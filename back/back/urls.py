@@ -20,5 +20,6 @@ from back import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.login_view, name='login'),
+    path('', views.show_form),
+    path('submit_form/', views.submit_form, name='submit_form'),
 ]
