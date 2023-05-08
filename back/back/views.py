@@ -14,9 +14,10 @@ def submit_form(request):
         email = request.POST['email']
         password = request.POST['password']
         if my_custom_sql(email, password):
-            return HttpResponse('100%')
+            return home_page(request)
         else:
-            return HttpResponse('Хуй')
+            error_message = "Invalid password. Please try again."
+            return render(request, 'login.html', {"form": LoginForm(), "error_message": error_message})
 
 
 def my_custom_sql(email, password):
@@ -27,3 +28,6 @@ def my_custom_sql(email, password):
             if elem[0] == email and elem[1] == password:
                 return True
         return False
+
+def home_page(request):
+    return render(request, 'home.html')
