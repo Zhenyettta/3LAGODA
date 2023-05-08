@@ -11,13 +11,18 @@ def show_form(request):
 
 def submit_form(request):
     if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
-        if my_custom_sql(email, password):
-            return home_page(request)
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            if my_custom_sql(email, password):
+                return home_page(request)
         else:
-            error_message = "Invalid password. Please try again."
-            return render(request, 'login.html', {"form": LoginForm(), "error_message": error_message})
+            form = LoginForm()
+    else:
+        form = LoginForm()
+
+    return render(request, 'login.html', {"form": form, "error_message": "Invalid email or password."})
 
 
 def my_custom_sql(email, password):
