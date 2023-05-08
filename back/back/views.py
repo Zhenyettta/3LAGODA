@@ -1,14 +1,13 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import AuthenticationForm
 
-
-def show_form(request):
-    return render(request, 'login.html')
-
-
-def submit_form(request):
+def login_view(request):
     if request.method == 'POST':
-        name = request.POST['name']
-        if name == 'Viktor noob': return HttpResponse('100%')
-        else:
-            return HttpResponse('Ні!')
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            return redirect('home.html')
+    else:
+        form = AuthenticationForm()
+
+    return render(request,'login.html', {'form' : form})

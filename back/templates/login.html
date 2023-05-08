@@ -1,18 +1,12 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-<a>Пишемо 'Viktor noob'</a>
-<form action="{% url 'submit_form' %}" method="post">
-    {% csrf_token %}
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name">
-    <button type="submit">Submit</button>
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<h2>Log In</h2>
+<form class="site-form" action="/login/" method="post">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" value="LogIn">
 </form>
-</body>
-</html>
+{% endblock %}
