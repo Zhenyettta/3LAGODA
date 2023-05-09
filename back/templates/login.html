@@ -1,14 +1,10 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}
+Log in
+{% endblock %}
+
+{% block content %}
 <div id="bg"></div>
 
 <form action="{% url 'submit_form' %}" method="post">
@@ -23,8 +19,7 @@
         <button id="login-btn" class="btn" type="submit" onclick="animateButton('red')">Log in</button>
     </div>
 </form>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     function animateButton(color) {
         var btn = $('#login-btn');
@@ -34,5 +29,5 @@
         }, 700);
     }
 </script>
-</body>
-</html>
+
+{% endblock %}

@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.db import connection
 from .forms import LoginForm
-
+import bcrypt
 
 def show_form(request):
     form = LoginForm()
@@ -15,6 +15,7 @@ def submit_form(request):
         if form.is_valid():
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
+            encryption()
             if my_custom_sql(email, password):
                 return home_page(request)
     return HttpResponse(status=204)
@@ -32,3 +33,10 @@ def my_custom_sql(email, password):
 
 def home_page(request):
     return render(request, 'home.html')
+
+def encryption():
+    password = "abvsdaf123абобус"
+    password = password.encode('utf-8')
+    hashedPassword = bcrypt.hashpw(password, bcrypt.gensalt())
+    print(bcrypt.checkpw(password, hashedPassword))
+    print(hashedPassword)
