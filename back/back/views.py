@@ -17,13 +17,19 @@ def submit_form(request):
             password = form.cleaned_data['password']
             encryption()
             if my_custom_sql(email, password):
-                return home_page(request)
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT role FROM employee WHERE email = %s", [email])
+                    role = cursor.fetchone()
+                    print(type(role))
+                    if role[0] == 'Manager':
+                        return manager_page(request)
+                    else:
+                        return home_page(request)
     return HttpResponse(status=204)
-
 
 def my_custom_sql(email, password):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT email, password FROM employee")
+        cursor.execute("SELECT email, password, role FROM employee")
         logins = cursor.fetchall()
         for elem in logins:
             if elem[0] == email and elem[1] == password:
@@ -33,6 +39,9 @@ def my_custom_sql(email, password):
 
 def home_page(request):
     return render(request, 'home.html')
+
+def manager_page(request):
+    return render(request, 'manager.html')
 
 def encryption():
     password = "abvsdaf123абобус"
