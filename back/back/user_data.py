@@ -4,3 +4,6 @@ class User:
         self.email = email
         self.password = password
         self.role = role
+
+    def __repr__(self):
+        return f"{self.email}, {self.role} "
