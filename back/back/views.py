@@ -32,11 +32,12 @@ def extract_form_data(form):
     return email, password
 
 def authenticate_user(email, password):
+    password = password.encode('utf-8')
     with connection.cursor() as cursor:
         cursor.execute("SELECT email, password, role FROM employee")
         logins = cursor.fetchall()
         for elem in logins:
-            if elem[0] == email and elem[1] == password:
+            if elem[0] == email and bcrypt.checkpw(password, elem[1].tobytes()):
                 user.email = email
                 user.password = password
                 user.role = elem[2]
@@ -46,7 +47,8 @@ def authenticate_user(email, password):
 def home_page(request):
     if not user_is_manager():
         return render(request, 'home.html')
-    return HttpResponse(status=401)
+    return HttpResponse(status=204)
+
 def manager_page(request):
     if user_is_manager():
         return render(request, 'manager.html')
@@ -71,3 +73,4 @@ def encryption():
     hashedPassword = bcrypt.hashpw(password, bcrypt.gensalt())
     print(bcrypt.checkpw(password, hashedPassword))
     print(hashedPassword)
+# cursor.execute("INSERT INTO employee SET password = %s WHERE employee_id = %s", (hashed_password, 4))
