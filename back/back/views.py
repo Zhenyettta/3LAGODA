@@ -46,14 +46,12 @@ def authenticate_user(email, password):
 def home_page(request):
     if not user_is_manager():
         return render(request, 'home.html')
-    else:
-        return HttpResponse(status=204)
+    return HttpResponse(status=204)
 
 def manager_page(request):
     if user_is_manager():
         return render(request, 'manager.html')
-    else:
-        return HttpResponse(status=204)
+    return HttpResponse(status=204)
 
 def user_is_manager():
     return user.role == 'Manager'

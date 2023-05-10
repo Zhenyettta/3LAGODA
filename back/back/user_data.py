@@ -6,4 +6,4 @@ class User:
         self.role = role
 
     def __repr__(self):
-        return f"{self.email}, {self.role} "
+        return f"{self.email}, {self.role}"
