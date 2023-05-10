@@ -52,17 +52,17 @@ def home_page(request):
 def manager_page(request):
     if user_is_manager():
         return render(request, 'manager.html')
-    return HttpResponse(status=401)
+    return HttpResponse(status=204)
 
 def redirect_to_home_page():
     if not user_is_manager():
         return HttpResponseRedirect('/submit_form/home')
-    return HttpResponse(status=401)
+    return HttpResponse(status=204)
 
 def redirect_to_manager_page():
     if user_is_manager():
         return HttpResponseRedirect('/submit_form/manager')
-    return HttpResponse(status=401)
+    return HttpResponse(status=204)
 
 def user_is_manager():
     return user.role == 'Manager'
