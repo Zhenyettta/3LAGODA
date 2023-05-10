@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.db import connection
 from .forms import LoginForm
@@ -20,9 +20,9 @@ def submit_form(request):
             if authenticate_user(email, password):
                 print(repr(user))
                 if user_is_manager():
-                    return manager_page(request)
+                    return redirect_to_manager_page()
                 else:
-                    return home_page(request)
+                    return redirect_to_home_page()
 
     return HttpResponse(status=204)
 
@@ -46,12 +46,21 @@ def authenticate_user(email, password):
 def home_page(request):
     if not user_is_manager():
         return render(request, 'home.html')
-    return HttpResponse(status=204)
-
+    return HttpResponse(status=401)
 def manager_page(request):
     if user_is_manager():
         return render(request, 'manager.html')
-    return HttpResponse(status=204)
+    return HttpResponse(status=401)
+
+def redirect_to_home_page():
+    if not user_is_manager():
+        return HttpResponseRedirect('/submit_form/home')
+    return HttpResponse(status=401)
+
+def redirect_to_manager_page():
+    if user_is_manager():
+        return HttpResponseRedirect('/submit_form/manager')
+    return HttpResponse(status=401)
 
 def user_is_manager():
     return user.role == 'Manager'
