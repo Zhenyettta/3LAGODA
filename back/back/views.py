@@ -4,6 +4,10 @@ from django.db import connection
 from .forms import LoginForm
 import bcrypt
 
+from .user_data import User
+
+user = User()
+
 def show_form(request):
     form = LoginForm()
     return render(request, 'login.html', {"form": form})
@@ -17,14 +21,11 @@ def submit_form(request):
             password = form.cleaned_data['password']
             encryption()
             if my_custom_sql(email, password):
-                with connection.cursor() as cursor:
-                    cursor.execute("SELECT role FROM employee WHERE email = %s", [email])
-                    role = cursor.fetchone()
-                    print(type(role))
-                    if role[0] == 'Manager':
-                        return manager_page(request)
-                    else:
-                        return home_page(request)
+                if user_is_manager():
+                    return manager_page(request)
+                else:
+                    return home_page(request)
+
     return HttpResponse(status=204)
 
 def my_custom_sql(email, password):
@@ -33,15 +34,27 @@ def my_custom_sql(email, password):
         logins = cursor.fetchall()
         for elem in logins:
             if elem[0] == email and elem[1] == password:
+                user.email = email
+                user.password = password
+                user.role = elem[2]
                 return True
         return False
 
 
 def home_page(request):
-    return render(request, 'home.html')
+    if not user_is_manager():
+        return render(request, 'home.html')
+    else:
+        HttpResponse(status=204)
 
 def manager_page(request):
-    return render(request, 'manager.html')
+    if user_is_manager():
+        return render(request, 'manager.html')
+    else:
+        HttpResponse(status=204)
+
+def user_is_manager():
+    return user.role == 'Manager'
 
 def encryption():
     password = "abvsdaf123абобус"
