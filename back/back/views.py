@@ -56,12 +56,12 @@ def manager_page(request):
 
 def redirect_to_home_page():
     if not user_is_manager():
-        return HttpResponseRedirect('/submit_form/home')
+        return HttpResponseRedirect('/home')
     return HttpResponse(status=204)
 
 def redirect_to_manager_page():
     if user_is_manager():
-        return HttpResponseRedirect('/submit_form/manager')
+        return HttpResponseRedirect('/manager')
     return HttpResponse(status=204)
 
 def user_is_manager():
