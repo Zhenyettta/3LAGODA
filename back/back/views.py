@@ -17,10 +17,8 @@ def submit_form(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            encryption()
-            if my_custom_sql(email, password):
+            email, password = extract_form_data(form)
+            if authenticate_user(email, password):
                 if user_is_manager():
                     return manager_page(request)
                 else:
@@ -28,7 +26,11 @@ def submit_form(request):
 
     return HttpResponse(status=204)
 
-def my_custom_sql(email, password):
+def extract_form_data(form):
+    email = form.cleaned_data['email']
+    password = form.cleaned_data['password']
+    return email, password
+def authenticate_user(email, password):
     with connection.cursor() as cursor:
         cursor.execute("SELECT email, password, role FROM employee")
         logins = cursor.fetchall()
@@ -39,7 +41,6 @@ def my_custom_sql(email, password):
                 user.role = elem[2]
                 return True
         return False
-
 
 def home_page(request):
     if not user_is_manager():
