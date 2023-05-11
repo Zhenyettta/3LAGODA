@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.db import connection
+
 from .forms import LoginForm
 import bcrypt
 
@@ -8,9 +9,11 @@ from .user_data import User
 
 user = User()
 
+
 def show_form(request):
     form = LoginForm()
     return render(request, 'login.html', {"form": form})
+
 
 def submit_form(request):
     if request.method == 'POST':
@@ -26,10 +29,12 @@ def submit_form(request):
 
     return HttpResponse(status=204)
 
+
 def extract_form_data(form):
     email = form.cleaned_data['email']
     password = form.cleaned_data['password']
     return email, password
+
 
 def authenticate_user(email, password):
     password = password.encode('utf-8')
@@ -44,33 +49,40 @@ def authenticate_user(email, password):
                 return True
         return False
 
+
 def home_page(request):
     if not user_is_manager():
         return render(request, 'home.html')
     return HttpResponse(status=204)
+
 
 def manager_page(request):
     if user_is_manager():
         return render(request, 'manager.html')
     return HttpResponse(status=204)
 
+
 def redirect_to_home_page():
     if not user_is_manager():
         return HttpResponseRedirect('/home')
     return HttpResponse(status=204)
+
 
 def redirect_to_manager_page():
     if user_is_manager():
         return HttpResponseRedirect('/manager')
     return HttpResponse(status=204)
 
+
 def user_is_manager():
     return user.role == 'Manager'
 
+
 def encryption():
-    password = "abvsdaf123абобус"
+    password = "123"
     password = password.encode('utf-8')
     hashedPassword = bcrypt.hashpw(password, bcrypt.gensalt())
     print(bcrypt.checkpw(password, hashedPassword))
     print(hashedPassword)
-# cursor.execute("INSERT INTO employee SET password = %s WHERE employee_id = %s", (hashed_password, 4))
+    with connection.cursor() as cursor:
+         cursor.execute("UPDATE employee SET password = %s WHERE employee_id = %s", (hashedPassword, 2))
