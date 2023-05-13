@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
     <title>{% block title %}{% endblock %}</title>
+    {% block head %}
+    {% endblock %}
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
 </head>
 <body>
 {% block content %}
 {% endblock %}
 </body>
-</html>'
+</html>
