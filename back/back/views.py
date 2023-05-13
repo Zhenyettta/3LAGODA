@@ -85,4 +85,12 @@ def encryption():
     print(bcrypt.checkpw(password, hashedPassword))
     print(hashedPassword)
     with connection.cursor() as cursor:
-         cursor.execute("UPDATE employee SET password = %s WHERE employee_id = %s", (hashedPassword, 2))
+        cursor.execute("UPDATE employee SET password = %s WHERE employee_id = %s", (hashedPassword, 2))
+
+
+def empl_list(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM employee WHERE role = 'Sales'")
+        employees = cursor.fetchall()
+
+    return render(request, 'empl_list.html', {'employees': employees})

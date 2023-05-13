@@ -24,4 +24,5 @@ urlpatterns = [
     path('submit_form/', views.submit_form, name='submit_form'),
     path('home/',views.home_page, name='home_page'),
     path('manager/', views.manager_page, name='manager_page'),
+    path('employees/', views.empl_list, name='empl_list'),
 ]

@@ -1,4 +1,16 @@
 {% extends 'base.html' %}
+
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+{% endblock %}
+
 {% block content %}
 <h2>Manager home page</h2>
+        <form action="{% url 'empl_list' %}" method="post">
+         {% csrf_token %}
+        <div class="form-field">
+            <button id="login-btn" class="btn" type="submit" onclick="animateButton('red')">ВІКТОР НУУБ</button>
+        </div>
+        </form>
 {% endblock %}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee List</title>
+</head>
+<body>
+    <h1>Employee List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Employee ID</th>
+                <th>Surname</th>
+                <th>Name</th>
+                <th>Patronymic</th>
+                <th>Role</th>
+                <th>Salary</th>
+                <th>Date of Birth</th>
+                <th>Date of Start</th>
+                <th>Phone Number</th>
+                <th>City</th>
+                <th>Street</th>
+                <th>Zip Code</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+            <tr>
+                <td>{{ employee.0 }}</td>
+                <td>{{ employee.1 }}</td>
+                <td>{{ employee.2 }}</td>
+                <td>{{ employee.3 }}</td>
+                <td>{{ employee.4 }}</td>
+                <td>{{ employee.5 }}</td>
+                <td>{{ employee.6 }}</td>
+                <td>{{ employee.7 }}</td>
+                <td>{{ employee.8 }}</td>
+                <td>{{ employee.9 }}</td>
+                <td>{{ employee.10 }}</td>
+                <td>{{ employee.11 }}</td>
+                <td>{{ employee.12 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
