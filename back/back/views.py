@@ -95,9 +95,11 @@ def empl_list(request):
 
     return render(request, 'empl_list.html', {'employees': employees})
 
+def add_employee(request):
+    return render(request,'add_employee.html')
 
-def delete_employee(request, id):
+def delete_employee(request):
     return render(request, 'manager.html')
 
-def edit_employee(request, id):
-    return render(request, 'manager.html')
+def edit_employee(request):
+    return render(request, 'edit_employee.html')
