@@ -1,38 +1,11 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Employee List
+    Employee List
 {% endblock %}
 
 {% block head %}
-    <style>
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        .button {
-            background-color: #4CAF50;
-            border: none;
-            color: white;
-            padding: 8px 16px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 14px;
-            margin: 4px 2px;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="/static/empl_list.css">
 {% endblock %}
 
 {% block content %}
@@ -40,26 +13,26 @@ Employee List
 
     <table>
         <thead>
-            <tr>
-                <th>Employee ID</th>
-                <th>Full Name</th>
-                <th>Role</th>
-                <th>Salary</th>
-                <th>Date of Birth</th>
-                <th>Date of Start</th>
-                <th>Phone Number</th>
-                <th>City</th>
-                <th>Street</th>
-                <th>Zip Code</th>
-                <th>Email</th>
-                <th>Actions</th>
-            </tr>
+        <tr>
+            <th>Employee ID</th>
+            <th>Full Name</th>
+            <th>Role</th>
+            <th>Salary</th>
+            <th>Date of Birth</th>
+            <th>Date of Start</th>
+            <th>Phone Number</th>
+            <th>City</th>
+            <th>Street</th>
+            <th>Zip Code</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
         </thead>
         <tbody>
-            {% for employee in employees %}
+        {% for employee in employees %}
             <tr>
                 <td>{{ employee.0 }}</td>
-                <td>{{ employee.1}} {{employee.2}} {{employee.3 }}</td>
+                <td>{{ employee.1 }} {{ employee.2 }} {{ employee.3 }}</td>
                 <td>{{ employee.4 }}</td>
                 <td>{{ employee.5 }}</td>
                 <td>{{ employee.6 }}</td>
@@ -72,12 +45,12 @@ Employee List
                 <td>
                     <a class="button" href="{% url 'edit_employee' employee.0 %}">Edit</a>
                     <form method="POST" action="{% url 'delete_employee' employee.0 %}">
-                    {% csrf_token %}
-                    <button class="button" type="submit">Delete</button>
+                        {% csrf_token %}
+                        <button class="button" type="submit">Delete</button>
                     </form>
                 </td>
             </tr>
-            {% endfor %}
+        {% endfor %}
         </tbody>
     </table>
 {% endblock %}
