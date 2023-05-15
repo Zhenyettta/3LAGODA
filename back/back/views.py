@@ -94,3 +94,5 @@ def empl_list(request):
         employees = cursor.fetchall()
 
     return render(request, 'empl_list.html', {'employees': employees})
+
+

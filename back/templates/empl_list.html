@@ -18,6 +18,20 @@ Employee List
         tr:hover {
             background-color: #f5f5f5;
         }
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+
     </style>
 {% endblock %}
 
@@ -39,6 +53,7 @@ Employee List
                 <th>Street</th>
                 <th>Zip Code</th>
                 <th>Email</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -57,6 +72,10 @@ Employee List
                 <td>{{ employee.10 }}</td>
                 <td>{{ employee.11 }}</td>
                 <td>{{ employee.12 }}</td>
+                <td>
+                    <a class="button">Edit</a>
+                    <a class="button">Delete</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
