@@ -36,14 +36,13 @@ Employee List
 {% endblock %}
 
 {% block content %}
-    <a class="button">Add Employee</a>
+    <a class="button" onclick="location.href='/manager'">Add Employee</a>
+
     <table>
         <thead>
             <tr>
                 <th>Employee ID</th>
-                <th>Surname</th>
-                <th>Name</th>
-                <th>Patronymic</th>
+                <th>Full Name</th>
                 <th>Role</th>
                 <th>Salary</th>
                 <th>Date of Birth</th>
@@ -60,9 +59,7 @@ Employee List
             {% for employee in employees %}
             <tr>
                 <td>{{ employee.0 }}</td>
-                <td>{{ employee.1 }}</td>
-                <td>{{ employee.2 }}</td>
-                <td>{{ employee.3 }}</td>
+                <td>{{ employee.1}} {{employee.2}} {{employee.3 }}</td>
                 <td>{{ employee.4 }}</td>
                 <td>{{ employee.5 }}</td>
                 <td>{{ employee.6 }}</td>
@@ -73,8 +70,11 @@ Employee List
                 <td>{{ employee.11 }}</td>
                 <td>{{ employee.12 }}</td>
                 <td>
-                    <a class="button">Edit</a>
-                    <a class="button">Delete</a>
+                    <a class="button" href="{% url 'edit_employee' employee.0 %}">Edit</a>
+                    <form method="POST" action="{% url 'delete_employee' employee.0 %}">
+                    {% csrf_token %}
+                    <button class="button" type="submit">Delete</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}
