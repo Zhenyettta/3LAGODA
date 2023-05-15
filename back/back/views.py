@@ -118,7 +118,7 @@ def add_employee(request):
                 data['email'],
                 data['password']
             )
-            return redirect('manager/employees/')
+            return empl_list(request)
     else:
         form = EmployeeForm()
     return render(request, 'add_employee.html', {'form': form})
@@ -136,7 +136,7 @@ def edit_employee(request, id):
     return render(request, 'edit_employee.html')
 
 
-def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city,street, zip_code,
+def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code,
                     email, password):
     with connection.cursor() as cursor:
         cursor.execute(

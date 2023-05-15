@@ -4,8 +4,11 @@
 Create Employee
 {% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/add_empl.css">
+{% endblock %}
+
 {% block content %}
-    <h1>Create Employee</h1>
     <form method="post">
         {% csrf_token %}
         <div>
@@ -18,7 +21,7 @@ Create Employee
         </div>
         <div>
             <label for="patronymic">Patronymic:</label>
-            <div><input type="text" id="patronymic" name="patronymic" required></div>
+            <div><input type="text" id="patronymic" name="patronymic"></div>
         </div>
         <div>
             <label for="role">Role:</label>
@@ -85,7 +88,7 @@ Create Employee
       var password = $('#password').val();
 
       // Call the create_employee function with the values
-      create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city,street, zip_code, email, password);
+      create_employee(surname, name,patronymic, role, salary, date_of_birth, date_of_start, phone_number, city,street, zip_code, email, password);
     });
   });
 </script>

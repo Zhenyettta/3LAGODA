@@ -11,7 +11,7 @@ class LoginForm(forms.Form):
 class EmployeeForm(forms.Form):
     surname = forms.CharField(max_length=100)
     name = forms.CharField(max_length=100)
-    patronymic = forms.CharField(max_length=100,required=False)
+    patronymic = forms.CharField(max_length=100, required=False)
     role = forms.CharField(max_length=100)
     salary = forms.DecimalField(max_digits=10, decimal_places=2)
     date_of_birth = forms.DateField()
