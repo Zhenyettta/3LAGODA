@@ -98,8 +98,8 @@ def empl_list(request):
 def add_employee(request):
     return render(request,'add_employee.html')
 
-def delete_employee(request):
+def delete_employee(request, id):
     return render(request, 'manager.html')
 
-def edit_employee(request):
+def edit_employee(request, id):
     return render(request, 'edit_employee.html')
