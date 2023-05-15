@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.db import connection
 
-from .forms import LoginForm,EmployeeForm
+from .forms import LoginForm, EmployeeForm
 import bcrypt
 
 from .user_data import User
@@ -95,6 +95,7 @@ def empl_list(request):
 
     return render(request, 'empl_list.html', {'employees': employees})
 
+
 def add_employee(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
@@ -119,12 +120,24 @@ def add_employee(request):
         form = EmployeeForm()
     return render(request, 'add_employee.html', {'form': form})
 
+
 def delete_employee(request, id):
-    return render(request, 'manager.html')
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM employee WHERE employee_id = %s", [id])
+        cursor.execute("SELECT * FROM employee WHERE role = 'Sales'")
+        employees = cursor.fetchall()
+
+    return render(request, 'empl_list.html', {'employees': employees})
+
 
 def edit_employee(request, id):
     return render(request, 'edit_employee.html')
 
-def create_employee(surname,name,patronymic,role,salary,date_of_birth,date_of_start,phone_number,city,zip_code,email,password):
+
+def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, zip_code,
+                    email, password):
     with connection.cursor() as cursor:
-        cursor.execute("INSERT INTO employees (surname,name,patronymic,role,salary,date_of_birth,date_of_start,phone_number,city,zip_code,email,password) VALUES (%s, %s, %s,%s, %s, %s,%s, %s, %s,%s, %s, %s)", [surname,name,patronymic,role,salary,date_of_birth,date_of_start,phone_number,city,zip_code,email,password])
+        cursor.execute(
+            "INSERT INTO employees (surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city,zip_code, email, password) VALUES (%s, %s, %s,%s, %s, %s,%s, %s, %s,%s, %s, %s)",
+            [surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, zip_code, email,
+             password])
