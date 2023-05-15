@@ -1,6 +1,8 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.db import connection
+from django.contrib import messages
+
 
 from .forms import LoginForm, EmployeeForm
 import bcrypt
@@ -111,6 +113,7 @@ def add_employee(request):
                 data['date_of_start'],
                 data['phone_number'],
                 data['city'],
+                data['street'],
                 data['zip_code'],
                 data['email'],
                 data['password']
@@ -126,18 +129,17 @@ def delete_employee(request, id):
         cursor.execute("DELETE FROM employee WHERE employee_id = %s", [id])
         cursor.execute("SELECT * FROM employee WHERE role = 'Sales'")
         employees = cursor.fetchall()
-
-    return render(request, 'empl_list.html', {'employees': employees})
+    return redirect('/manager/employees')
 
 
 def edit_employee(request, id):
     return render(request, 'edit_employee.html')
 
 
-def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, zip_code,
+def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city,street, zip_code,
                     email, password):
     with connection.cursor() as cursor:
         cursor.execute(
-            "INSERT INTO employees (surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city,zip_code, email, password) VALUES (%s, %s, %s,%s, %s, %s,%s, %s, %s,%s, %s, %s)",
-            [surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, zip_code, email,
+            "INSERT INTO employee (surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city,street,zip_code, email, password) VALUES (%s, %s, %s,%s, %s,%s, %s,%s, %s, %s,%s, %s, %s)",
+            [surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city,street, zip_code, email,
              password])

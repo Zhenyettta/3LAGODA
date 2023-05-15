@@ -18,6 +18,7 @@ class EmployeeForm(forms.Form):
     date_of_start = forms.DateField()
     phone_number = forms.CharField(max_length=20)
     city = forms.CharField(max_length=100)
+    street = forms.CharField(max_length=100)
     zip_code = forms.CharField(max_length=10)
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput())

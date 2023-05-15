@@ -45,6 +45,10 @@ Create Employee
             <div><input type="text" id="city" name="city" required></div>
         </div>
         <div>
+            <label for="street">Street:</label>
+            <div><input type="text" id="street" name="street" required></div>
+        </div>
+        <div>
             <label for="zip_code">Zip Code:</label>
             <div><input type="text" id="zip_code" name="zip_code" required></div>
         </div>
@@ -57,7 +61,33 @@ Create Employee
             <div><input type="password" id="password" name="password" required></div>
         </div>
         <div>
-            <button type="submit">Create Employee</button>
+            <button id="create-employee-btn">Create Employee</button>
         </div>
     </form>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#create-employee-btn').click(function() {
+      // Get the values from the input fields
+      var surname = $('#surname').val();
+      var name = $('#name').val();
+      var patronymic = $('#patronymic').val();
+      var role = $('#role').val();
+      var salary = $('#salary').val();
+      var date_of_birth = $('#date-of-birth').val();
+      var date_of_start = $('#date-of-start').val();
+      var phone_number = $('#phone-number').val();
+      var city = $('#city').val();
+      var street = $('#street').val();
+      var zip_code = $('#zip-code').val();
+      var email = $('#email').val();
+      var password = $('#password').val();
+
+      // Call the create_employee function with the values
+      create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city,street, zip_code, email, password);
+    });
+  });
+</script>
+
 {% endblock %}
