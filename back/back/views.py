@@ -1,12 +1,9 @@
+import bcrypt
+from django.db import connection
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.db import connection
-from django.contrib import messages
 
-
-from .forms import LoginForm, EmployeeForm
-import bcrypt
-
+from .forms import LoginForm, EmployeeForm, EditEmployeeForm
 from .user_data import User
 
 user = User()
@@ -105,6 +102,7 @@ def empl_only_sales_list(request):
 
     return render(request, 'manager/empl_list.html', {'employees': employees})
 
+
 def add_employee(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
@@ -115,6 +113,7 @@ def add_employee(request):
                 return render(request, 'manager/add_employee.html', {'form': form, 'error_message': error_message})
 
             create_employee(
+
                 data['surname'],
                 data['name'],
                 data['patronymic'],
@@ -127,12 +126,13 @@ def add_employee(request):
                 data['street'],
                 data['zip_code'],
                 data['email'],
-                data['password']
+                bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
             )
             return empl_list(request)
     else:
         form = EmployeeForm()
     return render(request, 'manager/add_employee.html', {'form': form})
+
 
 def is_email_used(email):
     with connection.cursor() as cursor:
@@ -140,6 +140,7 @@ def is_email_used(email):
         result = cursor.fetchone()
         count = result[0]
         return count > 0
+
 
 def delete_employee(request, id):
     with connection.cursor() as cursor:
@@ -149,20 +150,66 @@ def delete_employee(request, id):
     return redirect('/manager/employees')
 
 
-def edit_employee(request, id):
-    employee = None  # Initialize employee variable with a default value
-    with connection.cursor() as cursor:
-            # Retrieve the employee from the database
-        cursor.execute("SELECT * FROM employee WHERE employee_id = %s", [id])
-        employee = cursor.fetchone()
-        print(employee)
+def edit_employee_button(request, id):
+    if request.method == 'POST':
+        form = EditEmployeeForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            edit_employee(
+                id,
+                data['surname'],
+                data['name'],
+                data['patronymic'],
+                data['role'],
+                data['salary'],
+                data['date_of_birth'],
+                data['date_of_start'],
+                data['phone_number'],
+                data['city'],
+                data['street'],
+                data['zip_code'],
+                data['email'],
+                data['password'])
+            return empl_list(request)
+
+    else:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT employee_id, surname, name, patronymic, role, salary, date_of_birth, date_of_start,"
+                " phone_number, city, street, zip_code, email FROM employee WHERE employee_id = %s",
+                [id])
+            employee = cursor.fetchone()
     return render(request, 'manager/edit_employee.html', {'employee': employee})
 
 
-def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code,
+def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
+                    zip_code,
                     email, password):
     with connection.cursor() as cursor:
         cursor.execute(
-            "INSERT INTO employee (surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city,street,zip_code, email, password) VALUES (%s, %s, %s,%s, %s,%s, %s,%s, %s, %s,%s, %s, %s)",
-            [surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city,street, zip_code, email,
+            "INSERT INTO employee (surname, name, patronymic, role, salary, date_of_birth,"
+            " date_of_start, phone_number, city,street,zip_code, email, password)"
+            " VALUES (%s, %s, %s,%s, %s,%s, %s,%s, %s, %s,%s, %s, %s)",
+            [surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
+             zip_code, email,
              password])
+
+
+def edit_employee(id, surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
+                  zip_code, email, password):
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()) if password else None
+    with connection.cursor() as cursor:
+        if password:
+            cursor.execute(
+                "UPDATE employee SET surname = %s, name = %s, patronymic = %s, role = %s, salary = %s, "
+                "date_of_birth = %s, date_of_start = %s, phone_number = %s, city = %s, street = %s, zip_code = %s, "
+                "email = %s, password = %s WHERE employee_id = %s;",
+                [surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
+                 zip_code, email, hashed_password, id])
+        else:
+            cursor.execute(
+                "UPDATE employee SET surname = %s, name = %s, patronymic = %s, role = %s, salary = %s, "
+                "date_of_birth = %s, date_of_start = %s, phone_number = %s, city = %s, street = %s, zip_code = %s, "
+                "email = %s WHERE employee_id = %s;",
+                [surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
+                 zip_code, email, id])

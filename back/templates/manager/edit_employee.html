@@ -1,13 +1,64 @@
 {% extends 'base.html' %}
 
 {% block title %}
-AddEmployee
+    AddEmployee
 {% endblock %}
 {% block content %}
     <h1>Edit Menu</h1>
-    {% for line in employee %}
-        <div>line</div>
-        <div>1</div>
 
-    {% endfor %}
+    <form method="post">
+        {% csrf_token %}
+        <label>
+            <input type="text" id="surname" name="surname" value="{{ employee.1 }}">
+        </label>
+        <label>
+            <input type="text" id="name" name="name" value="{{ employee.2 }}">
+        </label>
+        <label>
+            <input type="text" id="patronymic" name="patronymic" value="{{ employee.3 }}">
+        </label>
+        <label>
+            <input type="text" id="role" name="role" value="{{ employee.4 }}">
+        </label>
+        <label>
+            <input type="text" id="salary" name="salary" value="{{ employee.5 }}">
+        </label>
+        <label>
+            <input type="date" id="date_of_birth" name="date_of_birth" value="{{ employee.6|date:'Y-m-d' }}">
+        </label>
+
+        <label>
+            <input type="date" id="date_of_start" name="date_of_start" value="{{ employee.7|date:'Y-m-d' }}">
+        </label>
+        <label>
+            <input type="text" id="phone_number" name="phone_number" value="{{ employee.8 }}">
+        </label>
+
+        <label>
+            <input type="text" id="city" name="city" value="{{ employee.9 }}">
+        </label>
+        <label>
+            <input type="text" id="street" name="street" value="{{ employee.10 }}">
+        </label>
+
+        <label>
+            <input type="text" id="zip_code" name="zip_code" value="{{ employee.11 }}">
+        </label>
+
+        <label>
+            <input type="text" id="email" name="email" value="{{ employee.12 }}">
+        </label>
+
+        <label>
+            <input type="password" name="password" id="password">
+        </label>
+        <div style="text-align: center;
+                    margin-top: 50vh">
+            <button id="edit-employee-btn"
+                    style="background-color: #4CAF50; color: white; padding: 10px 20px;
+                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;">
+                Create Employee
+            </button>
+        </div>
+    </form>
 {% endblock %}
