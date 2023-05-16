@@ -150,7 +150,13 @@ def delete_employee(request, id):
 
 
 def edit_employee(request, id):
-    return render(request, 'manager/edit_employee.html')
+    employee = None  # Initialize employee variable with a default value
+    with connection.cursor() as cursor:
+            # Retrieve the employee from the database
+        cursor.execute("SELECT * FROM employee WHERE employee_id = %s", [id])
+        employee = cursor.fetchone()
+        print(employee)
+    return render(request, 'manager/edit_employee.html', {'employee': employee})
 
 
 def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code,
