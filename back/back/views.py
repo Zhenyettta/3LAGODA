@@ -92,11 +92,18 @@ def encryption():
 
 def empl_list(request):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM employee WHERE role = 'Sales'")
+        cursor.execute("SELECT * FROM employee WHERE email != %s ORDER BY surname, name, patronymic", [user.email])
         employees = cursor.fetchall()
 
     return render(request, 'empl_list.html', {'employees': employees})
 
+
+def empl_only_sales_list(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM employee WHERE role='Sales' ORDER BY surname, name, patronymic")
+        employees = cursor.fetchall()
+
+    return render(request, 'empl_list.html', {'employees': employees})
 
 def add_employee(request):
     if request.method == 'POST':

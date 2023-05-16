@@ -10,6 +10,8 @@
 
 {% block content %}
     <a class="button" onclick="location.href='/manager/addemployee'">Add Employee</a>
+    <a class="button" href="{% url 'empl_list' %}">All</a>
+    <a class="button" href="{% url 'empl_only_sales_list' %}">Only Sales</a>
 
     <table>
         <thead>
