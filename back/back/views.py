@@ -14,7 +14,7 @@ user = User()
 
 def show_form(request):
     form = LoginForm()
-    return render(request, 'login.html', {"form": form})
+    return render(request, 'login/login.html', {"form": form})
 
 
 def submit_form(request):
@@ -54,13 +54,13 @@ def authenticate_user(email, password):
 
 def home_page(request):
     if not user_is_manager():
-        return render(request, 'home.html')
+        return render(request, 'sales/home.html')
     return HttpResponse(status=204)
 
 
 def manager_page(request):
     if user_is_manager():
-        return render(request, 'manager.html')
+        return render(request, 'manager/manager.html')
     return HttpResponse(status=204)
 
 
@@ -95,7 +95,7 @@ def empl_list(request):
         cursor.execute("SELECT * FROM employee WHERE email != %s ORDER BY surname, name, patronymic", [user.email])
         employees = cursor.fetchall()
 
-    return render(request, 'empl_list.html', {'employees': employees})
+    return render(request, 'manager/empl_list.html', {'employees': employees})
 
 
 def empl_only_sales_list(request):
@@ -103,13 +103,17 @@ def empl_only_sales_list(request):
         cursor.execute("SELECT * FROM employee WHERE role='Sales' ORDER BY surname, name, patronymic")
         employees = cursor.fetchall()
 
-    return render(request, 'empl_list.html', {'employees': employees})
+    return render(request, 'manager/empl_list.html', {'employees': employees})
 
 def add_employee(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
+            if is_email_used(data['email']):
+                error_message = 'Email is already used by another user.'
+                return render(request, 'manager/add_employee.html', {'form': form, 'error_message': error_message})
+
             create_employee(
                 data['surname'],
                 data['name'],
@@ -128,8 +132,14 @@ def add_employee(request):
             return empl_list(request)
     else:
         form = EmployeeForm()
-    return render(request, 'add_employee.html', {'form': form})
+    return render(request, 'manager/add_employee.html', {'form': form})
 
+def is_email_used(email):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT COUNT(*) FROM employee WHERE email = %s", [email])
+        result = cursor.fetchone()
+        count = result[0]
+        return count > 0
 
 def delete_employee(request, id):
     with connection.cursor() as cursor:
@@ -140,7 +150,7 @@ def delete_employee(request, id):
 
 
 def edit_employee(request, id):
-    return render(request, 'edit_employee.html')
+    return render(request, 'manager/edit_employee.html')
 
 
 def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code,
