@@ -92,15 +92,29 @@ def empl_list(request):
         cursor.execute("SELECT * FROM employee WHERE email != %s ORDER BY surname, name, patronymic", [user.email])
         employees = cursor.fetchall()
 
-    return render(request, 'manager/empl_list.html', {'employees': employees})
+    return render(request, 'manager/employee/empl_list.html', {'employees': employees})
 
+def cust_list(request):
+    return render(request, 'manager/customers/cust_list.html')
+
+def category_list(request):
+    return render(request, 'manager/categories/category_list.html')
+
+def product_list(request):
+    return render(request, 'manager/products/product_list.html')
+
+def in_store_product_list(request):
+    return render(request, 'manager/in_store_products/in_store_product_list.html')
+
+def cust_list(request):
+    return render(request, 'manager/customers/cust_list.html')
 
 def empl_only_sales_list(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM employee WHERE role='Sales' ORDER BY surname, name, patronymic")
         employees = cursor.fetchall()
 
-    return render(request, 'manager/empl_list.html', {'employees': employees})
+    return render(request, 'manager/employee/empl_list.html', {'employees': employees})
 
 
 def add_employee(request):
@@ -131,7 +145,7 @@ def add_employee(request):
             return empl_list(request)
     else:
         form = EmployeeForm()
-    return render(request, 'manager/add_employee.html', {'form': form})
+    return render(request, 'manager/employee/add_employee.html', {'form': form})
 
 
 def is_email_used(email):
@@ -179,7 +193,7 @@ def edit_employee_button(request, id):
                 " phone_number, city, street, zip_code, email FROM employee WHERE employee_id = %s",
                 [id])
             employee = cursor.fetchone()
-    return render(request, 'manager/edit_employee.html', {'employee': employee})
+    return render(request, 'manager/employee/edit_employee.html', {'employee': employee})
 
 
 def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
