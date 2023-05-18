@@ -3,6 +3,11 @@
 {% block title %}
     AddEmployee
 {% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/edit_employee.css">
+{% endblock %}
+
 {% block content %}
     <h1>Edit Menu</h1>
 
@@ -50,10 +55,10 @@
         </label>
 
         <label>
-            <input type="password" name="password" id="password">
+            <input type="password" name="password" id="password" placeholder="Password">
         </label>
         <div style="text-align: center;
-                    margin-top: 50vh">
+                    margin-top: 5vh">
             <button id="edit-employee-btn"
                     style="background-color: #4CAF50; color: white; padding: 10px 20px;
                      font-size: 16px; border: none; cursor: pointer; border-radius: 4px;">
