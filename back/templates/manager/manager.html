@@ -43,5 +43,11 @@
         </div>
     </form>
 
+    <form action="{% url 'check_list' %}" method="post">
+        {% csrf_token %}
+        <div class="form-field">
+            <button id="login-btn" class="btn" type="submit" onclick="animateButton('red')">Checks</button>
+        </div>
+    </form>
     </div>
 {% endblock %}

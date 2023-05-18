@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Create Customer
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/add_empl.css">
+{% endblock %}
+
+{% block content %}
+    <a id="create-employee-btn" onclick="location.href='/manager/customers'"><</a>
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <label for="surname">Surname:</label>
+            <div><input type="text" id="surname" name="surname" required></div>
+        </div>
+        <div>
+            <label for="name">Name:</label>
+            <div><input type="text" id="name" name="name" required></div>
+        </div>
+        <div>
+            <label for="patronymic">Patronymic:</label>
+            <div><input type="text" id="patronymic" name="patronymic"></div>
+        </div>
+            <label for="phone_number">Phone Number:</label>
+            <div><input type="tel" id="phone_number" name="phone_number" required></div>
+        </div>
+        <div>
+            <label for="city">City:</label>
+            <div><input type="text" id="city" name="city"></div>
+        </div>
+        <div>
+            <label for="street">Street:</label>
+            <div><input type="text" id="street" name="street"></div>
+        </div>
+        <div>
+            <label for="zip_code">Zip Code:</label>
+            <div><input type="text" id="zip_code" name="zip_code"></div>
+        </div>
+        <div>
+            <label for="percent">Percent of discount:</label>
+            <div><input type="text" id="percent" name="percent" required></div>
+        </div>
+        <div>
+            <button id="create-employee-btn">Create Customer</button>
+        </div>
+    </form>
+
+
+{% endblock %}

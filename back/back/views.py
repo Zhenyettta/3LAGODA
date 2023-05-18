@@ -3,7 +3,7 @@ from django.db import connection
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
-from .forms import LoginForm, EmployeeForm, EditEmployeeForm
+from .forms import LoginForm, EmployeeForm, EditEmployeeForm, CustomerForm, EditCustomerForm
 from .user_data import User
 
 user = User()
@@ -95,19 +95,38 @@ def empl_list(request):
     return render(request, 'manager/employee/empl_list.html', {'employees': employees})
 
 def cust_list(request):
-    return render(request, 'manager/customers/cust_list.html')
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM customer_card ORDER BY surname, name, patronymic")
+        customers = cursor.fetchall()
+        updated_list = []
+        for tpl in customers:
+            updated_tuple = list(tpl)
+            if updated_tuple[3] is None:
+                updated_tuple[3] = ""
+            updated_list.append(tuple(updated_tuple))
+
+        print(updated_list)
+    return render(request, 'manager/customers/cust_list.html', {'customers': updated_list})
 
 def category_list(request):
+    print('hello')
+
     return render(request, 'manager/categories/category_list.html')
 
 def product_list(request):
+    print('hello')
+
     return render(request, 'manager/products/product_list.html')
 
 def in_store_product_list(request):
+    print('hello')
+
     return render(request, 'manager/in_store_products/in_store_product_list.html')
 
-def cust_list(request):
-    return render(request, 'manager/customers/cust_list.html')
+def check_list(request):
+    print('hello')
+
+    return render(request, 'manager/checks/check_list.html')
 
 def empl_only_sales_list(request):
     with connection.cursor() as cursor:
@@ -147,6 +166,28 @@ def add_employee(request):
         form = EmployeeForm()
     return render(request, 'manager/employee/add_employee.html', {'form': form})
 
+def add_customer(request):
+    if request.method == 'POST':
+        form = CustomerForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            for key, value in data.items():
+                if value == "":
+                    data[key] = None
+            create_customer(
+                data['surname'],
+                data['name'],
+                data['patronymic'],
+                data['phone_number'],
+                data['city'],
+                data['street'],
+                data['zip_code'],
+                data['percent'],
+            )
+            return cust_list(request)
+    else:
+        form = CustomerForm()
+    return render(request, 'manager/customers/add_customer.html', {'form': form})
 
 def is_email_used(email):
     with connection.cursor() as cursor:
@@ -163,6 +204,10 @@ def delete_employee(request, id):
         employees = cursor.fetchall()
     return redirect('/manager/employees')
 
+def delete_customer(request,id):
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM customer_card WHERE card_number = %s", [id])
+    return redirect('/manager/customers')
 
 def edit_employee_button(request, id):
     if request.method == 'POST':
@@ -195,7 +240,31 @@ def edit_employee_button(request, id):
             employee = cursor.fetchone()
     return render(request, 'manager/employee/edit_employee.html', {'employee': employee})
 
+def edit_customer_button(request, id):
+    if request.method == 'POST':
+        form = EditCustomerForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            edit_customer(
+                id,
+                data['surname'],
+                data['name'],
+                data['patronymic'],
+                data['phone_number'],
+                data['city'],
+                data['street'],
+                data['zip_code'],
+                data['percent'])
+            return cust_list(request)
 
+    else:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT card_number, surname, name, patronymic,"
+                " phone_number, city, street, zip_code, percent FROM customer_card WHERE card_number = %s",
+                [id])
+            customer = cursor.fetchone()
+    return render(request, 'manager/customers/edit_customer.html', {'customer': customer})
 def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
                     zip_code,
                     email, password):
@@ -208,6 +277,15 @@ def create_employee(surname, name, patronymic, role, salary, date_of_birth, date
              zip_code, email,
              password])
 
+def create_customer(surname, name, patronymic, phone_number, city, street,
+                    zip_code,percent):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO customer_card (surname, name, patronymic,"
+            "phone_number, city,street,zip_code, percent)"
+            " VALUES (%s, %s, %s, %s, %s, %s, %s,%s)",
+            [surname, name, patronymic, phone_number, city, street,
+             zip_code, percent])
 
 def edit_employee(id, surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
                   zip_code, email, password):
@@ -227,3 +305,14 @@ def edit_employee(id, surname, name, patronymic, role, salary, date_of_birth, da
                 "email = %s WHERE employee_id = %s;",
                 [surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
                  zip_code, email, id])
+
+def edit_customer(id, surname, name, patronymic, phone_number, city, street,
+                  zip_code, percent):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "UPDATE customer_card SET surname = %s, name = %s, patronymic = %s, "
+            "phone_number = %s, city = %s, street = %s, zip_code = %s "
+            "WHERE card_number = %s;",
+            [surname, name, patronymic, phone_number, city, street, zip_code, id]
+        )
+

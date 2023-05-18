@@ -20,22 +20,26 @@ from back import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
     # Login
     path('', views.show_form),
     path('submit_form/', views.submit_form, name='submit_form'),
-    path('home/',views.home_page, name='home_page'),
+
     # Manager
     path('manager/', views.manager_page, name='manager_page'),
 
     # Employee list manipulations
     path('manager/employees/', views.empl_list, name='empl_list'),
-    path('manager/addemployee/', views.add_employee, name='add_employee'),
+    path('manager/employees/addemployee/', views.add_employee, name='add_employee'),
     path('manager/employees/edit/<int:id>/', views.edit_employee_button, name='edit_employee'),
     path('manager/employees/<int:id>/delete/', views.delete_employee, name='delete_employee'),
     path('manager/employees/onlysales/', views.empl_only_sales_list, name='empl_only_sales_list'),
 
     # Customer list implementation
     path('manager/customers/', views.cust_list, name='cust_list'),
+    path('manager/customers/addcustomer', views.add_customer, name='add_customer'),
+    path('manager/customers/edit/<int:id>/', views.edit_customer_button, name='edit_customer'),
+    path('manager/customers/<int:id>/delete/', views.delete_customer, name='delete_customer'),
 
     # Category list implementation
     path('manager/categories/', views.category_list, name='category_list'),
@@ -45,4 +49,10 @@ urlpatterns = [
 
     # InStoreProduct list implementation
     path('manager/instoreproduct/', views.in_store_product_list, name='in_store_product_list'),
+
+    # Check list implementation
+    path('manager/checks/', views.check_list, name='check_list'),
+
+    # Sales
+    path('home/', views.home_page, name='home_page'),
 ]

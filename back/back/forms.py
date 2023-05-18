@@ -39,3 +39,23 @@ class EditEmployeeForm(forms.Form):
     zip_code = forms.CharField(max_length=10, required=False)
     email = forms.EmailField(required=False)
     password = forms.CharField(widget=forms.PasswordInput(), required=False)
+
+class CustomerForm(forms.Form):
+    surname = forms.CharField(max_length=100)
+    name = forms.CharField(max_length=100)
+    patronymic = forms.CharField(max_length=100, required=False)
+    phone_number = forms.CharField(max_length=20)
+    city = forms.CharField(max_length=100, required=False)
+    street = forms.CharField(max_length=100, required=False)
+    zip_code = forms.CharField(max_length=10, required=False)
+    percent = forms.CharField(max_length=5)
+
+class EditCustomerForm(forms.Form):
+    surname = forms.CharField(max_length=100, required=False)
+    name = forms.CharField(max_length=100, required=False)
+    patronymic = forms.CharField(max_length=100, required=False)
+    phone_number = forms.CharField(max_length=20, required=False)
+    city = forms.CharField(max_length=100, required=False)
+    street = forms.CharField(max_length=100, required=False)
+    zip_code = forms.CharField(max_length=10, required=False)
+    percent = forms.CharField(max_length=5, required=False)

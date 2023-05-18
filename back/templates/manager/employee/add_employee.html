@@ -9,6 +9,7 @@ Create Employee
 {% endblock %}
 
 {% block content %}
+    <a id="create-employee-btn" onclick="location.href='/manager/employees'"><</a>
     <form method="post">
         {% csrf_token %}
         <div>
