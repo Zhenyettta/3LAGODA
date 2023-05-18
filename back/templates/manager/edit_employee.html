@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Edit Menu</h1>
+    <h1>Edit Employee Menu</h1>
 
     <form method="post">
         {% csrf_token %}
@@ -58,11 +58,11 @@
             <input type="password" name="password" id="password" placeholder="Password">
         </label>
         <div style="text-align: center;
-                    margin-top: 5vh">
+                    margin-top: 3vh">
             <button id="edit-employee-btn"
                     style="background-color: #4CAF50; color: white; padding: 10px 20px;
                      font-size: 16px; border: none; cursor: pointer; border-radius: 4px;">
-                Create Employee
+                Update
             </button>
         </div>
     </form>
