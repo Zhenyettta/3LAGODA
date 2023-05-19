@@ -347,6 +347,14 @@ def edit_employee(id, surname, name, patronymic, role, salary, date_of_birth, da
 
 def edit_customer(id, surname, name, patronymic, phone_number, city, street,
                   zip_code, percent):
+
+    if city.strip() == "":
+        city = None
+    if street.strip() == "":
+        street = None
+    if zip_code.strip() == "":
+        zip_code = None
+
     with connection.cursor() as cursor:
         cursor.execute(
             "UPDATE customer_card SET surname = %s, name = %s, patronymic = %s, "
