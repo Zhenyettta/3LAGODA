@@ -59,3 +59,9 @@ class EditCustomerForm(forms.Form):
     street = forms.CharField(max_length=100, required=False)
     zip_code = forms.CharField(max_length=10, required=False)
     percent = forms.CharField(max_length=5, required=False)
+
+class CategoryForm(forms.Form):
+    name = forms.CharField(max_length=100, required=False)
+class EditCategoryForm(forms.Form):
+    name = forms.CharField(max_length=100, required=False)
+

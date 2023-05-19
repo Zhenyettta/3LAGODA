@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Create Customer
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/add_empl.css">
+{% endblock %}
+
+{% block content %}
+    <a id="create-employee-btn" onclick="location.href='/manager/categories'"><</a>
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <label for="name">Name:</label>
+            <div><input type="text" id="name" name="name" required></div>
+        </div>
+        <div>
+            <button id="create-employee-btn">Create Category</button>
+        </div>
+    </form>
+
+
+{% endblock %}

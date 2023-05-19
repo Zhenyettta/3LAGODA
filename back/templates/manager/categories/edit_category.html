@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    AddEmployee
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/edit_employee.css">
+{% endblock %}
+
+{% block content %}
+    <h1>Edit Category Menu</h1>
+    <a class="edit-employee-btn" onclick="location.href='/manager/categories'"
+    style="background-color: #4CAF50; color: white; padding: 10px 20px;
+                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;"><</a>
+    <form method="post">
+        {% csrf_token %}
+        <label>
+            <input type="text" id="name" name="name" value="{{ category.0 }}">
+        </label>
+
+        <div style="text-align: center;
+                    margin-top: 3vh">
+            <button
+                    style="background-color: #4CAF50; color: white; padding: 10px 20px;
+                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;">
+                Update
+            </button>
+        </div>
+    </form>
+{% endblock %}

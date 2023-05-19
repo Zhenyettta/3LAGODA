@@ -3,7 +3,7 @@ from django.db import connection
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
-from .forms import LoginForm, EmployeeForm, EditEmployeeForm, CustomerForm, EditCustomerForm
+from .forms import LoginForm, EmployeeForm, EditEmployeeForm, CustomerForm, EditCustomerForm,CategoryForm,EditCategoryForm
 from .user_data import User
 
 user = User()
@@ -104,14 +104,14 @@ def cust_list(request):
             if updated_tuple[3] is None:
                 updated_tuple[3] = ""
             updated_list.append(tuple(updated_tuple))
-
-        print(updated_list)
     return render(request, 'manager/customers/cust_list.html', {'customers': updated_list})
 
 def category_list(request):
-    print('hello')
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM category ORDER BY name")
+        categories = cursor.fetchall()
 
-    return render(request, 'manager/categories/category_list.html')
+    return render(request, 'manager/categories/category_list.html', {'categories':categories})
 
 def product_list(request):
     print('hello')
@@ -189,6 +189,19 @@ def add_customer(request):
         form = CustomerForm()
     return render(request, 'manager/customers/add_customer.html', {'form': form})
 
+def add_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            create_category(
+                data['name'],
+            )
+            return category_list(request)
+    else:
+        form = CategoryForm()
+    return render(request, 'manager/categories/add_category.html', {'form': form})
+
 def is_email_used(email):
     with connection.cursor() as cursor:
         cursor.execute("SELECT COUNT(*) FROM employee WHERE email = %s", [email])
@@ -208,6 +221,11 @@ def delete_customer(request,id):
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM customer_card WHERE card_number = %s", [id])
     return redirect('/manager/customers')
+
+def delete_category(request,id):
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM category WHERE category_number = %s", [id])
+    return redirect('/manager/categories')
 
 def edit_employee_button(request, id):
     if request.method == 'POST':
@@ -265,6 +283,22 @@ def edit_customer_button(request, id):
                 [id])
             customer = cursor.fetchone()
     return render(request, 'manager/customers/edit_customer.html', {'customer': customer})
+
+def edit_category_button(request, id):
+    if request.method == 'POST':
+        form = EditCategoryForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            edit_category(
+                id,
+                data['name'])
+            return category_list(request)
+    else:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT name FROM category WHERE category_number = %s",[id])
+            category = cursor.fetchone()
+    return render(request, 'manager/categories/edit_category.html', {'category': category})
 def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
                     zip_code,
                     email, password):
@@ -286,6 +320,11 @@ def create_customer(surname, name, patronymic, phone_number, city, street,
             " VALUES (%s, %s, %s, %s, %s, %s, %s,%s)",
             [surname, name, patronymic, phone_number, city, street,
              zip_code, percent])
+
+def create_category(name):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO category (name) VALUES (%s)", [name])
 
 def edit_employee(id, surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
                   zip_code, email, password):
@@ -312,7 +351,13 @@ def edit_customer(id, surname, name, patronymic, phone_number, city, street,
         cursor.execute(
             "UPDATE customer_card SET surname = %s, name = %s, patronymic = %s, "
             "phone_number = %s, city = %s, street = %s, zip_code = %s "
-            "WHERE card_number = %s;",
-            [surname, name, patronymic, phone_number, city, street, zip_code, id]
+            ",percent =%s WHERE card_number = %s;",
+            [surname, name, patronymic, phone_number, city, street, zip_code,percent, id]
         )
 
+def edit_category(id, name):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "UPDATE category SET name = %s WHERE category_number = %s;",
+            [name, id]
+        )

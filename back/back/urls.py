@@ -43,6 +43,9 @@ urlpatterns = [
 
     # Category list implementation
     path('manager/categories/', views.category_list, name='category_list'),
+    path('manager/categories/addcategory', views.add_category, name='add_category'),
+    path('manager/categories/edit/<int:id>/', views.edit_category_button, name='edit_category'),
+    path('manager/categories/<int:id>/delete/', views.delete_category, name='delete_category'),
 
     # Product list implementation
     path('manager/product/', views.product_list, name='product_list'),
