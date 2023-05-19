@@ -114,9 +114,19 @@ def category_list(request):
     return render(request, 'manager/categories/category_list.html', {'categories':categories})
 
 def product_list(request):
-    print('hello')
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM product ORDER BY name")
+        products = list(cursor.fetchall())
 
-    return render(request, 'manager/products/product_list.html')
+        cursor.execute("SELECT * FROM category")
+        category_mapping = dict(cursor.fetchall())
+    for i, product in enumerate(products):
+        category_id = product[1]
+        category_name = category_mapping.get(category_id)
+        if category_name is not None:
+            products[i] = (product[0], category_name) + product[2:]
+
+    return render(request, 'manager/products/product_list.html', {'products': products})
 
 def in_store_product_list(request):
     print('hello')
@@ -226,6 +236,11 @@ def delete_category(request,id):
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM category WHERE category_number = %s", [id])
     return redirect('/manager/categories')
+
+def delete_product(request,id):
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM product WHERE product_id = %s", [id])
+    return redirect('/manager/products')
 
 def edit_employee_button(request, id):
     if request.method == 'POST':

@@ -48,7 +48,8 @@ urlpatterns = [
     path('manager/categories/<int:id>/delete/', views.delete_category, name='delete_category'),
 
     # Product list implementation
-    path('manager/product/', views.product_list, name='product_list'),
+    path('manager/products/', views.product_list, name='product_list'),
+    path('manager/products/<int:id>/delete/', views.delete_product, name='delete_product'),
 
     # InStoreProduct list implementation
     path('manager/instoreproduct/', views.in_store_product_list, name='in_store_product_list'),
