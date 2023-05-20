@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Edit Product
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/edit_employee.css">
+{% endblock %}
+
+{% block content %}
+    <h1>Edit Employee Menu</h1>
+    <a class="edit-employee-btn" onclick="location.href='/manager/products'"
+    style="background-color: #4CAF50; color: white; padding: 10px 20px;
+                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;"><</a>
+    <form method="post">
+        {% csrf_token %}
+
+         <label>
+            <select id="category" name="category">
+                {% for category in categories %}
+                    <option value="{{ category.0 }}" {% if category.0 == product.0 %}selected{% endif %}>{{ category.1 }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            <input type="text" id="name" name="name" value="{{ product.1 }}">
+        </label>
+        <label>
+            <input type="text" id="characteristics" name="characteristics" value="{{ product.2 }}">
+        </label>
+
+        <div style="text-align: center;
+                    margin-top: 3vh">
+            <button
+                    style="background-color: #4CAF50; color: white; padding: 10px 20px;
+                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;">
+                Update
+            </button>
+        </div>
+    </form>
+{% endblock %}

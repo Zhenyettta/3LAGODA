@@ -61,7 +61,16 @@ class EditCustomerForm(forms.Form):
     percent = forms.CharField(max_length=5, required=False)
 
 class CategoryForm(forms.Form):
-    name = forms.CharField(max_length=100, required=False)
+    name = forms.CharField(max_length=100)
 class EditCategoryForm(forms.Form):
     name = forms.CharField(max_length=100, required=False)
 
+class ProductForm(forms.Form):
+    category = forms.CharField(max_length=100)
+    name = forms.CharField(max_length=100)
+    characteristics = forms.CharField(max_length=100)
+
+class EditProductForm(forms.Form):
+    category = forms.CharField(max_length=100, required=False)
+    name = forms.CharField(max_length=100, required=False)
+    characteristics = forms.CharField(max_length=100, required=False)

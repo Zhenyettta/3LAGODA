@@ -3,7 +3,8 @@ from django.db import connection
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
-from .forms import LoginForm, EmployeeForm, EditEmployeeForm, CustomerForm, EditCustomerForm,CategoryForm,EditCategoryForm
+from .forms import LoginForm, EmployeeForm, EditEmployeeForm, CustomerForm, EditCustomerForm,CategoryForm,\
+    EditCategoryForm, ProductForm, EditProductForm
 from .user_data import User
 
 user = User()
@@ -212,6 +213,30 @@ def add_category(request):
         form = CategoryForm()
     return render(request, 'manager/categories/add_category.html', {'form': form})
 
+def add_product(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM category")
+        categories = cursor.fetchall()
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            create_product(
+                data['category'],
+                data['name'],
+                data['characteristics'],
+            )
+            return product_list(request)
+    else:
+        form = ProductForm()
+
+    context = {
+        'form': form,
+        'categories': categories,
+    }
+    return render(request, 'manager/products/add_product.html', context)
+
 def is_email_used(email):
     with connection.cursor() as cursor:
         cursor.execute("SELECT COUNT(*) FROM employee WHERE email = %s", [email])
@@ -314,6 +339,35 @@ def edit_category_button(request, id):
                 "SELECT name FROM category WHERE category_number = %s",[id])
             category = cursor.fetchone()
     return render(request, 'manager/categories/edit_category.html', {'category': category})
+
+def edit_product_button(request, id):
+    if request.method == 'POST':
+        form = EditProductForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            edit_product(
+                id,
+                data['category'],
+                data['name'],
+                data['characteristics'])
+            return product_list(request)
+    else:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT category_number,name,characteristics FROM product WHERE product_id = %s",[id])
+            product = cursor.fetchone()
+
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM category")
+                categories = cursor.fetchall()
+
+            context = {
+                'product': product,
+                'categories':categories
+            }
+    return render(request, 'manager/products/edit_product.html', context)
+
+
 def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
                     zip_code,
                     email, password):
@@ -340,6 +394,13 @@ def create_category(name):
     with connection.cursor() as cursor:
         cursor.execute(
             "INSERT INTO category (name) VALUES (%s)", [name])
+
+def create_product(category, name, characteristics):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO product (category_number, name, characteristics)"
+            " VALUES (%s, %s, %s)",
+            [category, name, characteristics])
 
 def edit_employee(id, surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
                   zip_code, email, password):
@@ -383,4 +444,12 @@ def edit_category(id, name):
         cursor.execute(
             "UPDATE category SET name = %s WHERE category_number = %s;",
             [name, id]
+        )
+
+
+def edit_product(id,category, name, characteristics):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "UPDATE product SET category_number = %s, name = %s, characteristics = %s  WHERE product_id = %s;",
+            [category, name, characteristics, id]
         )

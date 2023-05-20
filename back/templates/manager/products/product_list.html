@@ -29,7 +29,7 @@
                 <td>{{ product.3 }} </td>
 
                 <td>
-                    <a class="button">Edit</a>
+                    <a class="button" href="{% url 'edit_product' product.0 %}">Edit</a>
                     <form method="POST" action="{% url 'delete_product' product.0 %}">
                         {% csrf_token %}
                         <button class="button" type="submit" onclick="return confirm('Are you sure?');">Delete</button>

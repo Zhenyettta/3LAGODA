@@ -49,6 +49,8 @@ urlpatterns = [
 
     # Product list implementation
     path('manager/products/', views.product_list, name='product_list'),
+    path('manager/products/addproduct', views.add_product, name='add_product'),
+    path('manager/products/edit/<int:id>/', views.edit_product_button, name='edit_product'),
     path('manager/products/<int:id>/delete/', views.delete_product, name='delete_product'),
 
     # InStoreProduct list implementation

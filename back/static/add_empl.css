@@ -41,3 +41,13 @@ input {
   font-weight: bold;
   margin-top: 5px;
 }
+
+/* Style the category dropdown menu */
+#category {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 10px;
+  width: 100%;
+}
+
