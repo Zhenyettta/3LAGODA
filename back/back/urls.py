@@ -58,6 +58,7 @@ urlpatterns = [
 
     # Check list implementation
     path('manager/checks/', views.check_list, name='check_list'),
+    path('manager/checks/<int:id>/delete/', views.delete_check, name='delete_check'),
 
     # Sales
     path('home/', views.home_page, name='home_page'),
