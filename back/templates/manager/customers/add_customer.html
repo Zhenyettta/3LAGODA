@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Create Customer
+    Create Customer
 {% endblock %}
 
-{% load static %}
+
 {% block head %}
+    {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/add_empl.css.css' %}">
 {% endblock %}
 
@@ -25,8 +26,8 @@ Create Customer
             <label for="patronymic">Patronymic:</label>
             <div><input type="text" id="patronymic" name="patronymic"></div>
         </div>
-            <label for="phone_number">Phone Number:</label>
-            <div><input type="tel" id="phone_number" name="phone_number" required></div>
+        <label for="phone_number">Phone Number:</label>
+        <div><input type="tel" id="phone_number" name="phone_number" required></div>
         </div>
         <div>
             <label for="city">City:</label>

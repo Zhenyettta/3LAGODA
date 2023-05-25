@@ -4,15 +4,15 @@
     AddEmployee
 {% endblock %}
 
-{% load static %}
 {% block head %}
+    {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/edit_empl.css' %}">
 {% endblock %}
 
 {% block content %}
     <h1>Edit Category Menu</h1>
     <a class="edit-employee-btn" onclick="location.href='/manager/categories'"
-    style="background-color: #4CAF50; color: white; padding: 10px 20px;
+       style="background-color: #4CAF50; color: white; padding: 10px 20px;
                      font-size: 16px; border: none; cursor: pointer; border-radius: 4px;"><</a>
     <form method="post">
         {% csrf_token %}
