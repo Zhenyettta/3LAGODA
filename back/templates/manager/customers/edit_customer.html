@@ -4,10 +4,10 @@
     Edit Customer
 {% endblock %}
 
+{% load static %}
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="/static/edit_employee.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/edit_empl.css' %}">
 {% endblock %}
-
 {% block content %}
     <h1>Edit Employee Menu</h1>
     <a class="edit-employee-btn" onclick="location.href='/manager/customers'"

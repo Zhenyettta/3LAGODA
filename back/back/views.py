@@ -306,8 +306,8 @@ def edit_employee_button(request, id):
         with connection.cursor() as cursor:
             cursor.execute(
                 "SELECT employee_id, surname, name, patronymic, role, salary, date_of_birth, date_of_start,"
-                " phone_number, city, street, zip_code, email FROM employee WHERE employee_id = %s",
-                [id])
+                " phone_number, city, street, zip_code, email FROM employee WHERE employee_id = %s", [id]
+            )
             employee = cursor.fetchone()
     return render(request, 'manager/employee/edit_employee.html', {'employee': employee})
 
@@ -391,7 +391,8 @@ def create_employee(surname, name, patronymic, role, salary, date_of_birth, date
             " VALUES (%s, %s, %s,%s, %s,%s, %s,%s, %s, %s,%s, %s, %s)",
             [surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
              zip_code, email,
-             password])
+             password]
+        )
 
 def create_customer(surname, name, patronymic, phone_number, city, street,
                     zip_code,percent):
@@ -432,7 +433,8 @@ def edit_employee(id, surname, name, patronymic, role, salary, date_of_birth, da
                 "date_of_birth = %s, date_of_start = %s, phone_number = %s, city = %s, street = %s, zip_code = %s, "
                 "email = %s WHERE employee_id = %s;",
                 [surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
-                 zip_code, email, id])
+                 zip_code, email, id]
+            )
 
 def edit_customer(id, surname, name, patronymic, phone_number, city, street,
                   zip_code, percent):

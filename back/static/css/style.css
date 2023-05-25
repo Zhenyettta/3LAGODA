@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Lato:400,700");
 
 #bg {
-    background-image: url('images/background.jpg');
+    background-image: url('../images/background.jpg');
     position: fixed;
     left: 0;
     top: 0;
@@ -41,14 +41,14 @@ form .form-field::before {
 }
 
 form .form-field:nth-child(2)::before {
-    background-image: url('images/user-icon.png');
+    background-image: url('../images/user-icon.png');
     width: 20px;
     height: 20px;
     top: 15px;
 }
 
 form .form-field:nth-child(3)::before {
-    background-image: url('images/lock-icon.png');
+    background-image: url('../images/lock-icon.png');
     width: 16px;
     height: 16px;
 }

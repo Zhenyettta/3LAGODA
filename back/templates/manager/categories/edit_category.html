@@ -4,8 +4,9 @@
     AddEmployee
 {% endblock %}
 
+{% load static %}
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="/static/edit_employee.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/edit_empl.css' %}">
 {% endblock %}
 
 {% block content %}
