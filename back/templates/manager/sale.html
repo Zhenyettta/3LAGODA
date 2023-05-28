@@ -13,8 +13,8 @@
 {% block content %}
     <a class="button" onclick="location.href='/manager/'"><</a>
 
-    <div class="table-container">
-        <table>
+    <div class="checkout-container">
+        <table class="product-table">
             <thead>
             <tr>
                 <th>UPC</th>
@@ -29,24 +29,22 @@
             <tbody>
             {% for product in products %}
                 <tr>
-                    <td>{{ product.0 }} </td>
-                    <td>{{ product.1 }} </td>
-                    <td>{{ product.2 }} </td>
-                    <td>{{ product.3 }} </td>
-                    <td>{{ product.4 }} </td>
-                    <td>{{ product.5 }} </td>
+                    <td>{{ product.0 }}</td>
+                    <td>{{ product.1 }}</td>
+                    <td>{{ product.2 }}</td>
+                    <td>{{ product.3 }}</td>
+                    <td>{{ product.4 }}</td>
+                    <td>{{ product.5 }}</td>
                     <td>
-                        <a class="button" href="{% url 'edit_in_store_product' product.1 %}">Edit</a>
-                        <form method="POST" action="{% url 'delete_in_store_product' product.1 %}">
-                            {% csrf_token %}
-                            <button class="button" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
-                        </form>
+                        <input type="number" name="quantity" min="1" value="1">
+                        <button class="add-to-cart-button" data-product-id="{{ product.1 }}">Додати</button>
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
-        <table>
+
+        <table class="cart-table">
             <thead>
             <tr>
                 <th>UPC</th>
@@ -58,26 +56,65 @@
                 <th>Actions</th>
             </tr>
             </thead>
-            <tbody>
-            {% for product in products %}
-                <tr>
-                    <td>{{ product.0 }} </td>
-                    <td>{{ product.1 }} </td>
-                    <td>{{ product.2 }} </td>
-                    <td>{{ product.3 }} </td>
-                    <td>{{ product.4 }} </td>
-                    <td>{{ product.5 }} </td>
-                    <td>
-                        <a class="button" href="{% url 'edit_in_store_product' product.1 %}">Edit</a>
-                        <form method="POST" action="{% url 'delete_in_store_product' product.1 %}">
-                            {% csrf_token %}
-                            <button class="button" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
+            <tbody class="cart-items"></tbody>
         </table>
     </div>
 
-{% endblock %}
+    <script>
+        const addToCartButtons = document.querySelectorAll('.add-to-cart-button');
+        const cartItemsContainer = document.querySelector('.cart-items');
+
+        addToCartButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const productRow = button.closest('tr');
+                const productData = [...productRow.children].map((td) => td.textContent);
+                const countInput = productRow.querySelector('input[name="quantity"]');
+                let price = productData[3];
+                const count = parseInt(countInput.value);
+                const productId = button.dataset.productId;
+                const promotionalCheckbox = productData[5] === 'True';
+                const existingCartItem = Array.from(cartItemsContainer.children).find((row) =>
+                    row.querySelector('td:nth-child(2)').textContent === productId
+                );
+
+                if (promotionalCheckbox) {
+                    price *= 0.8;
+                }
+
+                if (existingCartItem) {
+                    const existingCountCell = existingCartItem.querySelector('td:nth-child(5)');
+                    const existingCount = parseInt(existingCountCell.textContent);
+                    existingCountCell.textContent = existingCount + count;
+                } else {
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                <td>${productData[0]}</td>
+                <td>${productData[1]}</td>
+                <td>${productData[2]}</td>
+                <td>${price}</td>
+                <td>${count}</td>
+                <td>${productData[5]}</td>
+                <td><button class="delete-button">Delete</button></td>
+            `;
+                    cartItemsContainer.appendChild(newRow);
+                }
+            });
+        });
+
+        cartItemsContainer.addEventListener('click', (event) => {
+            if (event.target.classList.contains('delete-button')) {
+                const cartItemRow = event.target.closest('tr');
+                const countCell = cartItemRow.querySelector('td:nth-child(5)');
+                let count = parseInt(countCell.textContent);
+
+                if (count > 1) {
+                    count--;
+                    countCell.textContent = count;
+                } else {
+                    cartItemRow.remove();
+                }
+            }
+        });
+
+    </script>
+{% endblock %}K

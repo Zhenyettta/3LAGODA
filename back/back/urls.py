@@ -31,6 +31,7 @@ urlpatterns = [
 
     path('manager/sale/', views.sale, name='sale'),
 
+
     # Employee list manipulations
     path('manager/employees/', views.empl_list, name='empl_list'),
     path('manager/employees/addemployee/', views.add_employee, name='add_employee'),

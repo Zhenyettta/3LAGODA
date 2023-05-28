@@ -1,6 +1,8 @@
 .table-container {
     display: flex;
-    margin-right: 20px;
+}
+table{
+    margin: 200px;
 }
 
 th, td {
