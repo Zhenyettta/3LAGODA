@@ -34,6 +34,7 @@
                 <td>{{ check.5 }} </td>
 
                 <td>
+                    <a class="button" href="{% url 'watch_check' check.0 %}">Watch</a>
                     <form method="POST" action="{% url 'delete_check' check.0 %}">
                         {% csrf_token %}
                         <button class="button" type="submit" onclick="return confirm('Are you sure?');">Delete</button>

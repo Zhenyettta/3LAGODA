@@ -354,6 +354,14 @@ def delete_check(request, id):
     return redirect('/manager/checks')
 
 
+def watch_check(request, id):
+    with connection.cursor() as cursor:
+        query = 'SELECT * FROM sale WHERE check_number = %s'
+        cursor.execute(query, [id])
+        sales = cursor.fetchall()
+    return render(request, 'manager/checks/watch_check.html', {'sales': sales})
+
+
 def edit_employee_button(request, id):
     if request.method == 'POST':
         form = EditEmployeeForm(request.POST)
@@ -638,16 +646,21 @@ def create_check(request):
         data = request.POST.get('data')
         if data is not None:
             data = json.loads(data)
-            print(data)
-            price = 0
-            for item in data:
-                price += float(item[3])  # Convert item[3] to float before adding to price
+            price = sum(float(item[3]) * int(item[4]) for item in data)
+
             with connection.cursor() as cursor:
                 query = """
-                INSERT INTO "check" (employee_id, card_number, sum_total, vat)
-                VALUES (%s, %s, %s, %s)
-                """
+                        INSERT INTO "check" (employee_id, card_number, sum_total, vat)
+                        VALUES (%s, %s, %s, %s)
+                        RETURNING check_number;
+                        """
                 cursor.execute(query, [user.id, 2, price, 20])
+                check_number = cursor.fetchone()[0]
 
-    return redirect('/manager/checks')
+                query_sale = """
+                        INSERT INTO sale (upc, price, check_number, product_count)
+                        VALUES (%s, %s, %s, %s);
+                        """
+                cursor.executemany(query_sale, [(item[0], item[3], check_number, item[4]) for item in data])
 
+    return check_list(request)
