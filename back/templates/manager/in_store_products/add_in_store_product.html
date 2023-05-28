@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Create Product
+{% endblock %}
+
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/add_empl.css' %}">
+{% endblock %}
+
+{% block content %}
+    <a id="create-employee-btn" onclick="location.href='/manager/instoreproducts'"><</a>
+    <div>
+        <button id="create-employee-btn" onclick="generateUPC()">Generate UPC</button>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <label for="product">Select a product:</label>
+            <select id="product" name="product" onchange="updateFields(this)">
+                {% for product in products %}
+                    <option value="{{ product.0 }}">{{ product.2 }}</option>
+                {% endfor %}
+            </select>
+
+        </div>
+
+        <div>
+            <label for="upc">UPC:</label>
+            <div><input type="text" id="upc" name="upc" required></div>
+        </div>
+
+
+        <div>
+            <label for="id">ID:</label>
+            <div><input type="text" id="id" name="id" readonly></div>
+        </div>
+
+        <div>
+            <label for="name">Name:</label>
+            <div><input type="text" id="name" name="name" readonly></div>
+        </div>
+
+        <div>
+            <label for="price">Price:</label>
+            <div><input type="number" id="price" name="price" required></div>
+        </div>
+
+        <div>
+            <label for="count">Count:</label>
+            <div><input type="number" id="count" name="count" required></div>
+        </div>
+
+        <div>
+            <label for="prom">Prom:</label>
+            <div><input type="checkbox" id="prom" name="prom" ></div>
+        </div>
+
+
+        <div>
+            <button id="create-employee-btn">Create Product</button>
+        </div>
+    </form>
+
+    <script>
+        function updateFields(selectElement) {
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            const id = selectedOption.getAttribute("value");
+            const productName = selectedOption.text;
+
+            document.getElementById("id").value = id;
+            document.getElementById("name").value = productName;
+        }
+
+        function generateUPC() {
+            let randomNumber = "";
+            const digits = "0123456789";
+
+            for (let i = 0; i < 12; i++) {
+                const randomIndex = Math.floor(Math.random() * digits.length);
+                randomNumber += digits.charAt(randomIndex);
+            }
+            document.getElementById("upc").value = randomNumber;
+        }
+
+    </script>
+
+
+{% endblock %}

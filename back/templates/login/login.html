@@ -14,11 +14,13 @@
 
     <form action="{% url 'submit_form' %}" method="post">
         {% csrf_token %}
+
         {% for field in form %}
             <div class="form-field">
                 {{ field }}
             </div>
         {% endfor %}
+
 
         <div class="form-field">
             <button id="login-btn" class="btn" type="submit" onclick="animateButton('red')">Log in</button>

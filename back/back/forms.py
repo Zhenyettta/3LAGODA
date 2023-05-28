@@ -40,6 +40,7 @@ class EditEmployeeForm(forms.Form):
     email = forms.EmailField(required=False)
     password = forms.CharField(widget=forms.PasswordInput(), required=False)
 
+
 class CustomerForm(forms.Form):
     surname = forms.CharField(max_length=100)
     name = forms.CharField(max_length=100)
@@ -49,6 +50,7 @@ class CustomerForm(forms.Form):
     street = forms.CharField(max_length=100, required=False)
     zip_code = forms.CharField(max_length=10, required=False)
     percent = forms.CharField(max_length=5)
+
 
 class EditCustomerForm(forms.Form):
     surname = forms.CharField(max_length=100, required=False)
@@ -60,15 +62,28 @@ class EditCustomerForm(forms.Form):
     zip_code = forms.CharField(max_length=10, required=False)
     percent = forms.CharField(max_length=5, required=False)
 
+
 class CategoryForm(forms.Form):
     name = forms.CharField(max_length=100)
+
+
 class EditCategoryForm(forms.Form):
     name = forms.CharField(max_length=100, required=False)
+
 
 class ProductForm(forms.Form):
     category = forms.CharField(max_length=100)
     name = forms.CharField(max_length=100)
     characteristics = forms.CharField(max_length=100)
+
+
+class InStoreProductForm(forms.Form):
+    upc = forms.DecimalField()
+    id = forms.DecimalField()
+    price = forms.FloatField()
+    count = forms.DecimalField()
+    prom = forms.BooleanField(required=False)
+
 
 class EditProductForm(forms.Form):
     category = forms.CharField(max_length=100, required=False)

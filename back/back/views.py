@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from .forms import LoginForm, EmployeeForm, EditEmployeeForm, CustomerForm, EditCustomerForm, CategoryForm, \
-    EditCategoryForm, ProductForm, EditProductForm
+    EditCategoryForm, ProductForm, EditProductForm, InStoreProductForm
 from .user_data import User
 
 user = User()
@@ -39,7 +39,8 @@ def extract_form_data(form):
 def authenticate_user(email, password):
     password = password.encode('utf-8')
     with connection.cursor() as cursor:
-        cursor.execute("SELECT email, password, role FROM employee")
+        query = "SELECT email, password, role FROM employee"
+        cursor.execute(query)
         logins = cursor.fetchall()
         for elem in logins:
             if elem[0] == email and bcrypt.checkpw(password, elem[1].tobytes()):
@@ -85,12 +86,14 @@ def encryption():
     print(bcrypt.checkpw(password, hashedPassword))
     print(hashedPassword)
     with connection.cursor() as cursor:
-        cursor.execute("UPDATE employee SET password = %s WHERE employee_id = %s", (hashedPassword, 2))
+        query = "UPDATE employee SET password = %s WHERE employee_id = %s", (hashedPassword, 2)
+        cursor.execute(query)
 
 
 def empl_list(request):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM employee WHERE email != %s ORDER BY surname, name, patronymic", [user.email])
+        query = "SELECT * FROM employee WHERE email != %s ORDER BY surname, name, patronymic"
+        cursor.execute(query, [user.email])
         employees = cursor.fetchall()
 
     return render(request, 'manager/employee/empl_list.html', {'employees': employees})
@@ -98,7 +101,8 @@ def empl_list(request):
 
 def cust_list(request):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM customer_card ORDER BY surname, name, patronymic")
+        query = "SELECT * FROM customer_card ORDER BY surname, name, patronymic"
+        cursor.execute(query)
         customers = cursor.fetchall()
         updated_list = []
         for tpl in customers:
@@ -111,7 +115,8 @@ def cust_list(request):
 
 def category_list(request):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM category ORDER BY name")
+        query = "SELECT * FROM category ORDER BY name"
+        cursor.execute(query)
         categories = cursor.fetchall()
 
     return render(request, 'manager/categories/category_list.html', {'categories': categories})
@@ -119,43 +124,50 @@ def category_list(request):
 
 def product_list(request):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM product ORDER BY name")
-        products = list(cursor.fetchall())
+        query = """
+            SELECT p.product_id, c.name, p.name, p.characteristics
+            FROM product p
+            JOIN category c ON p.category_number = c.category_number
+            ORDER BY p.name
+        """
+        cursor.execute(query)
+        products = cursor.fetchall()
 
-        cursor.execute("SELECT * FROM category")
-        category_mapping = dict(cursor.fetchall())
-
-    for i, product in enumerate(products):
-        category_id = product[1]
-        category_name = category_mapping.get(category_id)
-        if category_name is not None:
-            products[i] = (product[0], category_name) + product[2:]
-
-    return render(request, 'manager/products/product_list.html', {'products': products})
+    products = {'products': products}
+    return render(request, 'manager/products/product_list.html', products)
 
 
 def check_list(request):
     with connection.cursor() as cursor:
-        cursor.execute('SELECT * FROM "check"')
-        checks = list(cursor.fetchall())
+        query = """
+            SELECT c.check_number, e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')'
+            , c.print_date, c.sum_total, c.vat
+            FROM "check" c
+            JOIN employee e ON c.employee_id = e.employee_id
+        """
+        cursor.execute(query)
+        modified_checks = cursor.fetchall()
 
-        cursor.execute("SELECT * FROM employee")
-        employees = cursor.fetchall()
-        modified_checks = [
-            (check[0], employee[1] + " " + employee[2] + " " + employee[3] + f"(id:{employee[0]})", *check[2:]) for
-            check in checks for
-            employee in employees if check[1] == employee[0]]
-
-    return render(request, 'manager/checks/check_list.html', {'checks': modified_checks})
+    context = {'checks': modified_checks}
+    return render(request, 'manager/checks/check_list.html', context)
 
 
 def in_store_product_list(request):
-    return render(request, 'manager/in_store_products/in_store_product_list.html')
+    with connection.cursor() as cursor:
+        query = """
+        SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional 
+        FROM store_product s 
+        JOIN product p on s.product_id = p.product_id
+        """
+        cursor.execute(query)
+        in_store_products = cursor.fetchall()
+    return render(request, 'manager/in_store_products/in_store_product_list.html', {'products': in_store_products})
 
 
 def empl_only_sales_list(request):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM employee WHERE role='Sales' ORDER BY surname, name, patronymic")
+        query = "SELECT * FROM employee WHERE role='Sales' ORDER BY surname, name, patronymic"
+        cursor.execute(query)
         employees = cursor.fetchall()
 
     return render(request, 'manager/employee/empl_list.html', {'employees': employees})
@@ -233,7 +245,8 @@ def add_category(request):
 
 def add_product(request):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM category")
+        query = "SELECT * FROM category"
+        cursor.execute(query)
         categories = cursor.fetchall()
 
     if request.method == 'POST':
@@ -256,9 +269,40 @@ def add_product(request):
     return render(request, 'manager/products/add_product.html', context)
 
 
+def add_in_store_product(request):
+    with connection.cursor() as cursor:
+        query = "SELECT * FROM product"
+        cursor.execute(query)
+        products = cursor.fetchall()
+
+    if request.method == 'POST':
+        form = InStoreProductForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            create_in_store_product(
+                data['id'],
+                data['price'],
+                data['count'],
+                data['prom'],
+                data['upc'],
+            )
+            return in_store_product_list(request)
+        else:
+            print(form.errors)
+    else:
+        form = ProductForm()
+
+    context = {
+        'form': form,
+        'products': products,
+    }
+    return render(request, 'manager/in_store_products/add_in_store_product.html', context)
+
+
 def is_email_used(email):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT COUNT(*) FROM employee WHERE email = %s", [email])
+        query = "SELECT COUNT(*) FROM employee WHERE email = %s"
+        cursor.execute(query, [email])
         result = cursor.fetchone()
         count = result[0]
         return count > 0
@@ -266,31 +310,44 @@ def is_email_used(email):
 
 def delete_employee(request, id):
     with connection.cursor() as cursor:
-        cursor.execute("DELETE FROM employee WHERE employee_id = %s", [id])
+        query = "DELETE FROM employee WHERE employee_id = %s"
+        cursor.execute(query, [id])
     return redirect('/manager/employees')
 
 
 def delete_customer(request, id):
     with connection.cursor() as cursor:
-        cursor.execute("DELETE FROM customer_card WHERE card_number = %s", [id])
+        query = "DELETE FROM customer_card WHERE card_number = %s"
+        cursor.execute(query, [id])
     return redirect('/manager/customers')
 
 
 def delete_category(request, id):
     with connection.cursor() as cursor:
-        cursor.execute("DELETE FROM category WHERE category_number = %s", [id])
+        query = "DELETE FROM category WHERE category_number = %s"
+        cursor.execute(query, [id])
     return redirect('/manager/categories')
 
 
 def delete_product(request, id):
     with connection.cursor() as cursor:
-        cursor.execute("DELETE FROM product WHERE product_id = %s", [id])
+        query = "DELETE FROM product WHERE product_id = %s"
+        cursor.execute(query, [id])
     return redirect('/manager/products')
+
+
+def delete_in_store_product(request, id):
+    with connection.cursor() as cursor:
+        query = "DELETE FROM store_product WHERE product_id = %s"
+        cursor.execute(query, [id])
+    return redirect('/manager/instoreproducts')
 
 
 def delete_check(request, id):
     with connection.cursor() as cursor:
-        cursor.execute('DELETE FROM "check" WHERE check_number = %s', [id])
+        query = 'DELETE FROM "check" WHERE check_number = %s'
+        cursor.execute(query, [id])
+
     return redirect('/manager/checks')
 
 
@@ -318,10 +375,10 @@ def edit_employee_button(request, id):
 
     else:
         with connection.cursor() as cursor:
-            cursor.execute(
-                "SELECT employee_id, surname, name, patronymic, role, salary, date_of_birth, date_of_start,"
-                " phone_number, city, street, zip_code, email FROM employee WHERE employee_id = %s", [id]
-            )
+            query = """
+                SELECT employee_id, surname, name, patronymic, role, salary, date_of_birth, date_of_start,
+                phone_number, city, street, zip_code, email FROM employee WHERE employee_id = %s"""
+            cursor.execute(query, [id])
             employee = cursor.fetchone()
     return render(request, 'manager/employee/edit_employee.html', {'employee': employee})
 
@@ -344,11 +401,13 @@ def edit_customer_button(request, id):
             return cust_list(request)
 
     else:
+        customer_query = """
+            SELECT card_number, surname, name, patronymic, phone_number, city, street, zip_code, percent
+            FROM customer_card
+            WHERE card_number = %s
+        """
         with connection.cursor() as cursor:
-            cursor.execute(
-                "SELECT card_number, surname, name, patronymic,"
-                " phone_number, city, street, zip_code, percent FROM customer_card WHERE card_number = %s",
-                [id])
+            cursor.execute(customer_query, [id])
             customer = cursor.fetchone()
     return render(request, 'manager/customers/edit_customer.html', {'customer': customer})
 
@@ -363,9 +422,13 @@ def edit_category_button(request, id):
                 data['name'])
             return category_list(request)
     else:
+        category_query = """
+            SELECT name
+            FROM category
+            WHERE category_number = %s
+        """
         with connection.cursor() as cursor:
-            cursor.execute(
-                "SELECT name FROM category WHERE category_number = %s", [id])
+            cursor.execute(category_query, [id])
             category = cursor.fetchone()
     return render(request, 'manager/categories/edit_category.html', {'category': category})
 
@@ -382,11 +445,16 @@ def edit_product_button(request, id):
                 data['characteristics'])
             return product_list(request)
     else:
+        product_query = """
+            SELECT category_number, name, characteristics
+            FROM product
+            WHERE product_id = %s
+        """
+        category_query = "SELECT * FROM category"
         with connection.cursor() as cursor:
-            cursor.execute(
-                "SELECT category_number,name,characteristics FROM product WHERE product_id = %s", [id])
+            cursor.execute(product_query, [id])
             product = cursor.fetchone()
-            cursor.execute("SELECT * FROM category")
+            cursor.execute(category_query)
             categories = cursor.fetchall()
             context = {
                 'product': product,
@@ -399,40 +467,53 @@ def edit_product_button(request, id):
 def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
                     zip_code,
                     email, password):
+    employee_query = """
+        INSERT INTO employee (surname, name, patronymic, role, salary, date_of_birth,
+        date_of_start, phone_number, city, street, zip_code, email, password)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
     with connection.cursor() as cursor:
         cursor.execute(
-            "INSERT INTO employee (surname, name, patronymic, role, salary, date_of_birth,"
-            " date_of_start, phone_number, city,street,zip_code, email, password)"
-            " VALUES (%s, %s, %s,%s, %s,%s, %s,%s, %s, %s,%s, %s, %s)",
+            employee_query,
             [surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
-             zip_code, email,
-             password]
+             zip_code, email, password]
         )
 
 
-def create_customer(surname, name, patronymic, phone_number, city, street,
-                    zip_code, percent):
+def create_customer(surname, name, patronymic, phone_number, city, street, zip_code, percent):
+    customer_query = """
+        INSERT INTO customer_card (surname, name, patronymic, phone_number, city, street, zip_code, percent)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+    """
     with connection.cursor() as cursor:
         cursor.execute(
-            "INSERT INTO customer_card (surname, name, patronymic,"
-            "phone_number, city,street,zip_code, percent)"
-            " VALUES (%s, %s, %s, %s, %s, %s, %s,%s)",
-            [surname, name, patronymic, phone_number, city, street,
-             zip_code, percent])
+            customer_query,
+            [surname, name, patronymic, phone_number, city, street, zip_code, percent]
+        )
 
 
 def create_category(name):
+    category_query = "INSERT INTO category (name) VALUES (%s)"
     with connection.cursor() as cursor:
-        cursor.execute(
-            "INSERT INTO category (name) VALUES (%s)", [name])
+        cursor.execute(category_query, [name])
 
 
 def create_product(category, name, characteristics):
     with connection.cursor() as cursor:
-        cursor.execute(
-            "INSERT INTO product (category_number, name, characteristics)"
-            " VALUES (%s, %s, %s)",
-            [category, name, characteristics])
+        query = """
+        INSERT INTO product (category_number, name, characteristics)
+        VALUES (%s, %s, %s)
+        """
+        cursor.execute(query, [category, name, characteristics])
+
+
+def create_in_store_product(id, price, count, is_promotional, upc):
+    with connection.cursor() as cursor:
+        query = """
+        INSERT INTO store_product (product_id, price, count, is_promotional, upc)
+        VALUES (%s, %s, %s, %s, %s)
+        """
+        cursor.execute(query, [id, price, count, is_promotional, upc])
 
 
 def edit_employee(id, surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
@@ -440,24 +521,28 @@ def edit_employee(id, surname, name, patronymic, role, salary, date_of_birth, da
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()) if password else None
     with connection.cursor() as cursor:
         if password:
-            cursor.execute(
-                "UPDATE employee SET surname = %s, name = %s, patronymic = %s, role = %s, salary = %s, "
-                "date_of_birth = %s, date_of_start = %s, phone_number = %s, city = %s, street = %s, zip_code = %s, "
-                "email = %s, password = %s WHERE employee_id = %s;",
-                [surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
-                 zip_code, email, hashed_password, id])
+            query = """
+            UPDATE employee
+            SET surname = %s, name = %s, patronymic = %s, role = %s, salary = %s,
+            date_of_birth = %s, date_of_start = %s, phone_number = %s, city = %s, street = %s, zip_code = %s,
+            email = %s, password = %s
+            WHERE employee_id = %s
+            """
+            cursor.execute(query, [surname, name, patronymic, role, salary, date_of_birth, date_of_start,
+                                   phone_number, city, street, zip_code, email, hashed_password, id])
         else:
-            cursor.execute(
-                "UPDATE employee SET surname = %s, name = %s, patronymic = %s, role = %s, salary = %s, "
-                "date_of_birth = %s, date_of_start = %s, phone_number = %s, city = %s, street = %s, zip_code = %s, "
-                "email = %s WHERE employee_id = %s;",
-                [surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
-                 zip_code, email, id]
-            )
+            query = """
+            UPDATE employee
+            SET surname = %s, name = %s, patronymic = %s, role = %s, salary = %s,
+            date_of_birth = %s, date_of_start = %s, phone_number = %s, city = %s, street = %s, zip_code = %s,
+            email = %s
+            WHERE employee_id = %s
+            """
+            cursor.execute(query, [surname, name, patronymic, role, salary, date_of_birth, date_of_start,
+                                   phone_number, city, street, zip_code, email, id])
 
 
-def edit_customer(id, surname, name, patronymic, phone_number, city, street,
-                  zip_code, percent):
+def edit_customer(id, surname, name, patronymic, phone_number, city, street, zip_code, percent):
     if city.strip() == "":
         city = None
     if street.strip() == "":
@@ -466,25 +551,29 @@ def edit_customer(id, surname, name, patronymic, phone_number, city, street,
         zip_code = None
 
     with connection.cursor() as cursor:
-        cursor.execute(
-            "UPDATE customer_card SET surname = %s, name = %s, patronymic = %s, "
-            "phone_number = %s, city = %s, street = %s, zip_code = %s "
-            ",percent =%s WHERE card_number = %s;",
-            [surname, name, patronymic, phone_number, city, street, zip_code, percent, id]
-        )
+        query = """
+        UPDATE customer_card
+        SET surname = %s, name = %s, patronymic = %s,
+        phone_number = %s, city = %s, street = %s, zip_code = %s,
+        percent = %s
+        WHERE card_number = %s
+        """
+        cursor.execute(query, [surname, name, patronymic, phone_number, city, street, zip_code, percent, id])
 
 
 def edit_category(id, name):
     with connection.cursor() as cursor:
-        cursor.execute(
-            "UPDATE category SET name = %s WHERE category_number = %s;",
-            [name, id]
-        )
+        query = """
+        UPDATE category
+        SET name = %s
+        WHERE category_number = %s
+        """
+        cursor.execute(query, [name, id])
 
 
 def edit_product(id, category, name, characteristics):
     with connection.cursor() as cursor:
-        cursor.execute(
-            "UPDATE product SET category_number = %s, name = %s, characteristics = %s  WHERE product_id = %s;",
-            [category, name, characteristics, id]
-        )
+        query = """
+        UPDATE product SET category_number = %s, name = %s, characteristics = %s WHERE product_id = %s
+        """
+        cursor.execute(query, [category, name, characteristics, id])
