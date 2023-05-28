@@ -1,3 +1,5 @@
+import json
+
 import bcrypt
 from django.db import connection
 from django.http import HttpResponse, HttpResponseRedirect
@@ -39,7 +41,7 @@ def extract_form_data(form):
 def authenticate_user(email, password):
     password = password.encode('utf-8')
     with connection.cursor() as cursor:
-        query = "SELECT email, password, role FROM employee"
+        query = "SELECT email, password, role, employee_id FROM employee"
         cursor.execute(query)
         logins = cursor.fetchall()
         for elem in logins:
@@ -47,6 +49,7 @@ def authenticate_user(email, password):
                 user.email = email
                 user.password = password
                 user.role = elem[2]
+                user.id = elem[3]
                 return True
         return False
 
@@ -141,7 +144,7 @@ def check_list(request):
     with connection.cursor() as cursor:
         query = """
             SELECT c.check_number, e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')'
-            , c.print_date, c.sum_total, c.vat
+            , c.card_number, c.print_date, c.sum_total, c.vat
             FROM "check" c
             JOIN employee e ON c.employee_id = e.employee_id
         """
@@ -628,3 +631,23 @@ def sale(request):
         cursor.execute(query)
         in_store_products = cursor.fetchall()
     return render(request, 'manager/sale.html', {'products': in_store_products})
+
+
+def create_check(request):
+    if request.method == 'POST':
+        data = request.POST.get('data')
+        if data is not None:
+            data = json.loads(data)
+            print(data)
+            price = 0
+            for item in data:
+                price += float(item[3])  # Convert item[3] to float before adding to price
+            with connection.cursor() as cursor:
+                query = """
+                INSERT INTO "check" (employee_id, card_number, sum_total, vat)
+                VALUES (%s, %s, %s, %s)
+                """
+                cursor.execute(query, [user.id, 2, price, 20])
+
+    return redirect('/manager/checks')
+

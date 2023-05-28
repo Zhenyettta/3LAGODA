@@ -11,6 +11,7 @@
 {% endblock %}
 
 {% block content %}
+
     <a class="button" onclick="location.href='/manager/'"><</a>
 
     <div class="checkout-container">
@@ -20,7 +21,7 @@
                 <th>UPC</th>
                 <th>Product ID</th>
                 <th>Name</th>
-                <th>Selling price</th>
+                <th>Price</th>
                 <th>Count</th>
                 <th>Prom</th>
                 <th>Actions</th>
@@ -43,21 +44,24 @@
             {% endfor %}
             </tbody>
         </table>
-
-        <table class="cart-table">
-            <thead>
-            <tr>
-                <th>UPC</th>
-                <th>Product ID</th>
-                <th>Name</th>
-                <th>Selling price</th>
-                <th>Count</th>
-                <th>Prom</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody class="cart-items"></tbody>
-        </table>
+        <form method="post" action="{% url 'create_check' %}">
+            {% csrf_token %}
+            <table class="cart-table">
+                <thead>
+                <tr>
+                    <th>UPC</th>
+                    <th>Product ID</th>
+                    <th>Name</th>
+                    <th>Selling price</th>
+                    <th>Count</th>
+                    <th>Prom</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody class="cart-items"></tbody>
+            </table>
+            <button id="send-data" class="sale-button" type="submit">Відправити дані</button>
+        </form>
     </div>
 
     <script>
@@ -115,6 +119,38 @@
                 }
             }
         });
-
     </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#send-data').click(function() {
+            var data = [];
+
+            $('.cart-items tr').each(function() {
+                var row = [];
+                $(this).find('td').each(function() {
+                    row.push($(this).text());
+                });
+                data.push(row);
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url "create_check" %}',
+                data: {
+                    'data': JSON.stringify(data),
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                },
+                success: function(response) {
+
+                    console.log(response);
+                },
+                error: function(xhr, errmsg, err) {
+
+                    console.log(xhr.status + ': ' + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}K
