@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Edit Product
+{% endblock %}
+
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/edit_empl.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1>Edit Employee Menu</h1>
+    <a class="edit-employee-btn" onclick="location.href='/manager/instoreproducts'"
+       style="background-color: #4CAF50; color: white; padding: 10px 20px;
+                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;"><</a>
+    <div>
+        <button id="create-employee-btn" onclick="generateUPC()">Generate UPC</button>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="upc">UPC:
+            <input type="text" id="upc" name="upc" value="{{ product.0 }}">
+        </label>
+        <label for="id">ID:
+            <input type="number" id="id" name="id" value="{{ product.1 }}" readonly>
+        </label>
+
+        <label for=name>Name:
+            <input type="text" id="name" name="name" value="{{ product.2 }}" readonly>
+        </label>
+        <label for="price">Price:
+            <input type="number" id="price" name="price" value="{{ product.3 }}">
+        </label>
+
+        <label for="count">Count:
+            <input type="number" id="count" name="count" value="{{ product.4 }}">
+        </label>
+
+        <label for="prom">Prom:
+            <input type="checkbox" id="prom" name="prom"
+                    {% if product.5 %}
+                   checked
+                    {% endif %}>
+        </label>
+
+        <div style="text-align: center;
+                    margin-top: 3vh">
+            <button
+                    style="background-color: #4CAF50; color: white; padding: 10px 20px;
+                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;">
+                Update
+            </button>
+        </div>
+    </form>
+
+    <script>
+        function generateUPC() {
+            let randomNumber = "";
+            const digits = "0123456789";
+
+            for (let i = 0; i < 12; i++) {
+                const randomIndex = Math.floor(Math.random() * digits.length);
+                randomNumber += digits.charAt(randomIndex);
+            }
+            document.getElementById("upc").value = randomNumber;
+        }
+
+    </script>
+{% endblock %}

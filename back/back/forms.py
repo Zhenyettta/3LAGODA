@@ -89,3 +89,11 @@ class EditProductForm(forms.Form):
     category = forms.CharField(max_length=100, required=False)
     name = forms.CharField(max_length=100, required=False)
     characteristics = forms.CharField(max_length=100, required=False)
+
+
+class EditInStoreProductForm(forms.Form):
+    upc = forms.DecimalField(required=False)
+    id = forms.DecimalField(required=False)
+    price = forms.FloatField(required=False)
+    count = forms.DecimalField(required=False)
+    prom = forms.BooleanField(required=False)

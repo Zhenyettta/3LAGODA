@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+
 from back import views
 
 urlpatterns = [
@@ -27,6 +28,8 @@ urlpatterns = [
 
     # Manager
     path('manager/', views.manager_page, name='manager_page'),
+
+    path('manager/sale/', views.sale, name='sale'),
 
     # Employee list manipulations
     path('manager/employees/', views.empl_list, name='empl_list'),
@@ -56,6 +59,7 @@ urlpatterns = [
     # InStoreProduct list implementation
     path('manager/instoreproducts/', views.in_store_product_list, name='in_store_product_list'),
     path('manager/instoreproducts/addproduct', views.add_in_store_product, name='add_in_store_product'),
+    path('manager/instoreproducts/edit/<int:id>/', views.edit_in_store_product_button, name='edit_in_store_product'),
     path('manager/instoreproducts/<int:id>/delete', views.delete_in_store_product, name='delete_in_store_product'),
 
     # Check list implementation

@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from .forms import LoginForm, EmployeeForm, EditEmployeeForm, CustomerForm, EditCustomerForm, CategoryForm, \
-    EditCategoryForm, ProductForm, EditProductForm, InStoreProductForm
+    EditCategoryForm, ProductForm, EditProductForm, InStoreProductForm, EditInStoreProductForm
 from .user_data import User
 
 user = User()
@@ -464,6 +464,37 @@ def edit_product_button(request, id):
     return render(request, 'manager/products/edit_product.html', context)
 
 
+def edit_in_store_product_button(request, id):
+    if request.method == 'POST':
+        form = EditInStoreProductForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            edit_in_store_product(
+                id,
+                data['price'],
+                data['count'],
+                data['upc'],
+                data['prom'],
+            )
+            return in_store_product_list(request)
+    else:
+        product_query = """
+            SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional
+            FROM store_product s 
+            JOIN product p on s.product_id = p.product_id
+            WHERE s.product_id = %s
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(product_query, [id])
+            product = cursor.fetchone()
+
+            context = {
+                'product': product
+            }
+
+    return render(request, 'manager/in_store_products/edit_in_store_product.html', context)
+
+
 def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
                     zip_code,
                     email, password):
@@ -577,3 +608,23 @@ def edit_product(id, category, name, characteristics):
         UPDATE product SET category_number = %s, name = %s, characteristics = %s WHERE product_id = %s
         """
         cursor.execute(query, [category, name, characteristics, id])
+
+
+def edit_in_store_product(id, price, count, upc, prom):
+    with connection.cursor() as cursor:
+        query = """
+        UPDATE store_product SET price = %s, count = %s, upc = %s, is_promotional = %s WHERE product_id = %s
+        """
+        cursor.execute(query, [price, count, upc, prom, id])
+
+
+def sale(request):
+    with connection.cursor() as cursor:
+        query = """
+        SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional 
+        FROM store_product s 
+        JOIN product p on s.product_id = p.product_id
+        """
+        cursor.execute(query)
+        in_store_products = cursor.fetchall()
+    return render(request, 'manager/sale.html', {'products': in_store_products})
