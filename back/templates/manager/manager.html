@@ -3,22 +3,28 @@
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/manager.css' %}">
 {% endblock %}
 
 {% block content %}
-    <a class="edit-employee-btn" onclick="confirmLogout()"
+    <div class="header">
+        <h2 class="header-title">ZLAGODA</h2>
+
+
+        <a class="edit-employee-btn" onclick="confirmLogout()"
        style="background-color: #4CAF50; color: white; padding: 10px 20px; margin-right: 50px;
           font-size: 16px; border: none; cursor: pointer; border-radius: 4px;">Log out</a>
 
-    <script>
-        function confirmLogout() {
-            var confirmation = confirm("Are you sure you want to log out?");
-            if (confirmation) {
-                location.href = '/';
+        <script>
+            function confirmLogout() {
+                var confirmation = confirm("Are you sure you want to log out?");
+                if (confirmation) {
+                    location.href = '/';
+                }
             }
-        }
-    </script>
+        </script>
 
+    </div>
 
     <h2>Manager home page</h2>
     <div id="sell">
@@ -28,10 +34,12 @@
         </form>
     </div>
     <div>
+        <h1 class="title">Manager home page</h1>
         <form action="{% url 'empl_list' %}" method="post">
             {% csrf_token %}
             <div class="form-field">
-                <button id="login-btn" class="btn" type="submit">Employees</button>
+                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">Employees</button>
+                <button id="login-btn" class="btn btn-manager" type="submit">Employees</button>
             </div>
         </form>
 
@@ -39,6 +47,7 @@
             {% csrf_token %}
             <div class="form-field">
                 <button id="login-btn" class="btn" type="submit">Customers</button>
+                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">Customers</button>
             </div>
         </form>
 
@@ -46,6 +55,7 @@
             {% csrf_token %}
             <div class="form-field">
                 <button id="login-btn" class="btn" type="submit">Category</button>
+                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">Category</button>
             </div>
         </form>
 
@@ -53,12 +63,14 @@
             {% csrf_token %}
             <div class="form-field">
                 <button id="login-btn" class="btn" type="submit">Product</button>
+                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">Product</button>
             </div>
         </form>
 
         <form action="{% url 'in_store_product_list' %}" method="post">
             {% csrf_token %}
             <div class="form-field">
+                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">InStoreProduct</button>
                 <button id="login-btn" class="btn" type="submit">InStoreProduct</button>
             </div>
         </form>
@@ -66,7 +78,7 @@
         <form action="{% url 'check_list' %}" method="post">
             {% csrf_token %}
             <div class="form-field">
-                <button id="login-btn" class="btn" type="submit">Checks</button>
+                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">Checks</button>
             </div>
         </form>
     </div>

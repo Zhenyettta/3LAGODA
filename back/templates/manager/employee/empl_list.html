@@ -8,20 +8,22 @@
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
 {% endblock %}
 
 {% block content %}
-    <a class="button" onclick="location.href='/manager/'"><</a>
-    <div>
-    <a class="button" onclick="location.href='/manager/employees/addemployee'">Add Employee</a>
-    <a class="button" href="{% url 'empl_list' %}">All</a>
-    <a class="button" href="{% url 'empl_only_sales_list' %}">Only Sales</a>
+    <div class="header">
+        <a class="button button-back" onclick="location.href='/manager/'"> <span class="arrow">➜</span> Back </a>
+
+        <a class="button button-header btn-addempl" onclick="location.href='/manager/employees/addemployee'">Add Employee</a>
+        <a class="button button-header btn-all-only" href="{% url 'empl_list' %}">All</a>
+        <a class="button button-header btn-all-only" href="{% url 'empl_only_sales_list' %}">Only Sales</a>
     </div>
 
-    <table>
+    <table class="table">
         <thead>
         <tr>
-            <th>Full Name</th>
+            <th class="no-border">Full Name</th>
             <th>Role</th>
             <th>Salary</th>
             <th>Date of Birth</th>

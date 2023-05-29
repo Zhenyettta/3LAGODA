@@ -1,0 +1,48 @@
+.table {
+    padding: 30px;
+    width: 100%;
+    margin-top: 70px;
+}
+
+.header {
+    position: absolute;
+    padding: 0 20px;
+    top: 0;
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    background-color: #d5ebc8;
+    align-items: center;
+    gap: 5px;
+    margin-left: 0;
+    height: 70px;
+}
+
+.button-back {
+    background-color: #d5ebc8;
+    color: #4A4A4A;
+    font-weight: bolder;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+}
+
+.arrow {
+    transform: rotate(180deg);
+    display: block;
+    margin-right: 4px;
+    font-size: 16px;
+}
+
+.button-header {
+    border-radius: 7px;
+}
+
+.btn-addempl {
+    margin-left:35px;
+    margin-right: 25px;
+}
+
+.btn-all-only {
+    width: 70px;
+}

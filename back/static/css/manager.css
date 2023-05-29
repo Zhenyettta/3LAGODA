@@ -1,0 +1,28 @@
+body {
+    display: flex;
+    flex-direction: column;
+
+}
+.header {
+    height: 70px;
+    position: absolute;
+    top: 0;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    background-color: #d5ebc8;
+    align-items: center;
+}
+.header-title {
+    margin-left: 30px;
+}
+
+.title {
+
+    text-align: center;
+    margin-bottom: 70px;
+}
+
+.btn-manager {
+    width: 195px;
+}
