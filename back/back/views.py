@@ -142,6 +142,7 @@ def product_list(request):
 
 from django.core.paginator import Paginator
 
+
 def check_list(request):
     with connection.cursor() as cursor:
         query = """
@@ -159,7 +160,6 @@ def check_list(request):
     paginated_checks = paginator.get_page(page_number)
     context = {'checks': paginated_checks}
     return render(request, 'manager/checks/check_list.html', context)
-
 
 
 def in_store_product_list(request):
@@ -364,7 +364,12 @@ def delete_check(request, id):
 
 def watch_check(request, id):
     with connection.cursor() as cursor:
-        query = 'SELECT * FROM sale WHERE check_number = %s'
+        query = """
+        SELECT s.upc, p.name, s.price, s.product_count FROM sale s
+        JOIN store_product on s.upc = store_product.upc
+        JOIN product p on p.product_id = store_product.product_id
+        WHERE check_number = %s
+        """
         cursor.execute(query, [id])
         sales = cursor.fetchall()
     return render(request, 'manager/checks/watch_check.html', {'sales': sales})
