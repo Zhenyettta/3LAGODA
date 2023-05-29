@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Create Product
+    Create Product
 {% endblock %}
 
 {% load static %}
@@ -15,12 +15,12 @@ Create Product
     <form method="post">
         {% csrf_token %}
         <div>
-        <label for="category">Select a category:</label>
-        <select id="category" name="category">
-        {% for category in categories %}
-            <option value="{{ category.0 }}">{{ category.1 }}</option>
-        {% endfor %}
-        </select>
+            <label for="category">Select a category:</label>
+            <select id="category" name="category">
+                {% for category in categories %}
+                    <option value="{{ category.0 }}">{{ category.1 }}</option>
+                {% endfor %}
+            </select>
 
         </div>
 

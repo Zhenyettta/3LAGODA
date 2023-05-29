@@ -32,8 +32,6 @@ urlpatterns = [
     path('manager/sale/', views.sale, name='sale'),
     path('manager/sale/createcheck/', views.create_check, name='create_check'),
 
-
-
     # Employee list manipulations
     path('manager/employees/', views.empl_list, name='empl_list'),
     path('manager/employees/addemployee/', views.add_employee, name='add_employee'),
@@ -69,7 +67,6 @@ urlpatterns = [
     path('manager/checks/', views.check_list, name='check_list'),
     path('manager/checks/<int:id>/delete/', views.delete_check, name='delete_check'),
     path('manager/checks/watch/<int:id>/', views.watch_check, name='watch_check'),
-
 
     # Sales
     path('home/', views.home_page, name='home_page'),
