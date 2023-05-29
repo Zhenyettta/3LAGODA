@@ -1,6 +1,7 @@
 import json
 
 import bcrypt
+from django.core.paginator import Paginator
 from django.db import connection
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -138,9 +139,6 @@ def product_list(request):
 
     products = {'products': products}
     return render(request, 'manager/products/product_list.html', products)
-
-
-from django.core.paginator import Paginator
 
 
 def check_list(request):
@@ -651,7 +649,7 @@ def sale(request):
         """
         cursor.execute(query)
         in_store_products = cursor.fetchall()
-    return render(request, 'manager/sale.html', {'products': in_store_products})
+    return render(request, 'manager/checks/sale.html', {'products': in_store_products})
 
 
 def create_check(request):

@@ -71,6 +71,7 @@
 
         addToCartButtons.forEach((button) => {
             button.addEventListener('click', () => {
+
                 const productRow = button.closest('tr');
                 const productData = [...productRow.children].map((td) => td.textContent);
                 const countInput = productRow.querySelector('input[name="quantity"]');
@@ -126,6 +127,7 @@
         const csrfToken = '{{ csrf_token }}';
         $(document).ready(function () {
             $('#send-data').click(function () {
+
                 var data = [];
 
                 $('.cart-items tr').each(function () {
@@ -149,7 +151,7 @@
                         success: function (response) {
                             console.log(response);
                         },
-                        error: function (xhr, errmsg, err) {
+                        error: function (xhr) {
                             console.log(xhr.status + ': ' + xhr.responseText);
                         }
                     });
