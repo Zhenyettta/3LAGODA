@@ -4,15 +4,14 @@
     Product List
 {% endblock %}
 
-
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <meta http-equiv="refresh" content="no-cache, no-store, must-revalidate">
 {% endblock %}
 
 {% block content %}
     <a class="button" onclick="location.href='/manager/'"><</a>
-    </div>
     <table>
         <thead>
         <tr>
@@ -32,7 +31,6 @@
                 <td>{{ check.3 }} </td>
                 <td>{{ check.4 }} </td>
                 <td>{{ check.5 }} </td>
-
                 <td>
                     <a class="button" href="{% url 'watch_check' check.0 %}">Watch</a>
                     <form method="POST" action="{% url 'delete_check' check.0 %}">
@@ -44,4 +42,24 @@
         {% endfor %}
         </tbody>
     </table>
+
+    {% if checks.has_other_pages %}
+        <div class="pagination">
+            {% if checks.has_previous %}
+                <a href="?page={{ checks.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            {% for page in checks.paginator.page_range %}
+                {% if page == checks.number %}
+                    <span class="current-page">{{ page }}</span>
+                {% else %}
+                    <a href="?page={{ page }}">{{ page }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if checks.has_next %}
+                <a href="?page={{ checks.next_page_number }}">Next</a>
+            {% endif %}
+        </div>
+    {% endif %}
 {% endblock %}

@@ -140,6 +140,8 @@ def product_list(request):
     return render(request, 'manager/products/product_list.html', products)
 
 
+from django.core.paginator import Paginator
+
 def check_list(request):
     with connection.cursor() as cursor:
         query = """
@@ -147,12 +149,17 @@ def check_list(request):
             , c.card_number, c.print_date, c.sum_total, c.vat
             FROM "check" c
             JOIN employee e ON c.employee_id = e.employee_id
+            ORDER BY c.print_date desc
         """
         cursor.execute(query)
-        modified_checks = cursor.fetchall()
-
-    context = {'checks': modified_checks}
+        checks = cursor.fetchall()
+    page_number = request.GET.get('page')
+    items_per_page = 10
+    paginator = Paginator(checks, items_per_page)
+    paginated_checks = paginator.get_page(page_number)
+    context = {'checks': paginated_checks}
     return render(request, 'manager/checks/check_list.html', context)
+
 
 
 def in_store_product_list(request):
@@ -178,6 +185,7 @@ def empl_only_sales_list(request):
 
 def add_employee(request):
     if request.method == 'POST':
+        print(request)
         form = EmployeeForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
@@ -642,8 +650,14 @@ def sale(request):
 
 
 def create_check(request):
+    print(request.method)
+    print(request.POST)
+
     if request.method == 'POST':
         data = request.POST.get('data')
+        print(data)
+        print(request)
+
         if data is not None:
             data = json.loads(data)
             price = sum(float(item[3]) * int(item[4]) for item in data)
@@ -653,14 +667,14 @@ def create_check(request):
                         INSERT INTO "check" (employee_id, card_number, sum_total, vat)
                         VALUES (%s, %s, %s, %s)
                         RETURNING check_number;
-                        """
+                    """
                 cursor.execute(query, [user.id, 2, price, 20])
                 check_number = cursor.fetchone()[0]
 
                 query_sale = """
                         INSERT INTO sale (upc, price, check_number, product_count)
                         VALUES (%s, %s, %s, %s);
-                        """
+                    """
                 cursor.executemany(query_sale, [(item[0], item[3], check_number, item[4]) for item in data])
 
     return check_list(request)

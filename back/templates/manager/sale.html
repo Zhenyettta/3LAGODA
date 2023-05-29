@@ -8,6 +8,7 @@
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+
 {% endblock %}
 
 {% block content %}
@@ -44,7 +45,7 @@
             {% endfor %}
             </tbody>
         </table>
-        <form method="post" action="{% url 'create_check' %}">
+        <form method="POST" action="{% url 'create_check' %}">
             {% csrf_token %}
             <table class="cart-table">
                 <thead>
@@ -60,7 +61,7 @@
                 </thead>
                 <tbody class="cart-items"></tbody>
             </table>
-            <button id="send-data" class="sale-button" type="submit">Відправити дані</button>
+            <button id="send-data" class="sale-button" type="submit">Create Check</button>
         </form>
     </div>
 
@@ -121,36 +122,41 @@
         });
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#send-data').click(function() {
-            var data = [];
+    <script>
+        const csrfToken = '{{ csrf_token }}';
+        $(document).ready(function () {
+            $('#send-data').click(function () {
+                var data = [];
 
-            $('.cart-items tr').each(function() {
-                var row = [];
-                $(this).find('td').each(function() {
-                    row.push($(this).text());
+                $('.cart-items tr').each(function () {
+                    var row = [];
+                    $(this).find('td').each(function () {
+                        row.push($(this).text());
+                    });
+                    data.push(row);
                 });
-                data.push(row);
-            });
 
-            $.ajax({
-                type: 'POST',
-                url: '{% url "create_check" %}',
-                data: {
-                    'data': JSON.stringify(data),
-                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
-                },
-                success: function(response) {
+                var hasPrice = $('.cart-items td:nth-child(4):not(:empty)').length > 0;
 
-                    console.log(response);
-                },
-                error: function(xhr, errmsg, err) {
-
-                    console.log(xhr.status + ': ' + xhr.responseText);
+                if (hasPrice) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "{% url 'create_check' %}",
+                        data: {
+                            'data': JSON.stringify(data),
+                            'csrfmiddlewaretoken': csrfToken
+                        },
+                        success: function (response) {
+                            console.log(response);
+                        },
+                        error: function (xhr, errmsg, err) {
+                            console.log(xhr.status + ': ' + xhr.responseText);
+                        }
+                    });
+                } else {
+                    console.log("No price found in the cart. Cannot send data.");
                 }
             });
         });
-    });
-</script>
+    </script>
 {% endblock %}K

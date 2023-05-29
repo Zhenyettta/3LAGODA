@@ -18,6 +18,27 @@
     cursor: pointer;
 }
 
+
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination a,
+.pagination .current-page {
+    padding: 5px 10px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: #333;
+}
+
+.pagination .current-page {
+    background-color: #ccc;
+}
+
 table {
     margin: 200px;
 }
