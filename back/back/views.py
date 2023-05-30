@@ -177,11 +177,11 @@ def get_in_store_by_upc(request):
        SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional 
         FROM store_product s 
         JOIN product p on s.product_id = p.product_id
-        WHERE s.upc = %s
+        WHERE s.upc LIKE %s
         ORDER BY s.count
         """
 
-        cursor.execute(query, [upc])
+        cursor.execute(query, [upc + '%'])
         products = cursor.fetchall()
 
     html = render(request, 'manager/in_store_products/in_store_product_table.html', {'products': products}).content
@@ -198,7 +198,7 @@ def get_empl_by_surname(request):
             FROM employee e
             WHERE e.surname LIKE %s;
             """
-        cursor.execute(query, [surname])
+        cursor.execute(query, [surname + '%'])
         employees = cursor.fetchall()
 
     html = render(request, 'manager/employee/empl_table.html', {'employees': employees}).content
