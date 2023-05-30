@@ -3,8 +3,9 @@ import json
 import bcrypt
 from django.core.paginator import Paginator
 from django.db import connection
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 
 from .forms import LoginForm, EmployeeForm, EditEmployeeForm, CustomerForm, EditCustomerForm, CategoryForm, \
     EditCategoryForm, ProductForm, EditProductForm, InStoreProductForm, EditInStoreProductForm
@@ -126,7 +127,7 @@ def category_list(request):
     return render(request, 'manager/categories/category_list.html', {'categories': categories})
 
 
-def product_list(request):
+def fetch_products_and_categories():
     with connection.cursor() as cursor:
         query = """
             SELECT p.product_id, c.name, p.name, p.characteristics
@@ -137,8 +138,36 @@ def product_list(request):
         cursor.execute(query)
         products = cursor.fetchall()
 
-    products = {'products': products}
-    return render(request, 'manager/products/product_list.html', products)
+        query = "SELECT c.name FROM category c"
+        cursor.execute(query)
+        categories = cursor.fetchall()
+
+    return products, categories
+
+
+def product_list(request):
+    products, categories = fetch_products_and_categories()
+    context = {'products': products, 'categories': categories}
+    return render(request, 'manager/products/product_list.html', context)
+
+
+def get_products_by_category(request):
+    category = request.GET.get('category')
+
+    with connection.cursor() as cursor:
+        query = """
+            SELECT p.product_id, c.name, p.name, p.characteristics
+            FROM product p
+            JOIN category c ON p.category_number = c.category_number
+            WHERE c.name = %s
+            ORDER BY p.name
+        """
+        cursor.execute(query, [category])
+        products = cursor.fetchall()
+
+    html = render(request, 'manager/products/products_table.html', {'products': products}).content
+    html = html.decode('utf-8')
+    return JsonResponse({'html': html})
 
 
 def check_list(request):
@@ -166,6 +195,7 @@ def in_store_product_list(request):
         SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional 
         FROM store_product s 
         JOIN product p on s.product_id = p.product_id
+        ORDER BY s.count
         """
         cursor.execute(query)
         in_store_products = cursor.fetchall()
@@ -183,7 +213,6 @@ def empl_only_sales_list(request):
 
 def add_employee(request):
     if request.method == 'POST':
-        print(request)
         form = EmployeeForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
@@ -653,13 +682,13 @@ def sale(request):
 
 
 def create_check(request):
-    print(request.method)
-    print(request.POST)
+    print(request.method, "METHOD")
+    print(request.POST, "POST")
 
     if request.method == 'POST':
         data = request.POST.get('data')
-        print(data)
-        print(request)
+        print(data, "DATA")
+        print(request, "REQUEST")
 
         if data is not None:
             data = json.loads(data)

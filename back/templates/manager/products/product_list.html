@@ -12,8 +12,15 @@
 {% block content %}
     <a class="button" onclick="location.href='/manager/'"><</a>
     <div><a class="button" onclick="location.href='/manager/products/addproduct'">Add Product</a>
+        <label>
+            <select id="category-select">
+                {% for category in categories %}
+                    <option value='{{ category.0 }}'>{{ category.0 }}</option>
+                {% endfor %}
+            </select>
+        </label>
     </div>
-    <table>
+    <table id = "product-table">
         <thead>
         <tr>
             <th>Category</th>
@@ -40,4 +47,27 @@
         {% endfor %}
         </tbody>
     </table>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#category-select').change(function () {
+                const selectedCategory = $(this).val();
+                updateProductList(selectedCategory);
+            });
+
+            function updateProductList(category) {
+                $.ajax({
+                    url: '/manager/products/get_products_by_category/',
+                    method: 'GET',
+                    data: {category: category},
+                    success: function (response) {
+                        $($('#product-table')).html(response.html);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock %}

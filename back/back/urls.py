@@ -70,4 +70,8 @@ urlpatterns = [
 
     # Sales
     path('home/', views.home_page, name='home_page'),
+
+
+    # Sort
+    path('manager/products/get_products_by_category/', views.get_products_by_category, name='get_products_by_category'),
 ]
