@@ -38,6 +38,7 @@ urlpatterns = [
     path('manager/employees/edit/<int:id>/', views.edit_employee_button, name='edit_employee'),
     path('manager/employees/<int:id>/delete/', views.delete_employee, name='delete_employee'),
     path('manager/employees/onlysales/', views.empl_only_sales_list, name='empl_only_sales_list'),
+    path('manager/employees/get_empl_by_surname/', views.get_empl_by_surname, name='get_empl_by_surname'),
 
     # Customer list implementation
     path('manager/customers/', views.cust_list, name='cust_list'),

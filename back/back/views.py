@@ -169,6 +169,22 @@ def get_products_by_category(request):
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
 
+def get_empl_by_surname(request):
+    surname = request.GET.get('surname')
+
+    with connection.cursor() as cursor:
+        query = """
+            SELECT *
+            FROM employee e
+            WHERE e.surname LIKE %s;
+            """
+        cursor.execute(query, [surname])
+        employees = cursor.fetchall()
+
+    html = render(request, 'manager/employee/empl_table.html', {'employees': employees}).content
+    html = html.decode('utf-8')
+    return JsonResponse({'html': html})
+
 
 def check_list(request):
     with connection.cursor() as cursor:
@@ -710,3 +726,4 @@ def create_check(request):
                 cursor.executemany(query_sale, [(item[0], item[3], check_number, item[4]) for item in data])
 
     return check_list(request)
+

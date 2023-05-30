@@ -18,9 +18,14 @@
         <a class="button button-header btn-addempl" onclick="location.href='/manager/employees/addemployee'">Add Employee</a>
         <a class="button button-header btn-all-only" href="{% url 'empl_list' %}">All</a>
         <a class="button button-header btn-all-only" href="{% url 'empl_only_sales_list' %}">Only Sales</a>
+        <a>
+            <label>
+                <input type="text" id="search-input" placeholder="Enter surname">
+                <button class="button" id="b-search-by-surname" type="submit">Search</button>
+            </label>
+        </a>
     </div>
-
-    <table class="table">
+    <table class="table", id="empl_list">
         <thead>
         <tr>
             <th class="no-border">Full Name</th>
@@ -60,4 +65,23 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    document.getElementById("b-search-by-surname").addEventListener("click", function() {
+        var surname = document.getElementById("search-input").value;
+        $.ajax({
+                    url: '/manager/employees/get_empl_by_surname/',
+                    method: 'GET',
+                    data: {surname: surname},
+                    success: function (response) {
+                        $($('#empl_list')).html(response.html);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+    });
+    </script>
+
 {% endblock %}
