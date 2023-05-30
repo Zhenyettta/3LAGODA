@@ -57,12 +57,14 @@ urlpatterns = [
     path('manager/products/addproduct', views.add_product, name='add_product'),
     path('manager/products/edit/<int:id>/', views.edit_product_button, name='edit_product'),
     path('manager/products/<int:id>/delete/', views.delete_product, name='delete_product'),
+    path('manager/products/get_products_by_category/', views.get_products_by_category, name='get_products_by_category'),
 
     # InStoreProduct list implementation
     path('manager/instoreproducts/', views.in_store_product_list, name='in_store_product_list'),
     path('manager/instoreproducts/addproduct', views.add_in_store_product, name='add_in_store_product'),
     path('manager/instoreproducts/edit/<int:id>/', views.edit_in_store_product_button, name='edit_in_store_product'),
     path('manager/instoreproducts/<int:id>/delete', views.delete_in_store_product, name='delete_in_store_product'),
+    path('manager/instoreproducts/get_in_store_by_upc/', views.get_in_store_by_upc, name='get_in_store_by_upc'),
 
     # Check list implementation
     path('manager/checks/', views.check_list, name='check_list'),
@@ -72,7 +74,4 @@ urlpatterns = [
     # Sales
     path('home/', views.home_page, name='home_page'),
 
-
-    # Sort
-    path('manager/products/get_products_by_category/', views.get_products_by_category, name='get_products_by_category'),
 ]
