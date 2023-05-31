@@ -233,11 +233,20 @@ def check_list(request):
         """
         cursor.execute(query)
         checks = cursor.fetchall()
+        query_empl = """
+            SELECT *
+            FROM employee
+        """
+        cursor.execute(query_empl)
+        employees = cursor.fetchall()
     page_number = request.GET.get('page')
     items_per_page = 10
     paginator = Paginator(checks, items_per_page)
     paginated_checks = paginator.get_page(page_number)
-    context = {'checks': paginated_checks}
+
+
+    context = {'checks': paginated_checks, 'employees':employees}
+
     return render(request, 'manager/checks/check_list.html', context)
 
 
@@ -812,23 +821,37 @@ from datetime import datetime
 def get_all_checks_all_empl(request):
     date = request.GET.get('requested_date')
     parsed_date = datetime.strptime(date, '%Y-%m-%d').date()  # Parse date string into a datetime object
-
-    with connection.cursor() as cursor:
-        query = """
-            SELECT c.check_number, e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')'
-            , c.card_number, c.print_date, c.sum_total, c.vat
-            FROM "check" c
-            JOIN employee e ON c.employee_id = e.employee_id
-            WHERE DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
-            ORDER BY c.print_date desc
-        """
-
-        cursor.execute(query, [parsed_date])
-        checks = cursor.fetchall()
+    employee = request.GET.get('empl_id')
+    print(employee)
+    if employee == 'all':
+        with connection.cursor() as cursor:
+            query = """
+                SELECT c.check_number, e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')'
+                , c.card_number, c.print_date, c.sum_total, c.vat
+                FROM "check" c
+                JOIN employee e ON c.employee_id = e.employee_id
+                WHERE DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
+                ORDER BY c.print_date desc
+            """
+            cursor.execute(query, [parsed_date])
+            checks = cursor.fetchall()
+    else:
+        with connection.cursor() as cursor:
+            query = """
+                SELECT c.check_number, e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')'
+                , c.card_number, c.print_date, c.sum_total, c.vat
+                FROM "check" c
+                JOIN employee e ON c.employee_id = e.employee_id
+                WHERE c.employee_id = %s AND DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
+                ORDER BY c.print_date desc
+            """
+            cursor.execute(query, [employee, parsed_date])
+            checks = cursor.fetchall()
 
     html = render(request, 'manager/checks/check_table.html', {'checks': checks}).content
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
+
 
 
 

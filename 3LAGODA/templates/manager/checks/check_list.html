@@ -11,13 +11,19 @@
 {% endblock %}
 
 {% block content %}
-    <a class="button" onclick="location.href='/manager/'"><</a>
-    <div>
-        <label>
+    <div><a class="button" onclick="location.href='/manager/'"><</a></div>
+    <label>Select employee and date:</label>
+    <br>
+    <select id="empls" name="empls" >
+            <option value="all">all</option>
+            {% for empl in employees %}
+                    <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>
+            {% endfor %}
+
         <input type="date" id="search-all-checks-all-empl">
         <button class="button" id="b-search-all-checks-all-empl" type="submit">Find all checks</button>
-        </label>
-    </div>
+
+
 
 
     {% include 'manager/checks/check_table.html' %}
@@ -25,11 +31,12 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
         document.getElementById("b-search-all-checks-all-empl").addEventListener("click", function () {
+            const empl_id = document.getElementById("empls").value;
             const requested_date = document.getElementById("search-all-checks-all-empl").value;
             $.ajax({
                 url: '/manager/checks/get_all_checks_all_empl/',
                 method: 'GET',
-                data: { requested_date: requested_date },
+                data: { requested_date: requested_date, empl_id: empl_id },
                 success: function (response) {
                     $($('#check_list')).html(response.html);
                 },
