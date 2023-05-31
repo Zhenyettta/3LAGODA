@@ -727,3 +727,13 @@ def create_check(request):
 
     return check_list(request)
 
+def only_prom(request):
+    with connection.cursor() as cursor:
+        query = """
+        SELECT * 
+        FROM store_product 
+        WHERE is_promotional = true;
+        """
+        cursor.execute(query)
+        only_prom = cursor.fetchall()
+    return render(request, 'manager/in_store_products/in_store_product_list.html', {'products': only_prom})

@@ -63,6 +63,7 @@ urlpatterns = [
     path('manager/instoreproducts/addproduct', views.add_in_store_product, name='add_in_store_product'),
     path('manager/instoreproducts/edit/<int:id>/', views.edit_in_store_product_button, name='edit_in_store_product'),
     path('manager/instoreproducts/<int:id>/delete', views.delete_in_store_product, name='delete_in_store_product'),
+    path('manager/instoreproducts/only_prom', views.only_prom, name='only_prom'),
 
     # Check list implementation
     path('manager/checks/', views.check_list, name='check_list'),
