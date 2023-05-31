@@ -14,36 +14,28 @@
     <a class="button" onclick="location.href='/manager/'"><</a>
     <div><a class="button" onclick="location.href='/manager/customers/addcustomer'">Add Customer</a>
     </div>
-    <table>
-        <thead>
-        <tr>
-            <th>Full Name</th>
-            <th>Phone Number</th>
-            <th>City</th>
-            <th>Street</th>
-            <th>Zip Code</th>
-            <th>Percent</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for customer in customers %}
-            <tr>
-                <td>{{ customer.1 }} {{ customer.2 }} {{ customer.3 }}</td>
-                <td>{{ customer.4 }}</td>
-                <td>{{ customer.5 }}</td>
-                <td>{{ customer.6 }}</td>
-                <td>{{ customer.7 }}</td>
-                <td>{{ customer.8 }}</td>
-                <td>
-                    <a class="button" href="{% url 'edit_customer' customer.0 %}">Edit</a>
-                    <form method="POST" action="{% url 'delete_customer' customer.0 %}">
-                        {% csrf_token %}
-                        <button class="button" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <label>
+        <input type="text" id="search-input" placeholder="%%%">
+        <button class="button" id="b-search-by-prom" type="submit">Search</button>
+    </label>
+        {% include 'manager/customers/customer_table.html' %}
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.getElementById("b-search-by-prom").addEventListener("click", function () {
+            const prom = document.getElementById("search-input").value;
+            $.ajax({
+                url: '/manager/instoreproducts/get_in_store_by_prom/',
+                method: 'GET',
+                data: {prom: prom},
+                success: function (response) {
+                    $($('#cust_list')).html(response.html);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    </script>
 {% endblock %}

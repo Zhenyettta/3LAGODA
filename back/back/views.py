@@ -189,6 +189,22 @@ def get_in_store_by_upc(request):
     return JsonResponse({'html': html})
 
 
+def get_in_store_by_prom(request):
+    prom = request.GET.get('prom')
+
+    with connection.cursor() as cursor:
+        query = """
+        SELECT *
+        FROM customer_card
+        WHERE percent = %s
+        """
+
+        cursor.execute(query, prom)
+        customers = cursor.fetchall()
+
+    html = render(request, 'manager/customers/customer_table.html', {'customers': customers}).content
+    html = html.decode('utf-8')
+    return JsonResponse({'html': html})
 def get_empl_by_surname(request):
     surname = request.GET.get('surname')
 

@@ -1,0 +1,32 @@
+ <table id="cust_list">
+        <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Phone Number</th>
+            <th>City</th>
+            <th>Street</th>
+            <th>Zip Code</th>
+            <th>Percent</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for customer in customers %}
+            <tr>
+                <td>{{ customer.1 }} {{ customer.2 }} {{ customer.3 }}</td>
+                <td>{{ customer.4 }}</td>
+                <td>{{ customer.5 }}</td>
+                <td>{{ customer.6 }}</td>
+                <td>{{ customer.7 }}</td>
+                <td>{{ customer.8 }}</td>
+                <td>
+                    <a class="button" href="{% url 'edit_customer' customer.0 %}">Edit</a>
+                    <form method="POST" action="{% url 'delete_customer' customer.0 %}">
+                        {% csrf_token %}
+                        <button class="button" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
