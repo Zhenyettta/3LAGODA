@@ -1,10 +1,6 @@
-import json
-
 import bcrypt
-from django.core.paginator import Paginator
-from django.db import connection
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect
 
 from .forms import LoginForm, EmployeeForm, EditEmployeeForm, CustomerForm, EditCustomerForm, CategoryForm, \
     EditCategoryForm, ProductForm, EditProductForm, InStoreProductForm, EditInStoreProductForm
@@ -729,35 +725,55 @@ def sale(request):
         """
         cursor.execute(query)
         in_store_products = cursor.fetchall()
-    return render(request, 'manager/checks/sale.html', {'products': in_store_products})
+    return render(request, 'manager/checks/create_check.html', {'products': in_store_products})
+
+
+from django.core.paginator import Paginator
+from django.db import connection
+from django.http import JsonResponse
+from django.shortcuts import render
+import json
 
 
 def create_check(request):
-    print(request.method, "METHOD")
-    print(request.POST, "POST")
-
-    if request.method == 'POST':
-        data = request.POST.get('data')
-        print(data, "DATA")
-        print(request, "REQUEST")
-
+    if request.method == 'GET':
+        data = request.GET.get('data')
         if data is not None:
             data = json.loads(data)
             price = sum(float(item[3]) * int(item[4]) for item in data)
 
             with connection.cursor() as cursor:
                 query = """
-                        INSERT INTO "check" (employee_id, card_number, sum_total, vat)
-                        VALUES (%s, %s, %s, %s)
-                        RETURNING check_number;
-                    """
+                    INSERT INTO "check" (employee_id, card_number, sum_total, vat)
+                    VALUES (%s, %s, %s, %s)
+                    RETURNING check_number;
+                """
                 cursor.execute(query, [user.id, 2, price, 20])
                 check_number = cursor.fetchone()[0]
 
                 query_sale = """
-                        INSERT INTO sale (upc, price, check_number, product_count)
-                        VALUES (%s, %s, %s, %s);
-                    """
+                    INSERT INTO sale (upc, price, check_number, product_count)
+                    VALUES (%s, %s, %s, %s);
+                """
                 cursor.executemany(query_sale, [(item[0], item[3], check_number, item[4]) for item in data])
 
-    return check_list(request)
+                query = """
+                    SELECT c.check_number, e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')',
+                    c.card_number, c.print_date, c.sum_total, c.vat
+                    FROM "check" c
+                    JOIN employee e ON c.employee_id = e.employee_id
+                    ORDER BY c.print_date desc
+                """
+                cursor.execute(query)
+                checks = cursor.fetchall()
+                page_number = request.GET.get('page')
+                items_per_page = 10
+                paginator = Paginator(checks, items_per_page)
+                paginated_checks = paginator.get_page(page_number)
+                context = {'checks': paginated_checks}
+
+                html = render(request, 'manager/checks/check_list.html', {'products': context}).content
+                html = html.decode('utf-8')
+
+                return JsonResponse({'html': html})
+    return JsonResponse({'error': 'Invalid request method'})

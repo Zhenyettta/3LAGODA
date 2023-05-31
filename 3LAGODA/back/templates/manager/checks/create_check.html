@@ -45,24 +45,21 @@
             {% endfor %}
             </tbody>
         </table>
-        <form method="POST" action="{% url 'create_check' %}">
-            {% csrf_token %}
-            <table class="cart-table">
-                <thead>
-                <tr>
-                    <th>UPC</th>
-                    <th>Product ID</th>
-                    <th>Name</th>
-                    <th>Selling price</th>
-                    <th>Count</th>
-                    <th>Prom</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody class="cart-items"></tbody>
-            </table>
-            <button id="send-data" class="sale-button" type="submit">Create Check</button>
-        </form>
+        <table class="cart-table">
+            <thead>
+            <tr>
+                <th>UPC</th>
+                <th>Product ID</th>
+                <th>Name</th>
+                <th>Selling price</th>
+                <th>Count</th>
+                <th>Prom</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody class="cart-items"></tbody>
+        </table>
+        <button id="send-data" class="sale-button" type="submit">Create Check</button>
     </div>
 
     <script>
@@ -127,38 +124,35 @@
         const csrfToken = '{{ csrf_token }}';
         $(document).ready(function () {
             $('#send-data').click(function () {
-
-                var data = [];
+                const data = [];
 
                 $('.cart-items tr').each(function () {
-                    var row = [];
+                    const row = [];
                     $(this).find('td').each(function () {
                         row.push($(this).text());
                     });
                     data.push(row);
                 });
 
-                var hasPrice = $('.cart-items td:nth-child(4):not(:empty)').length > 0;
+                const hasPrice = $('.cart-items td:nth-child(4):not(:empty)').length > 0;
 
                 if (hasPrice) {
+
                     $.ajax({
-                        type: 'POST',
-                        url: "{% url 'create_check' %}",
-                        data: {
-                            'data': JSON.stringify(data),
-                            'csrfmiddlewaretoken': csrfToken
+                        url: '/manager/sale/createcheck/',
+                        method: 'GET',
+                        data: {data: JSON.stringify(data)},
+                        success: function () {
+                            window.location.href = '/manager/checks/';
                         },
-                        success: function (response) {
-                            console.log(response);
-                        },
-                        error: function (xhr) {
-                            console.log(xhr.status + ': ' + xhr.responseText);
+                        error: function (error) {
+                            console.log(error);
                         }
                     });
-                } else {
-                    console.log("No price found in the cart. Cannot send data.");
+
                 }
             });
         });
     </script>
-{% endblock %}K
+
+{% endblock %}
