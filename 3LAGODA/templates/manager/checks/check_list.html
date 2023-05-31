@@ -12,7 +12,15 @@
 
 {% block content %}
     <a class="button" onclick="location.href='/manager/'"><</a>
-    <table>
+    <div>
+        <label>
+        <input type="date" id="search-all-checks-all-empl">
+        <button class="button" id="b-search-all-checks-all-empl" type="submit">Find all checks</button>
+        </label>
+    </div>
+
+
+    <table id="check_list">
         <thead>
         <tr>
             <th>Employee</th>
@@ -42,6 +50,25 @@
         {% endfor %}
         </tbody>
     </table>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+        document.getElementById("b-search-all-checks-all-empl").addEventListener("click", function () {
+            const requested_date = document.getElementById("search-all-checks-all-empl").value;
+            $.ajax({
+                url: '/manager/checks/get_all_checks_all_empl/',
+                method: 'GET',
+                data: { requested_date: requested_date },
+                success: function (response) {
+                    $($('#check_list')).html(response.html);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    </script>
+
+
 
     {% if checks.has_other_pages %}
         <div class="pagination">

@@ -805,3 +805,27 @@ def sort_selected(request):
     html = render(request, 'manager/in_store_products/in_store_product_table.html', {'products': products}).content
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
+
+
+from datetime import datetime
+
+def get_all_checks_all_empl(request):
+    date = request.GET.get('requested_date')
+    parsed_date = datetime.strptime(date, '%Y-%m-%d').date()  # Parse date string into a datetime object
+
+    with connection.cursor() as cursor:
+        query = """
+        SELECT *
+        FROM "check" c
+        WHERE DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
+        """
+
+        cursor.execute(query, [parsed_date])
+        checks = cursor.fetchall()
+
+    html = render(request, 'manager/in_store_products/in_store_product_table.html', {'checks': checks}).content
+    html = html.decode('utf-8')
+    return JsonResponse({'html': html})
+
+
+

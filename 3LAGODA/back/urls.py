@@ -72,6 +72,7 @@ urlpatterns = [
     path('manager/checks/', views.check_list, name='check_list'),
     path('manager/checks/<int:id>/delete/', views.delete_check, name='delete_check'),
     path('manager/checks/watch/<int:id>/', views.watch_check, name='watch_check'),
+    path('manager/checks/get_all_checks_all_empl/', views.get_all_checks_all_empl, name='get_all_checks_all_empl'),
 
     # Sales
     path('home/', views.home_page, name='home_page'),
