@@ -11,23 +11,61 @@
 
 {% block content %}
     <a class="button" onclick="location.href='/manager/'"><</a>
-    <div><a class="button" onclick="location.href='/manager/instoreproducts/addproduct'">Add Product</a>
+    <div>
+        <a class="button" onclick="location.href='/manager/instoreproducts/addproduct'">Add Product</a>
     </div>
     <label>
         <input type="text" id="search-input" placeholder="Enter UPC">
         <button class="button" id="b-search-by-upc" type="submit">Search</button>
     </label>
+    <select id="product" name="product" onchange="updateFields()">
+        <option value="default">default</option>
+        <option value="by-quantity">By Quantity</option>
+        <option value="by-name">By Name</option>
+    </select>
+    <label for="is-prom">Prom</label>
+    <input type="checkbox" id="is-prom" onclick="updateFields()">
 
     {% include 'manager/in_store_products/in_store_product_table.html' %}
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function updateFields() {
+            let selectedValue = document.getElementById("product").value;
+            let checkboxChecked = document.getElementById("is-prom").checked;
+            let choice;
+            switch (selectedValue) {
+                case 'default':
+                    choice = 'default';
+                    break;
+                case 'by-quantity':
+                    choice = 'count';
+                    break;
+                case 'by-name':
+                    choice = 'name';
+                    break;
+            }
+            $.ajax({
+                url: '/manager/instoreproducts/sort_selected/',
+                method: 'GET',
+                data: { choice: choice, prom: checkboxChecked },
+                success: function (response) {
+                    $($('#in_store_list')).html(response.html);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
+
     <script>
         document.getElementById("b-search-by-upc").addEventListener("click", function () {
             const upc = document.getElementById("search-input").value;
             $.ajax({
                 url: '/manager/instoreproducts/get_in_store_by_upc/',
                 method: 'GET',
-                data: {upc: upc},
+                data: { upc: upc },
                 success: function (response) {
                     $($('#in_store_list')).html(response.html);
                 },

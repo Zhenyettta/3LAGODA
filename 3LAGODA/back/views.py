@@ -1,6 +1,11 @@
 import bcrypt
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
+from django.core.paginator import Paginator
+from django.db import connection
+from django.http import JsonResponse
+from django.shortcuts import render
+import json
 
 from .forms import LoginForm, EmployeeForm, EditEmployeeForm, CustomerForm, EditCustomerForm, CategoryForm, \
     EditCategoryForm, ProductForm, EditProductForm, InStoreProductForm, EditInStoreProductForm
@@ -728,12 +733,6 @@ def sale(request):
     return render(request, 'manager/checks/create_check.html', {'products': in_store_products})
 
 
-from django.core.paginator import Paginator
-from django.db import connection
-from django.http import JsonResponse
-from django.shortcuts import render
-import json
-
 
 def create_check(request):
     if request.method == 'GET':
@@ -777,3 +776,24 @@ def create_check(request):
 
                 return JsonResponse({'html': html})
     return JsonResponse({'error': 'Invalid request method'})
+
+def sort_selected(request):
+    choice = request.GET.get('choice')
+    prom = request.GET.get('prom')
+
+
+    with connection.cursor() as cursor:
+        query = f"""
+            SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional
+            FROM store_product s
+            JOIN product p on s.product_id = p.product_id
+            WHERE s.is_promotional in {prom}
+            ORDER BY {choice}
+            """
+
+        cursor.execute(query)
+        products = cursor.fetchall()
+
+    html = render(request, 'manager/in_store_products/in_store_product_table.html', {'products': products}).content
+    html = html.decode('utf-8')
+    return JsonResponse({'html': html})

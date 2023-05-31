@@ -66,6 +66,8 @@ urlpatterns = [
     path('manager/instoreproducts/<int:id>/delete', views.delete_in_store_product, name='delete_in_store_product'),
     path('manager/instoreproducts/get_in_store_by_upc/', views.get_in_store_by_upc, name='get_in_store_by_upc'),
 
+    path('manager/instoreproducts/sort_selected/', views.sort_selected, name='sort_selected'),
+
     # Check list implementation
     path('manager/checks/', views.check_list, name='check_list'),
     path('manager/checks/<int:id>/delete/', views.delete_check, name='delete_check'),
