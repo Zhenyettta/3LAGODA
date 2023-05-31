@@ -20,7 +20,7 @@
         <div>
             <label for="product">Select a product:</label>
             <select id="product" name="product" onchange="updateFields(this)">
-                <option value="" disabled selected hidden>Оберіть продукт</option>
+                <option value="" disabled selected hidden>Select product</option>
                 {% for product in products %}
                     <option value="{{ product.0 }}">{{ product.2 }}</option>
                 {% endfor %}

@@ -1,11 +1,12 @@
+import json
+
 import bcrypt
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect
 from django.core.paginator import Paginator
 from django.db import connection
+from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
+from django.shortcuts import redirect
 from django.shortcuts import render
-import json
 
 from .forms import LoginForm, EmployeeForm, EditEmployeeForm, CustomerForm, EditCustomerForm, CategoryForm, \
     EditCategoryForm, ProductForm, EditProductForm, InStoreProductForm, EditInStoreProductForm
@@ -742,7 +743,6 @@ def sale(request):
     return render(request, 'manager/checks/create_check.html', {'products': in_store_products})
 
 
-
 def create_check(request):
     if request.method == 'GET':
         data = request.GET.get('data')
@@ -786,26 +786,20 @@ def create_check(request):
                 return JsonResponse({'html': html})
     return JsonResponse({'error': 'Invalid request method'})
 
+
 def sort_selected(request):
     choice = request.GET.get('choice')
     prom = request.GET.get('prom')
+    order = request.GET.get('order')
+    print(order, choice)
 
     with connection.cursor() as cursor:
-        if choice == 'default':
-            query = f"""
+        query = f"""
             SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional
             FROM store_product s
             JOIN product p on s.product_id = p.product_id
-            WHERE s.is_promotional IN (True, False)
-            ORDER BY name
-            """
-        else:
-            query = f"""
-            SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional
-            FROM store_product s
-            JOIN product p on s.product_id = p.product_id
-            WHERE s.is_promotional = {prom}
-            ORDER BY {choice}
+            WHERE is_promotional IN ({prom})
+            ORDER BY {choice} {order}
             """
 
         cursor.execute(query)
