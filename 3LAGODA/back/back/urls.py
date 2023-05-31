@@ -45,7 +45,7 @@ urlpatterns = [
     path('manager/customers/addcustomer', views.add_customer, name='add_customer'),
     path('manager/customers/edit/<int:id>/', views.edit_customer_button, name='edit_customer'),
     path('manager/customers/<int:id>/delete/', views.delete_customer, name='delete_customer'),
-    path('/manager/customers/get_in_store_by_prom/', views.get_in_store_by_prom, name='get_in_store_by_prom'),
+    path('manager/customers/get_customer_by_percent/', views.get_customer_by_percent, name='get_customer_by_percent'),
 
     # Category list implementation
     path('manager/categories/', views.category_list, name='category_list'),
