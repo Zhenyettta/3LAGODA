@@ -815,15 +815,18 @@ def get_all_checks_all_empl(request):
 
     with connection.cursor() as cursor:
         query = """
-        SELECT *
-        FROM "check" c
-        WHERE DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
+            SELECT c.check_number, e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')'
+            , c.card_number, c.print_date, c.sum_total, c.vat
+            FROM "check" c
+            JOIN employee e ON c.employee_id = e.employee_id
+            WHERE DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
+            ORDER BY c.print_date desc
         """
 
         cursor.execute(query, [parsed_date])
         checks = cursor.fetchall()
 
-    html = render(request, 'manager/in_store_products/in_store_product_table.html', {'checks': checks}).content
+    html = render(request, 'manager/checks/check_table.html', {'checks': checks}).content
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
 

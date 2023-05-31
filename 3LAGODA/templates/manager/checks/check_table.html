@@ -1,0 +1,30 @@
+    <table id="check_list">
+        <thead>
+        <tr>
+            <th>Employee</th>
+            <th>Card Number</th>
+            <th>Print Date</th>
+            <th>Sum Total</th>
+            <th>Vat</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for check in checks %}
+            <tr>
+                <td>{{ check.1 }} </td>
+                <td>{{ check.2 }} </td>
+                <td>{{ check.3 }} </td>
+                <td>{{ check.4 }} </td>
+                <td>{{ check.5 }} </td>
+                <td>
+                    <a class="button" href="{% url 'watch_check' check.0 %}">Watch</a>
+                    <form method="POST" action="{% url 'delete_check' check.0 %}">
+                        {% csrf_token %}
+                        <button class="button" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
