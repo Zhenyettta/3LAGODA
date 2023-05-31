@@ -781,13 +781,20 @@ def sort_selected(request):
     choice = request.GET.get('choice')
     prom = request.GET.get('prom')
 
-
     with connection.cursor() as cursor:
-        query = f"""
+        if choice == 'default':
+            query = f"""
             SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional
             FROM store_product s
             JOIN product p on s.product_id = p.product_id
-            WHERE s.is_promotional in {prom}
+            WHERE s.is_promotional IN (True, False)
+            """
+        else:
+            query = f"""
+            SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional
+            FROM store_product s
+            JOIN product p on s.product_id = p.product_id
+            WHERE s.is_promotional = {prom}
             ORDER BY {choice}
             """
 
