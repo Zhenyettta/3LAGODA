@@ -5,7 +5,6 @@ from django.core.paginator import Paginator
 from django.db import connection
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
 
 from .forms import LoginForm, EmployeeForm, EditEmployeeForm, CustomerForm, EditCustomerForm, CategoryForm, \
     EditCategoryForm, ProductForm, EditProductForm, InStoreProductForm, EditInStoreProductForm
@@ -165,9 +164,30 @@ def get_products_by_category(request):
         cursor.execute(query, [category])
         products = cursor.fetchall()
 
-    html = render(request, 'manager/products/products_table.html', {'products': products}).content
+    html = render(request, 'manager/products/product_table.html', {'products': products}).content
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
+
+
+def get_in_store_by_upc(request):
+    upc = request.GET.get('upc')
+
+    with connection.cursor() as cursor:
+        query = """
+       SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional 
+        FROM store_product s 
+        JOIN product p on s.product_id = p.product_id
+        WHERE s.upc LIKE %s
+        ORDER BY s.count
+        """
+
+        cursor.execute(query, [upc + '%'])
+        products = cursor.fetchall()
+
+    html = render(request, 'manager/in_store_products/in_store_product_table.html', {'products': products}).content
+    html = html.decode('utf-8')
+    return JsonResponse({'html': html})
+
 
 def get_empl_by_surname(request):
     surname = request.GET.get('surname')
@@ -178,7 +198,7 @@ def get_empl_by_surname(request):
             FROM employee e
             WHERE e.surname LIKE %s;
             """
-        cursor.execute(query, [surname])
+        cursor.execute(query, [surname + '%'])
         employees = cursor.fetchall()
 
     html = render(request, 'manager/employee/empl_table.html', {'employees': employees}).content
@@ -726,14 +746,3 @@ def create_check(request):
                 cursor.executemany(query_sale, [(item[0], item[3], check_number, item[4]) for item in data])
 
     return check_list(request)
-
-def only_prom(request):
-    with connection.cursor() as cursor:
-        query = """
-        SELECT * 
-        FROM store_product 
-        WHERE is_promotional = true;
-        """
-        cursor.execute(query)
-        only_prom = cursor.fetchall()
-    return render(request, 'manager/in_store_products/in_store_product_list.html', {'products': only_prom})

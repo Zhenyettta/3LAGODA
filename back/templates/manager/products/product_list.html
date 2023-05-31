@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+
 {% block title %}
     Product List
 {% endblock %}
@@ -20,33 +21,7 @@
             </select>
         </label>
     </div>
-    <table id = "product-table">
-        <thead>
-        <tr>
-            <th>Category</th>
-            <th>Name</th>
-            <th>Characteristics</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for product in products %}
-            <tr>
-                <td>{{ product.1 }} </td>
-                <td>{{ product.2 }} </td>
-                <td>{{ product.3 }} </td>
-
-                <td>
-                    <a class="button" href="{% url 'edit_product' product.0 %}">Edit</a>
-                    <form method="POST" action="{% url 'delete_product' product.0 %}">
-                        {% csrf_token %}
-                        <button class="button" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% include 'manager/products/product_table.html' %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -61,7 +36,7 @@
                     method: 'GET',
                     data: {category: category},
                     success: function (response) {
-                        $($('#product-table')).html(response.html);
+                        $('#product-table').html(response.html);
                     },
                     error: function (error) {
                         console.log(error);

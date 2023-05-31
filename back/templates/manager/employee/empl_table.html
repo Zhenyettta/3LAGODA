@@ -1,39 +1,40 @@
 <table class="table" id="empl_list">
     <thead>
     <tr>
-            <th>Role</th>
-            <th>Salary</th>
-            <th>Date of Birth</th>
-            <th>Date of Start</th>
-            <th>Phone Number</th>
-            <th>City</th>
-            <th>Street</th>
-            <th>Zip Code</th>
-            <th>Email</th>
-            <th>Actions</th>
+        <th class="no-border">Full Name</th>
+        <th>Role</th>
+        <th>Salary</th>
+        <th>Date of Birth</th>
+        <th>Date of Start</th>
+        <th>Phone Number</th>
+        <th>City</th>
+        <th>Street</th>
+        <th>Zip Code</th>
+        <th>Email</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>
-{% for employee in employees %}
-            <tr>
-                <td>{{ employee.1 }} {{ employee.2 }} {{ employee.3 }}</td>
-                <td>{{ employee.4 }}</td>
-                <td>{{ employee.5 }}</td>
-                <td>{{ employee.6 }}</td>
-                <td>{{ employee.7 }}</td>
-                <td>{{ employee.8 }}</td>
-                <td>{{ employee.9 }}</td>
-                <td>{{ employee.10 }}</td>
-                <td>{{ employee.11 }}</td>
-                <td>{{ employee.12 }}</td>
-                <td>
-                    <a class="button" href="{% url 'edit_employee' employee.0 %}">Edit</a>
-                    <form method="POST" action="{% url 'delete_employee' employee.0 %}">
-                        {% csrf_token %}
-                        <button class="button" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
+    {% for employee in employees %}
+        <tr>
+            <td>{{ employee.1 }} {{ employee.2 }} {{ employee.3 }}</td>
+            <td>{{ employee.4 }}</td>
+            <td>{{ employee.5 }}</td>
+            <td>{{ employee.6 }}</td>
+            <td>{{ employee.7 }}</td>
+            <td>{{ employee.8 }}</td>
+            <td>{{ employee.9 }}</td>
+            <td>{{ employee.10 }}</td>
+            <td>{{ employee.11 }}</td>
+            <td>{{ employee.12 }}</td>
+            <td>
+                <a class="button" href="{% url 'edit_employee' employee.0 %}">Edit</a>
+                <form method="POST" action="{% url 'delete_employee' employee.0 %}">
+                    {% csrf_token %}
+                    <button class="button" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
     </tbody>
 </table>

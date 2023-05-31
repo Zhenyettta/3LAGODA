@@ -12,58 +12,29 @@
 {% block content %}
     <a class="button" onclick="location.href='/manager/'"><</a>
     <div><a class="button" onclick="location.href='/manager/instoreproducts/addproduct'">Add Product</a>
-    <a id="b-prom_only" class="button">Only promotional</a>
-
     </div>
-    <table class="table" id="product_list">
-        <thead>
-        <tr>
-            <th>UPC</th>
-            <th>Product ID</th>
-            <th>Name</th>
-            <th>Selling price</th>
-            <th>Count</th>
-            <th>Prom</th>
-            <th>Actions</th>
+    <label>
+        <input type="text" id="search-input" placeholder="Enter UPC">
+        <button class="button" id="b-search-by-upc" type="submit">Search</button>
+    </label>
 
-        </tr>
-        </thead>
-        <tbody>
-        {% for product in products %}
-            <tr>
-                <td>{{ product.0 }} </td>
-                <td>{{ product.1 }} </td>
-                <td>{{ product.2 }} </td>
-                <td>{{ product.3 }} </td>
-                <td>{{ product.4 }} </td>
-                <td>{{ product.5 }} </td>
-
-                <td>
-                    <a class="button" href="{% url 'edit_in_store_product' product.0 %}">Edit</a>
-                    <form method="POST" action="{% url 'delete_in_store_product' product.0 %}">
-                        {% csrf_token %}
-                        <button class="button" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% include 'manager/in_store_products/in_store_product_table.html' %}
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-    document.getElementById("b-prom_only").addEventListener("click", function() {
-        $.ajax({
-                    url: 'only_prom',
-                    method: 'GET',
-                    success: function (response) {
-                        $($('#product_list')).html(response.html);
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                });
-    });
+        document.getElementById("b-search-by-upc").addEventListener("click", function () {
+            const upc = document.getElementById("search-input").value;
+            $.ajax({
+                url: '/manager/instoreproducts/get_in_store_by_upc/',
+                method: 'GET',
+                data: {upc: upc},
+                success: function (response) {
+                    $($('#in_store_list')).html(response.html);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
     </script>
-
 {% endblock %}
