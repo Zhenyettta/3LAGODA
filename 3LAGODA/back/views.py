@@ -788,6 +788,7 @@ def sort_selected(request):
             FROM store_product s
             JOIN product p on s.product_id = p.product_id
             WHERE s.is_promotional IN (True, False)
+            ORDER BY name
             """
         else:
             query = f"""
