@@ -824,34 +824,37 @@ from datetime import datetime
 
 
 def get_all_checks_all_empl(request):
-    date = request.GET.get('requested_date')
-    parsed_date = datetime.strptime(date, '%Y-%m-%d').date()
+    start_date = request.GET.get('start_date')
+    parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+    end_date = request.GET.get('end_date')
+    parsed_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
     employee = request.GET.get('empl_id')
     print(employee)
 
     if employee == 'all':
         with connection.cursor() as cursor:
-            query = """
+            query = f"""
                 SELECT c.check_number, e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')'
                 , c.card_number, c.print_date, c.sum_total, c.vat
                 FROM "check" c
                 JOIN employee e ON c.employee_id = e.employee_id
-                WHERE DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
+                WHERE DATE(c.print_date AT TIME ZONE 'UTC')::date BETWEEN '{parsed_start_date}' AND '{parsed_end_date}'
                 ORDER BY c.print_date desc
             """
-            cursor.execute(query, [parsed_date])
+            cursor.execute(query)
             checks = cursor.fetchall()
     else:
         with connection.cursor() as cursor:
-            query = """
+            query = f"""
                 SELECT c.check_number, e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')'
                 , c.card_number, c.print_date, c.sum_total, c.vat
                 FROM "check" c
                 JOIN employee e ON c.employee_id = e.employee_id
-                WHERE c.employee_id = %s AND DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
+                WHERE c.employee_id = {employee} AND DATE(c.print_date AT TIME ZONE 'UTC')::date BETWEEN '{parsed_start_date}' AND '{parsed_end_date}'
                 ORDER BY c.print_date desc
             """
-            cursor.execute(query, [employee, parsed_date])
+            cursor.execute(query)
             checks = cursor.fetchall()
 
     html = render(request, 'manager/checks/check_table.html', {'checks': checks}).content
@@ -859,34 +862,39 @@ def get_all_checks_all_empl(request):
     return JsonResponse({'html': html})
 
 
+
 def get_all_checks_sum(request):
-    date = request.GET.get('requested_date')
-    parsed_date = datetime.strptime(date, '%Y-%m-%d').date()
+    start_date = request.GET.get('start_date')
+    parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+    end_date = request.GET.get('end_date')
+    parsed_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
+
     employee = request.GET.get('empl_id')
     if employee == 'all':
         with connection.cursor() as cursor:
-            query = """
+            query = f"""
                 SELECT e.surname || ' ' || e.name || ' ' || e.patronymic, SUM(c.sum_total)
                 FROM "check" c
                 JOIN employee e ON c.employee_id = e.employee_id
-                WHERE DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
+                WHERE DATE(c.print_date AT TIME ZONE 'UTC')::date BETWEEN '{parsed_start_date}' AND '{parsed_end_date}'
                 GROUP BY e.surname, e.name, e.patronymic
             """
 
-            cursor.execute(query, [parsed_date])
+            cursor.execute(query)
             checks = cursor.fetchall()
             print(checks)
     else:
         with connection.cursor() as cursor:
-            query = """
+            query = f"""
                 SELECT e.surname || ' ' || e.name || ' ' || e.patronymic, SUM(c.sum_total)
                 FROM "check" c
                 JOIN employee e ON c.employee_id = e.employee_id
-                WHERE c.employee_id = %s AND DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
+                WHERE c.employee_id = {employee} AND DATE(c.print_date AT TIME ZONE 'UTC')::date BETWEEN '{parsed_start_date}' AND '{parsed_end_date}'
                 GROUP BY e.surname, e.name, e.patronymic
             """
 
-            cursor.execute(query, [employee, parsed_date])
+            cursor.execute(query)
             checks = cursor.fetchall()
 
     html = render(request, 'manager/checks/check_sum_table.html', {'checks': checks}).content
