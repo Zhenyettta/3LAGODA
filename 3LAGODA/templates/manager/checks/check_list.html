@@ -12,24 +12,52 @@
 
 {% block content %}
     <div><a class="button" onclick="location.href='/manager/'"><</a></div>
-    <label>Select employee and date:</label>
-    <br>
     <select id="empls" name="empls" >
-            <option value="all">all</option>
-            {% for empl in employees %}
-                    <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>
-            {% endfor %}
+        <option value="all">All</option>
+        {% for empl in employees %}
+            <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>
+        {% endfor %}
+    </select>
 
-        <input type="date" id="search-all-checks-all-empl">
-        <button class="button" id="b-search-all-checks-all-empl" type="submit">Find all checks</button>
+    <input type="date" id="search-all-checks-all-empl">
+    <button class="button" id="b-search-all-checks-all-empl" type="submit">Find checks</button>
+    <br>
+    <select id="sum" name="sum" >
+        <option value="all">All</option>
+        {% for empl in employees %}
+            <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>
+        {% endfor %}
+    </select>
 
-
-
+    <input type="date" id="search-sum">
+    <button class="button" id="b-search-sum" type="submit">Find sum</button>
+    <div><a class="button" onclick="location.href='/manager/checks/'">Reset</a></div>
+    <br>
 
     {% include 'manager/checks/check_table.html' %}
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        document.getElementById("b-search-sum").addEventListener("click", function () {
+            const empl_id = document.getElementById("sum").value;
+            const requested_date = document.getElementById("search-sum").value;
+            $.ajax({
+                url: '/manager/checks/get_all_checks_sum/',
+                method: 'GET',
+                data: { requested_date: requested_date, empl_id: empl_id },
+                success: function (response) {
+                    $($('#check_list')).html(response.html);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    </script>
+
+
+    <script>
         document.getElementById("b-search-all-checks-all-empl").addEventListener("click", function () {
             const empl_id = document.getElementById("empls").value;
             const requested_date = document.getElementById("search-all-checks-all-empl").value;
@@ -48,7 +76,6 @@
     </script>
 
 
-
     {% if checks.has_other_pages %}
         <div class="pagination">
             {% if checks.has_previous %}
@@ -61,7 +88,7 @@
                 {% else %}
                     <a href="?page={{ page }}">{{ page }}</a>
                 {% endif %}
-            {% endfor %}
+                            {% endfor %}
 
             {% if checks.has_next %}
                 <a href="?page={{ checks.next_page_number }}">Next</a>

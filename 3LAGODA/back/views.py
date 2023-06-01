@@ -817,6 +817,7 @@ def get_all_checks_all_empl(request):
     parsed_date = datetime.strptime(date, '%Y-%m-%d').date()  # Parse date string into a datetime object
     employee = request.GET.get('empl_id')
     print(employee)
+
     if employee == 'all':
         with connection.cursor() as cursor:
             query = """
@@ -847,5 +848,37 @@ def get_all_checks_all_empl(request):
     return JsonResponse({'html': html})
 
 
+def get_all_checks_sum(request):
+    date = request.GET.get('requested_date')
+    parsed_date = datetime.strptime(date, '%Y-%m-%d').date()  # Parse date string into a datetime object
+    employee = request.GET.get('empl_id')
+    if employee == 'all':
+        with connection.cursor() as cursor:
+            query = """
+                SELECT e.surname || ' ' || e.name || ' ' || e.patronymic, SUM(c.sum_total)
+                FROM "check" c
+                JOIN employee e ON c.employee_id = e.employee_id
+                WHERE DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
+                GROUP BY e.surname, e.name, e.patronymic
+            """
 
+            cursor.execute(query, [parsed_date])
+            checks = cursor.fetchall()
+            print(checks)
+    else:
+        with connection.cursor() as cursor:
+            query = """
+                SELECT e.surname || ' ' || e.name || ' ' || e.patronymic, SUM(c.sum_total)
+                FROM "check" c
+                JOIN employee e ON c.employee_id = e.employee_id
+                WHERE c.employee_id = %s AND DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
+                GROUP BY e.surname, e.name, e.patronymic
+            """
+
+            cursor.execute(query, [employee, parsed_date])
+            checks = cursor.fetchall()
+
+    html = render(request, 'manager/checks/check_sum_table.html', {'checks': checks}).content
+    html = html.decode('utf-8')
+    return JsonResponse({'html': html})
 
