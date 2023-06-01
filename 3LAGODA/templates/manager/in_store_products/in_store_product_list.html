@@ -19,12 +19,26 @@
         <button class="button" id="b-search-by-upc" type="submit">Search</button>
     </label>
 
-    <label for="is-prom">Prom</label>
+    <label>
+        <select id="products" name="products" >
+            {% for prod in prod_name %}
+                <option value='{{ prod.0 }}'>{{ prod.1 }}</option>
+            {% endfor %}
+        </select>
+        <input type="date" id="search-product">
+        <lable>-</lable>
+        <input type="date" id="search-product-end">
+
+        <button class="button" id="b-search-product" type="submit">Find product</button>
+    </label>
+    <div>
+        <label for="is-prom">Prom</label>
     <input type="checkbox" id="is-prom" onclick="sortTable(4, this)">
 
     <label for="not-prom">Not prom</label>
     <input type="checkbox" id="not-prom" onclick="sortTable(5, this)">
-    <table>
+    </div>
+    <table id="is_store_table">
         <thead>
         <tr>
             <th>UPC</th>
@@ -50,6 +64,24 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+            document.getElementById("b-search-product").addEventListener("click", function () {
+            const product = document.getElementById("products").value;
+            const requested_date = document.getElementById("search-product").value;
+            const requested_date_end = document.getElementById("search-product-end").value;
+
+            $.ajax({
+                url: '/manager/instoreproducts/find_product/',
+                method: 'GET',
+                data: { requested_date: requested_date, product: product,requested_date_end:requested_date_end},
+                success: function (response) {
+                    $($('#is_store_table')).html(response.html);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
         function sortTable(choice, element) {
             const isProm = document.getElementById("is-prom").checked;
             const notProm = document.getElementById("not-prom").checked;
@@ -155,5 +187,20 @@
             return "name";
         }
 
+        document.getElementById("b-search-sum").addEventListener("click", function () {
+            const empl_id = document.getElementById("sum").value;
+            const requested_date = document.getElementById("search-sum").value;
+            $.ajax({
+                url: '/manager/checks/get_all_checks_sum/',
+                method: 'GET',
+                data: { requested_date: requested_date, empl_id: empl_id },
+                success: function (response) {
+                    $($('#check_list')).html(response.html);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
     </script>
 {% endblock %}

@@ -261,7 +261,17 @@ def in_store_product_list(request):
         """
         cursor.execute(query)
         in_store_products = cursor.fetchall()
-    return render(request, 'manager/in_store_products/in_store_product_list.html', {'products': in_store_products})
+
+        query = """SELECT MIN(product_id), name
+                    FROM product
+                    GROUP BY name
+                    ORDER BY name
+                    """
+
+        cursor.execute(query)
+        prod_name = cursor.fetchall()
+        content = {'products': in_store_products, "prod_name":prod_name}
+    return render(request, 'manager/in_store_products/in_store_product_list.html', content)
 
 
 def empl_only_sales_list(request):
@@ -374,6 +384,7 @@ def add_in_store_product(request):
         query = "SELECT * FROM product"
         cursor.execute(query)
         products = cursor.fetchall()
+        print(products)
 
     if request.method == 'POST':
         form = InStoreProductForm(request.POST)
@@ -462,7 +473,6 @@ def watch_check(request, id):
         cursor.execute(query, [id])
         sales = cursor.fetchall()
     return render(request, 'manager/checks/watch_check.html', {'sales': sales})
-
 
 def edit_employee_button(request, id):
     if request.method == 'POST':
@@ -814,7 +824,7 @@ from datetime import datetime
 
 def get_all_checks_all_empl(request):
     date = request.GET.get('requested_date')
-    parsed_date = datetime.strptime(date, '%Y-%m-%d').date()  # Parse date string into a datetime object
+    parsed_date = datetime.strptime(date, '%Y-%m-%d').date()
     employee = request.GET.get('empl_id')
     print(employee)
 
@@ -850,7 +860,7 @@ def get_all_checks_all_empl(request):
 
 def get_all_checks_sum(request):
     date = request.GET.get('requested_date')
-    parsed_date = datetime.strptime(date, '%Y-%m-%d').date()  # Parse date string into a datetime object
+    parsed_date = datetime.strptime(date, '%Y-%m-%d').date()
     employee = request.GET.get('empl_id')
     if employee == 'all':
         with connection.cursor() as cursor:
@@ -882,3 +892,24 @@ def get_all_checks_sum(request):
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
 
+def find_product(request):
+    start_date = request.GET.get('requested_date')
+    end_date = request.GET.get('requested_date_end')
+    parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+    parsed_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
+    product = request.GET.get('product')
+    with connection.cursor() as cursor:
+        query = f"""
+            SELECT SUM(sp.count) AS total_units_sold
+            FROM Sale s
+            JOIN "check" c ON s.check_number = c.check_number
+            JOIN store_product sp ON s.UPC = sp.UPC
+            WHERE sp.product_id = {product}
+            AND c.print_date BETWEEN '{parsed_start_date}' AND '{parsed_end_date}'
+        """
+        cursor.execute(query)
+        total_units_sold = cursor.fetchone()[0]
+
+        print(total_units_sold)
+    return HttpResponse()
