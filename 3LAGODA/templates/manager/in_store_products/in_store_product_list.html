@@ -74,7 +74,7 @@
                 method: 'GET',
                 data: { requested_date: requested_date, product: product,requested_date_end:requested_date_end},
                 success: function (response) {
-                    $($('#is_store_table')).html(response.html);
+                    $('#is_store_table').html(response.html);
                 },
                 error: function (error) {
                     console.log(error);
@@ -195,7 +195,7 @@
                 method: 'GET',
                 data: { requested_date: requested_date, empl_id: empl_id },
                 success: function (response) {
-                    $($('#check_list')).html(response.html);
+                    $('#check_list').html(response.html);
                 },
                 error: function (error) {
                     console.log(error);

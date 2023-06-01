@@ -76,7 +76,7 @@
                 method: 'GET',
                 data: {surname: surname},
                 success: function (response) {
-                    $($('#empl_list')).html(response.html);
+                    $('#empl_list').html(response.html);
                 },
                 error: function (error) {
                     console.log(error);

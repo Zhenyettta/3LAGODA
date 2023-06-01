@@ -245,8 +245,7 @@ def check_list(request):
     paginator = Paginator(checks, items_per_page)
     paginated_checks = paginator.get_page(page_number)
 
-
-    context = {'checks': paginated_checks, 'employees':employees}
+    context = {'checks': paginated_checks, 'employees': employees}
 
     return render(request, 'manager/checks/check_list.html', context)
 
@@ -270,7 +269,7 @@ def in_store_product_list(request):
 
         cursor.execute(query)
         prod_name = cursor.fetchall()
-        content = {'products': in_store_products, "prod_name":prod_name}
+        content = {'products': in_store_products, "prod_name": prod_name}
     return render(request, 'manager/in_store_products/in_store_product_list.html', content)
 
 
@@ -473,6 +472,7 @@ def watch_check(request, id):
         cursor.execute(query, [id])
         sales = cursor.fetchall()
     return render(request, 'manager/checks/watch_check.html', {'sales': sales})
+
 
 def edit_employee_button(request, id):
     if request.method == 'POST':
@@ -822,6 +822,7 @@ def sort_selected(request):
 
 from datetime import datetime
 
+
 def get_all_checks_all_empl(request):
     date = request.GET.get('requested_date')
     parsed_date = datetime.strptime(date, '%Y-%m-%d').date()
@@ -892,13 +893,17 @@ def get_all_checks_sum(request):
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
 
+
 def find_product(request):
+    product = request.GET.get('product')
     start_date = request.GET.get('requested_date')
     end_date = request.GET.get('requested_date_end')
+
     parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     parsed_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
-    product = request.GET.get('product')
+    print(parsed_start_date, end_date, product)
+
     with connection.cursor() as cursor:
         query = f"""
             SELECT SUM(sp.count) AS total_units_sold

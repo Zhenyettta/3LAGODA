@@ -30,7 +30,7 @@
                 method: 'GET',
                 data: {prom: prom},
                 success: function (response) {
-                    $($('#cust_list')).html(response.html);
+                    $('#cust_list').html(response.html);
                 },
                 error: function (error) {
                     console.log(error);
