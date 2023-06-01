@@ -8,17 +8,23 @@
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cust_list.css' %}">
 {% endblock %}
 
 {% block content %}
-    <a class="button" onclick="location.href='/manager/'"><</a>
-    <div><a class="button" onclick="location.href='/manager/customers/addcustomer'">Add Customer</a>
+    <div class="header">
+        <a class="button button-back" onclick="location.href='/manager/'"> <span class="arrow">➜</span> Back </a>
+        <a class="button button-header" onclick="location.href='/manager/customers/addcustomer'">Add Customer</a>
+
+        <div class="search-wrapper">
+            <input type="text" class="search-input" id="search-input" placeholder="%%%">
+            <button class="button button-header" id="b-search-by-prom" type="submit">Search</button>
+        </div>
+
     </div>
-    <label>
-        <input type="text" id="search-input" placeholder="%%%">
-        <button class="button" id="b-search-by-prom" type="submit">Search</button>
-    </label>
+    <div class="table">
         {% include 'manager/customers/customer_table.html' %}
+    </div>
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
