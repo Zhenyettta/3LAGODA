@@ -902,19 +902,20 @@ def find_product(request):
     parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     parsed_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
-    print(parsed_start_date, end_date, product)
-
     with connection.cursor() as cursor:
         query = f"""
-            SELECT SUM(sp.count) AS total_units_sold
+            SELECT SUM(sp.count), p.name AS total_units_sold
             FROM Sale s
             JOIN "check" c ON s.check_number = c.check_number
             JOIN store_product sp ON s.UPC = sp.UPC
+            JOIN product p ON p.product_id = sp.product_id
             WHERE sp.product_id = {product}
-            AND c.print_date BETWEEN '{parsed_start_date}' AND '{parsed_end_date}'
+            AND DATE(c.print_date AT TIME ZONE 'UTC')::date BETWEEN '{parsed_start_date}' AND '{parsed_end_date}'
+            GROUP BY p.name
         """
         cursor.execute(query)
-        total_units_sold = cursor.fetchone()[0]
+        products = cursor.fetchall()
 
-        print(total_units_sold)
-    return HttpResponse()
+    html = render(request, 'manager/in_store_products/in_store_sum.html', {'products': products}).content
+    html = html.decode('utf-8')
+    return JsonResponse({'html': html})
