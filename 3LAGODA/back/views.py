@@ -510,6 +510,12 @@ def delete_customer(request, id):
     return redirect('/manager/customers')
 
 
+def delete_customer_as_sale(request, id):
+    with connection.cursor() as cursor:
+        query = "DELETE FROM customer_card WHERE card_number = %s"
+        cursor.execute(query, [id])
+    return redirect('/home/customers_view')
+
 def delete_category(request, id):
     with connection.cursor() as cursor:
         query = "DELETE FROM category WHERE category_number = %s"
@@ -611,6 +617,35 @@ def edit_customer_button(request, id):
             cursor.execute(customer_query, [id])
             customer = cursor.fetchone()
     return render(request, 'manager/customers/edit_customer.html', {'customer': customer})
+
+def edit_customer_button_sales(request, id):
+    if request.method == 'POST':
+        form = EditCustomerForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            edit_customer(
+                id,
+                data['surname'],
+                data['name'],
+                data['patronymic'],
+                data['phone_number'],
+                data['city'],
+                data['street'],
+                data['zip_code'],
+                data['percent'])
+            return customers_view(request)
+
+    else:
+        customer_query = """
+            SELECT card_number, surname, name, patronymic, phone_number, city, street, zip_code, percent
+            FROM customer_card
+            WHERE card_number = %s
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(customer_query, [id])
+            customer = cursor.fetchone()
+    return render(request, 'sales/customers/edit_cust_from_sale.html', {'customer': customer})
+
 
 
 def edit_category_button(request, id):

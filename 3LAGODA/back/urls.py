@@ -83,11 +83,12 @@ urlpatterns = [
     path('home/product_view/get_product_by_name/', views.get_product_by_name, name='get_product_by_name'),
 
     #In Store
-    path('manager/instoreproducts_view/', views.instoreproducts_view, name='instoreproducts_view'),
+    path('home/instoreproducts_view/', views.instoreproducts_view, name='instoreproducts_view'),
 
     #Customers
-    path('manager/customers_view/', views.customers_view, name='customers_view'),
-
+    path('home/customers_view/', views.customers_view, name='customers_view'),
+    path('home/customers_view/edit/<int:id>/', views.edit_customer_button_sales, name='edit_customer'),
+    path('home/customers_view/<int:id>/delete/', views.delete_customer_as_sale, name='delete_customer'),
 
     path('home/sale/', views.sale, name='sale'),
     path('home/sale/createcheck/', views.create_check, name='create_check'),

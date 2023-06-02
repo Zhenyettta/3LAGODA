@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Edit Customer
+{% endblock %}
+
+
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/edit_empl.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1>Edit Employee Menu</h1>
+    <a class="edit-employee-btn" onclick="location.href='/home/customers_view'"
+       style="background-color: #4CAF50; color: white; padding: 10px 20px;
+                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;"><</a>
+    <form method="post">
+        {% csrf_token %}
+        <label>
+            <input type="text" id="surname" name="surname" value="{{ customer.1 }}">
+        </label>
+        <label>
+            <input type="text" id="name" name="name" value="{{ customer.2 }}">
+        </label>
+        <label>
+            <input type="text" id="patronymic" name="patronymic" value="{{ customer.3 }}">
+        </label>
+
+        <label>
+            <input type="text" id="phone_number" name="phone_number" value="{{ customer.4 }}">
+        </label>
+
+        <label>
+            <input type="text" id="city" name="city" value="{{ customer.5 }}">
+        </label>
+        <label>
+            <input type="text" id="street" name="street" value="{{ customer.6 }}">
+        </label>
+
+        <label>
+            <input type="text" id="zip_code" name="zip_code" value="{{ customer.7 }}">
+        </label>
+
+        <label>
+            <input type="text" id="percent" name="percent" value="{{ customer.8 }}">
+        </label>
+
+        <div style="text-align: center;
+                    margin-top: 3vh">
+            <button
+                    style="background-color: #4CAF50; color: white; padding: 10px 20px;
+                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;">
+                Update
+            </button>
+        </div>
+    </form>
+{% endblock %}
