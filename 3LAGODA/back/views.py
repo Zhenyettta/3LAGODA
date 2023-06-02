@@ -7,6 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
+from datetime import datetime, date
 
 from .forms import LoginForm, EmployeeForm, EditEmployeeForm, CustomerForm, EditCustomerForm, CategoryForm, \
     EditCategoryForm, ProductForm, EditProductForm, InStoreProductForm, EditInStoreProductForm
@@ -105,6 +106,13 @@ def empl_list(request):
     return render(request, 'manager/employee/empl_list.html', {'employees': employees})
 
 
+def my_info(request):
+    with connection.cursor() as cursor:
+        query = "SELECT * FROM employee WHERE email = %s"
+        cursor.execute(query, [user.email])
+        employee = cursor.fetchone()
+    return render(request, 'sales/my_info/my_info.html', {'employee': employee})
+
 def cust_list(request):
     with connection.cursor() as cursor:
         query = "SELECT * FROM customer_card ORDER BY surname, name, patronymic"
@@ -128,19 +136,14 @@ def get_customer_by_name(request):
     with connection.cursor() as cursor:
         query = f"""SELECT * 
                     FROM customer_card 
-                    WHERE name LIKE '{name}%'
+                    WHERE surname LIKE '{name}%'
                     ORDER BY surname, name, patronymic"""
 
         cursor.execute(query)
-        customers = cursor.fetchall()
-        updated_list = []
-        for tpl in customers:
-            updated_tuple = list(tpl)
-            if updated_tuple[3] is None:
-                updated_tuple[3] = ""
-            updated_list.append(tuple(updated_tuple))
 
-    return render(request, 'sales/customers/customers_table.html', {'customers': updated_list})
+        customers = cursor.fetchall()
+
+    return render(request, 'sales/customers/customers_table.html', {'customers': customers})
 
 
 
@@ -314,6 +317,30 @@ def check_list(request):
 
     return render(request, 'manager/checks/check_list.html', context)
 
+
+def today_check(request):
+    today = date.today()
+    formatted_date = today.strftime("%Y-%m-%d")
+    print(formatted_date)
+    print(user.email)
+
+    with connection.cursor() as cursor:
+        query = """
+            SELECT c.check_number, c.card_number, c.print_date, c.sum_total, c.vat
+            FROM "check" c
+            JOIN employee e ON c.employee_id = e.employee_id
+            WHERE e.email = %s AND DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
+            ORDER BY c.print_date desc
+        """
+
+        cursor.execute(query,[user.email, formatted_date])
+        check = cursor.fetchall()
+
+    print(check)
+
+    html = render(request, 'sales/my_info/checks_table.html', {'check': check}).content
+    html = html.decode('utf-8')
+    return JsonResponse({'html': html})
 
 def in_store_product_list(request):
     with connection.cursor() as cursor:
@@ -940,10 +967,6 @@ def sort_selected(request):
     html = render(request, 'manager/in_store_products/in_store_product_table.html', {'products': products}).content
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
-
-
-from datetime import datetime
-
 
 def get_all_checks_all_empl(request):
     start_date = request.GET.get('start_date')

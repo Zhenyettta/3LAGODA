@@ -28,6 +28,13 @@
 
     <h2>Sales home page</h2>
     <br>
+        <div id="my_info">
+        <form action="{% url 'my_info' %}" method="post">
+            {% csrf_token %}
+            <button id="login-btn" class="btn" type="submit">My Info</button>
+        </form>
+    </div>
+
     <div>
         <form action="{% url 'customers_view' %}" method="post">
             {% csrf_token %}

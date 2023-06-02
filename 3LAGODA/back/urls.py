@@ -93,4 +93,8 @@ urlpatterns = [
 
     path('home/sale/', views.sale, name='sale'),
     path('home/sale/createcheck/', views.create_check, name='create_check'),
+
+    path('home/my_info/', views.my_info, name='my_info'),
+    path('home/my_info/today_check/', views.today_check, name='today_check'),
+
 ]

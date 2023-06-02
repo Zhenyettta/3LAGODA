@@ -145,11 +145,11 @@
                 if (hasPrice) {
 
                     $.ajax({
-                        url: '/manager/sale/createcheck/',
+                        url: 'createcheck/',
                         method: 'GET',
                         data: {data: JSON.stringify(data)},
                         success: function () {
-                            window.location.href = '/manager/checks/';
+                            window.location.href = '/home/sale/';
                         },
                         error: function (error) {
                             console.log(error);

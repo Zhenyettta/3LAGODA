@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Employee List
+{% endblock %}
+
+
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="header">
+        <a class="button button-back" onclick="location.href='/home/'"> <span class="arrow">➜</span> Back </a>
+    </div>
+
+
+    {% include 'sales/my_info/my_info_table.html' %}
+
+    <br>
+        <button class="button button-header" id="b-work-for-today" type="submit">Today</button>
+    <br>
+        {% include 'sales/my_info/checks_table.html' %}
+
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.getElementById("b-work-for-today").addEventListener("click", function () {
+            $.ajax({
+                url: '/home/my_info/today_check/',
+                method: 'GET',
+                success: function (response) {
+                    $('#check_today').html(response);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    </script>
+
+{% endblock %}
