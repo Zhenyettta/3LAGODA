@@ -324,23 +324,23 @@ def today_check(request):
     print(formatted_date)
     print(user.email)
 
+    # THIS SQL SHOULD BE FIXED DATE IS NOT WORKING
     with connection.cursor() as cursor:
         query = """
             SELECT c.check_number, c.card_number, c.print_date, c.sum_total, c.vat
             FROM "check" c
             JOIN employee e ON c.employee_id = e.employee_id
-            WHERE e.email = %s AND DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
+            WHERE e.email = %s AND c.print_date = %s
             ORDER BY c.print_date desc
         """
 
-        cursor.execute(query,[user.email, formatted_date])
-        check = cursor.fetchall()
+        cursor.execute(query, [user.email,formatted_date])
+        checks = cursor.fetchall()
 
-    print(check)
+    print(checks)
+    context = {'checks': checks}
 
-    html = render(request, 'sales/my_info/checks_table.html', {'check': check}).content
-    html = html.decode('utf-8')
-    return JsonResponse({'html': html})
+    return render(request, 'sales/my_info/checks_table.html', context)
 
 def in_store_product_list(request):
     with connection.cursor() as cursor:

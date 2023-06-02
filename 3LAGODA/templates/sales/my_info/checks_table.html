@@ -1,20 +1,40 @@
-<table id="check_today">
-    <thead>
-        <tr>
-            <th>Check Number</th>
-            <th>Card Number</th>
-            <th>Print Date</th>
-            <th>Sum Total</th>
-            <th>Vat</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>{{ check.0 }}</td>
-            <td>{{ check.2 }}</td>
-            <td>{{ check.3 }}</td>
-            <td>{{ check.4 }}</td>
-            <td>{{ check.5 }}</td>
-        </tr>
-    </tbody>
-</table>
+{% extends 'base.html' %}
+
+{% block title %}
+    Today Checks List
+{% endblock %}
+
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="header">
+        <a class="button button-back" onclick="location.href='/home/my_info/'"> <span class="arrow">➜</span> Back </a>
+    </div>
+
+    <table class="table" id="check_today">
+        <thead>
+            <tr>
+                <th>Check Number</th>
+                <th>Card Number</th>
+                <th>Print Date</th>
+                <th>Sum Total</th>
+                <th>Vat</th>
+            </tr>
+        </thead>
+        <tbody id="today">
+            <tr>
+                {% for check in checks  %}
+                    <td>{{ check.0 }}</td>
+                    <td>{{ check.2 }}</td>
+                    <td>{{ check.3 }}</td>
+                    <td>{{ check.4 }}</td>
+                    <td>{{ check.5 }}</td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

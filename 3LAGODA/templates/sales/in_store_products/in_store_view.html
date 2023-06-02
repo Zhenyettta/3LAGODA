@@ -12,6 +12,36 @@
 {% block content %}
     <a class="button" onclick="location.href='/home/'"><-Back</a>
     <br>
-    <div>In Store Products:</div>
+    <div>
+        <label for="is-prom">Prom</label>
+    <input type="checkbox" id="is-prom">
+
+    <label for="not-prom">Not prom</label>
+    <input type="checkbox" id="not-prom">
+
+    <button class="button" onclick="location.href='/home/instoreproducts_view/'">Reset</button>
+    </div>
+
+    <table id="is_store_table">
+        <thead>
+        <tr>
+            <th>UPC</th>
+            <th>Product ID</th>
+            <th>Name
+                <button class="sort-button" data="name">▲</button>
+            </th>
+            <th>Selling price
+                <button class="sort-button" data="price">▲</button>
+            </th>
+            <th>Count
+                <button class="sort-button" data="count">▲</button>
+            </th>
+            <th>Prom</th>
+        </tr>
+        </thead>
+        <tbody id="in_store_list">
         {% include 'sales/in_store_products/in_store_table_view.html' %}
+        </tbody>
+    </table>
+
 {% endblock %}
