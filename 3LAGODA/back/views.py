@@ -110,18 +110,27 @@ def cust_list(request):
         query = "SELECT * FROM customer_card ORDER BY surname, name, patronymic"
         cursor.execute(query)
         customers = cursor.fetchall()
-        updated_list = []
-        for tpl in customers:
-            updated_tuple = list(tpl)
-            if updated_tuple[3] is None:
-                updated_tuple[3] = ""
-            updated_list.append(tuple(updated_tuple))
-    return render(request, 'manager/customers/cust_list.html', {'customers': updated_list})
+
+    return render(request, 'manager/customers/cust_list.html', {'customers': customers})
 
 
 def customers_view(request):
     with connection.cursor() as cursor:
         query = "SELECT * FROM customer_card ORDER BY surname, name, patronymic"
+        cursor.execute(query)
+        customers = cursor.fetchall()
+
+    return render(request, 'sales/customers/customers_view.html', {'customers': customers})
+
+
+def get_customer_by_name(request):
+    name = request.GET.get('name').strip()
+    with connection.cursor() as cursor:
+        query = f"""SELECT * 
+                    FROM customer_card 
+                    WHERE name LIKE '{name}%'
+                    ORDER BY surname, name, patronymic"""
+
         cursor.execute(query)
         customers = cursor.fetchall()
         updated_list = []
@@ -130,8 +139,8 @@ def customers_view(request):
             if updated_tuple[3] is None:
                 updated_tuple[3] = ""
             updated_list.append(tuple(updated_tuple))
-    return render(request, 'sales/customers/customers_view.html', {'customers': updated_list})
 
+    return render(request, 'sales/customers/customers_table.html', {'customers': updated_list})
 
 
 
@@ -215,7 +224,7 @@ def get_product_by_name(request):
             SELECT p.product_id, c.name, p.name, p.characteristics
             FROM product p
             JOIN category c ON p.category_number = c.category_number
-            WHERE p.name LIKE '{name}'
+            WHERE p.name LIKE '{name}%' 
             ORDER BY p.name
             """
 

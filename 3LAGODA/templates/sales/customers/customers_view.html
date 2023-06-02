@@ -14,6 +14,31 @@
     <a class="button" onclick="location.href='/home/'"><-Back</a>
     <br>
     <div>Customers:</div>
+
+    <div class="search-wrapper">
+            <input type="text" class="search-input" id="search-input" placeholder="Name">
+            <button class="button button-header" id="b-search-by-name" type="submit">Find</button>
+            <button class="button button-header" onclick="location.href='/home/customers_view/'">Reset</button>
+    </div>
+
     {% include 'sales/customers/customers_table.html' %}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.getElementById("b-search-by-name").addEventListener("click", function () {
+            const name = document.getElementById("search-input").value;
+            $.ajax({
+                url: '/home/customers_list/get_customer_by_name/',
+                method: 'GET',
+                data: {name: name},
+                success: function (response) {
+                    $('#customer_list').html(response);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    </script>
 
 {% endblock %}

@@ -89,6 +89,7 @@ urlpatterns = [
     path('home/customers_view/', views.customers_view, name='customers_view'),
     path('home/customers_view/edit/<int:id>/', views.edit_customer_button_sales, name='edit_customer'),
     path('home/customers_view/<int:id>/delete/', views.delete_customer_as_sale, name='delete_customer'),
+    path('home/customers_list/get_customer_by_name/', views.get_customer_by_name, name='get_customer_by_name'),
 
     path('home/sale/', views.sale, name='sale'),
     path('home/sale/createcheck/', views.create_check, name='create_check'),
