@@ -8,7 +8,7 @@
 
 {% block content %}
     <div class="header">
-        <h2 class="header-title">ZLAGODA</h2>
+        <h2 class="header-title">ЗLAGODA</h2>
 
 
         <a class="edit-employee-btn" onclick="confirmLogout()"
@@ -26,19 +26,21 @@
 
     </div>
 
-    <h2>Manager home page</h2>
-    <div id="sell">
-        <form action="{% url 'sale' %}" method="post">
-            {% csrf_token %}
-            <button id="login-btn" class="btn" type="submit">Sell</button>
-        </form>
-    </div>
+
     <div>
         <h1 class="title">Manager home page</h1>
+
+        <form action="{% url 'sale' %}" method="post">
+            {% csrf_token %}
+            <div class="form-field">
+                <button id="login-btn" class="btn btn-manager" type="submit">Sell</button>
+            </div>
+        </form>
+
+
         <form action="{% url 'empl_list' %}" method="post">
             {% csrf_token %}
             <div class="form-field">
-                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">Employees</button>
                 <button id="login-btn" class="btn btn-manager" type="submit">Employees</button>
             </div>
         </form>
@@ -46,32 +48,28 @@
         <form action="{% url 'cust_list' %}" method="post">
             {% csrf_token %}
             <div class="form-field">
-                <button id="login-btn" class="btn" type="submit">Customers</button>
-                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">Customers</button>
+                <button id="login-btn" class="btn btn-manager" type="submit">Customers</button>
             </div>
         </form>
 
         <form action="{% url 'category_list' %}" method="post">
             {% csrf_token %}
             <div class="form-field">
-                <button id="login-btn" class="btn" type="submit">Category</button>
-                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">Category</button>
+                <button id="login-btn" class="btn btn-manager" type="submit">Category</button>
             </div>
         </form>
 
         <form action="{% url 'product_list' %}" method="post">
             {% csrf_token %}
             <div class="form-field">
-                <button id="login-btn" class="btn" type="submit">Product</button>
-                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">Product</button>
+                <button id="login-btn" class="btn btn-manager" type="submit">Product</button>
             </div>
         </form>
 
         <form action="{% url 'in_store_product_list' %}" method="post">
             {% csrf_token %}
             <div class="form-field">
-                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">InStoreProduct</button>
-                <button id="login-btn" class="btn" type="submit">InStoreProduct</button>
+                <button id="login-btn" class="btn btn-manager" type="submit">InStoreProduct</button>
             </div>
         </form>
 
