@@ -119,6 +119,22 @@ def cust_list(request):
     return render(request, 'manager/customers/cust_list.html', {'customers': updated_list})
 
 
+def customers_view(request):
+    with connection.cursor() as cursor:
+        query = "SELECT * FROM customer_card ORDER BY surname, name, patronymic"
+        cursor.execute(query)
+        customers = cursor.fetchall()
+        updated_list = []
+        for tpl in customers:
+            updated_tuple = list(tpl)
+            if updated_tuple[3] is None:
+                updated_tuple[3] = ""
+            updated_list.append(tuple(updated_tuple))
+    return render(request, 'sales/customers/customers_view.html', {'customers': updated_list})
+
+
+
+
 def category_list(request):
     with connection.cursor() as cursor:
         query = "SELECT * FROM category ORDER BY name"
@@ -151,6 +167,10 @@ def product_list(request):
     context = {'products': products, 'categories': categories}
     return render(request, 'manager/products/product_list.html', context)
 
+def product_view(request):
+    products, categories = fetch_products_and_categories()
+    context = {'products': products, 'categories': categories}
+    return render(request, 'sales/products/product_view.html', context)
 
 def get_products_by_category(request):
     category = request.GET.get('category')
@@ -271,6 +291,28 @@ def in_store_product_list(request):
         prod_name = cursor.fetchall()
         content = {'products': in_store_products, "prod_name": prod_name}
     return render(request, 'manager/in_store_products/in_store_product_list.html', content)
+
+def instoreproducts_view(request):
+    with connection.cursor() as cursor:
+        query = """
+        SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional 
+        FROM store_product s 
+        JOIN product p on s.product_id = p.product_id
+        ORDER BY s.count
+        """
+        cursor.execute(query)
+        in_store_products = cursor.fetchall()
+
+        query = """SELECT MIN(product_id), name
+                    FROM product
+                    GROUP BY name
+                    ORDER BY name
+                    """
+
+        cursor.execute(query)
+        prod_name = cursor.fetchall()
+        content = {'products': in_store_products, "prod_name": prod_name}
+    return render(request, 'sales/in_store_products/in_store_view.html', content)
 
 
 def empl_only_sales_list(request):
@@ -750,7 +792,7 @@ def sale(request):
         """
         cursor.execute(query)
         in_store_products = cursor.fetchall()
-    return render(request, 'manager/checks/create_check.html', {'products': in_store_products})
+    return render(request, 'sales/create_check.html', {'products': in_store_products})
 
 
 def create_check(request):

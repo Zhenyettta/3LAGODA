@@ -1,0 +1,24 @@
+    <table id="is_store_table">
+        <thead>
+        <tr>
+            <th>UPC</th>
+            <th>Product ID</th>
+            <th>Name</th>
+            <th>Selling price</th>
+            <th>Count</th>
+            <th>Prom</th>
+        </tr>
+        </thead>
+        <tbody id="in_store_list">
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.0 }}</td>
+                    <td>{{ product.1 }}</td>
+                    <td>{{ product.2 }}</td>
+                    <td>{{ product.3 }}</td>
+                    <td>{{ product.4 }}</td>
+                    <td>{{ product.5 }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>

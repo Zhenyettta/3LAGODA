@@ -29,8 +29,6 @@ urlpatterns = [
     # Manager
     path('manager/', views.manager_page, name='manager_page'),
 
-    path('manager/sale/', views.sale, name='sale'),
-    path('manager/sale/createcheck/', views.create_check, name='create_check'),
     # Employee list manipulations
     path('manager/employees/', views.empl_list, name='empl_list'),
     path('manager/employees/addemployee/', views.add_employee, name='add_employee'),
@@ -79,4 +77,16 @@ urlpatterns = [
     # Sales
     path('home/', views.home_page, name='home_page'),
 
+    #Products
+    path('home/product_view/', views.product_view, name='product_view'),
+
+    #In Store
+    path('manager/instoreproducts_view/', views.instoreproducts_view, name='instoreproducts_view'),
+
+    #Customers
+    path('manager/customers_view/', views.customers_view, name='customers_view'),
+
+
+    path('home/sale/', views.sale, name='sale'),
+    path('home/sale/createcheck/', views.create_check, name='create_check'),
 ]

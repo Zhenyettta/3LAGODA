@@ -13,9 +13,11 @@
 
 {% block content %}
 
-    <a class="button" onclick="location.href='/manager/'"><</a>
+    <a class="button" onclick="location.href='/home/'"><</a>
 
     <div class="checkout-container">
+
+    <div>Products:</div>
         <table class="product-table">
             <thead>
             <tr>
@@ -45,6 +47,9 @@
             {% endfor %}
             </tbody>
         </table>
+
+    <br>
+        <label>Check:</label>
         <table class="cart-table">
             <thead>
             <tr>
@@ -59,6 +64,7 @@
             </thead>
             <tbody class="cart-items"></tbody>
         </table>
+
         <button id="send-data" class="sale-button" type="submit">Create Check</button>
     </div>
 

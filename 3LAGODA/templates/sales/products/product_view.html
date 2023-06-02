@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Product List
+{% endblock %}
+
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div><a class="button" onclick="location.href='/home/'"><-Back</a></div>
+    <br>
+        <label>
+            <select id="category-select">
+                {% for category in categories %}
+                    <option value='{{ category.0 }}'>{{ category.0 }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+    {% include 'sales/products/product_view_table.html' %}
+{% endblock %}

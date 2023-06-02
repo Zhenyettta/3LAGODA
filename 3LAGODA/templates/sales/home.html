@@ -1,4 +1,65 @@
 {% extends 'base.html' %}
+
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/manager.css' %}">
+{% endblock %}
+
 {% block content %}
-    <h2>Viktor noob Zhenya boss</h2>
+    <div class="header">
+        <h2 class="header-title">ZLAGODA</h2>
+
+
+        <a class="edit-employee-btn" onclick="confirmLogout()"
+       style="background-color: #4CAF50; color: white; padding: 10px 20px; margin-right: 50px;
+          font-size: 16px; border: none; cursor: pointer; border-radius: 4px;">Log out</a>
+
+        <script>
+            function confirmLogout() {
+                var confirmation = confirm("Are you sure you want to log out?");
+                if (confirmation) {
+                    location.href = '/';
+                }
+            }
+        </script>
+
+    </div>
+
+    <h2>Sales home page</h2>
+    <br>
+    <div>
+        <form action="{% url 'customers_view' %}" method="post">
+            {% csrf_token %}
+            <div class="form-field">
+                <button id="login-btn" class="btn" type="submit">Customers</button>
+                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">Customers</button>
+            </div>
+        </form>
+
+        <form action="{% url 'product_view' %}" method="post">
+            {% csrf_token %}
+            <div class="form-field">
+                <button id="login-btn" class="btn" type="submit">Product</button>
+                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">Product</button>
+            </div>
+        </form>
+
+        <form action="{% url 'instoreproducts_view' %}" method="post">
+            {% csrf_token %}
+            <div class="form-field">
+                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">InStoreProduct</button>
+                <button id="login-btn" class="btn" type="submit">InStoreProduct</button>
+            </div>
+        </form>
+    </div>
+
+    <br>
+    <div id="sell">
+        <form action="{% url 'sale' %}" method="post">
+            {% csrf_token %}
+            <button id="login-btn" class="btn" type="submit">Sell</button>
+        </form>
+    </div>
+
 {% endblock %}

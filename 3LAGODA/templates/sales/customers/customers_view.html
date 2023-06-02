@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Customer List
+{% endblock %}
+
+
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+{% endblock %}
+
+{% block content %}
+    <a class="button" onclick="location.href='/home/'"><-Back</a>
+    <br>
+    <div>Customers:</div>
+    {% include 'sales/customers/customers_table.html' %}
+
+{% endblock %}

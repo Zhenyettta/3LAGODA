@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Product List
+{% endblock %}
+
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+{% endblock %}
+
+{% block content %}
+    <a class="button" onclick="location.href='/home/'"><-Back</a>
+    <br>
+    <div>In Store Products:</div>
+        {% include 'sales/in_store_products/in_store_table_view.html' %}
+{% endblock %}
