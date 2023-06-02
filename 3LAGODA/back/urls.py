@@ -79,6 +79,8 @@ urlpatterns = [
 
     #Products
     path('home/product_view/', views.product_view, name='product_view'),
+    path('home/product_view/search_category/', views.search_category, name='search_category'),
+    path('home/product_view/get_product_by_name/', views.get_product_by_name, name='get_product_by_name'),
 
     #In Store
     path('manager/instoreproducts_view/', views.instoreproducts_view, name='instoreproducts_view'),

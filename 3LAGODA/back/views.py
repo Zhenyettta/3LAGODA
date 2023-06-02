@@ -190,6 +190,42 @@ def get_products_by_category(request):
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
 
+def search_category(request):
+    category = request.GET.get('category')
+    with connection.cursor() as cursor:
+        query = """
+            SELECT p.product_id, c.name, p.name, p.characteristics
+            FROM product p
+            JOIN category c ON p.category_number = c.category_number
+            WHERE c.name = %s
+            ORDER BY p.name
+            """
+        cursor.execute(query, [category])
+        products = cursor.fetchall()
+
+    html = render(request, 'sales/products/product_view_table.html', {'products': products}).content
+    html = html.decode('utf-8')
+    return JsonResponse({'html': html})
+
+
+def get_product_by_name(request):
+    name = request.GET.get('name')
+    with connection.cursor() as cursor:
+        query = f"""
+            SELECT p.product_id, c.name, p.name, p.characteristics
+            FROM product p
+            JOIN category c ON p.category_number = c.category_number
+            WHERE p.name LIKE '{name}'
+            ORDER BY p.name
+            """
+
+        cursor.execute(query)
+        products = cursor.fetchall()
+
+    html = render(request, 'sales/products/product_view_table.html', {'products': products}).content
+    html = html.decode('utf-8')
+    return JsonResponse({'html': html})
+
 
 def get_in_store_by_upc(request):
     upc = request.GET.get('upc')

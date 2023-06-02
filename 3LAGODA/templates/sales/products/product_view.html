@@ -13,13 +13,65 @@
 {% block content %}
     <div><a class="button" onclick="location.href='/home/'"><-Back</a></div>
     <br>
+
         <label>
             <select id="category-select">
+                <option disabled selected>default</option>
                 {% for category in categories %}
                     <option value='{{ category.0 }}'>{{ category.0 }}</option>
                 {% endfor %}
             </select>
         </label>
 
+    <label>
+        <input type="text" class="search-input" id="search-input" placeholder="Name">
+        <button class="button button-header" id="b-search-by-name" type="submit">Search</button>
+    </label>
+
+        <button class="button button-header" onclick="location.href='/home/product_view/'">Clear</button>
+
     {% include 'sales/products/product_view_table.html' %}
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+        <script>
+
+            document.getElementById("b-search-by-name").addEventListener("click", function () {
+            const name = document.getElementById("search-input").value;
+            $.ajax({
+                url: '/home/product_view/get_product_by_name/',
+                method: 'GET',
+                data: {name: name},
+                success: function (response) {
+                    $('#product-table').html(response.html);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
+
+        $(document).ready(function () {
+            $('#category-select').change(function () {
+                const selectedCategory = $(this).val();
+                updateProductList(selectedCategory);
+            });
+
+            function updateProductList(category) {
+                $.ajax({
+                    url: '/home/product_view/search_category/',
+                    method: 'GET',
+                    data: {category: category},
+                    success: function (response) {
+                        $('#product-table').html(response.html);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+        });
+
+    </script>
+
 {% endblock %}
