@@ -8,7 +8,7 @@
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/cust_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -16,8 +16,8 @@
         <a class="button button-back" onclick="location.href='/manager/'"> <span class="arrow">➜</span> Back </a>
         <a class="button button-header" onclick="location.href='/manager/categories/addcategory'">Add Category</a>
     </div>
- <div class="table">
-    <table>
+ <div>
+    <table class="styled-table">
         <thead>
         <tr>
             <th>Category ID</th>
