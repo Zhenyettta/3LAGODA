@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, date
 
 import bcrypt
 from django.core.paginator import Paginator
@@ -7,7 +8,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
-from datetime import datetime, date
 
 from .forms import LoginForm, EmployeeForm, EditEmployeeForm, CustomerForm, EditCustomerForm, CategoryForm, \
     EditCategoryForm, ProductForm, EditProductForm, InStoreProductForm, EditInStoreProductForm
@@ -113,6 +113,7 @@ def my_info(request):
         employee = cursor.fetchone()
     return render(request, 'sales/my_info/my_info.html', {'employee': employee})
 
+
 def cust_list(request):
     with connection.cursor() as cursor:
         query = "SELECT * FROM customer_card ORDER BY surname, name, patronymic"
@@ -144,7 +145,6 @@ def get_customer_by_name(request):
         customers = cursor.fetchall()
 
     return render(request, 'sales/customers/customers_table.html', {'customers': customers})
-
 
 
 def category_list(request):
@@ -179,10 +179,12 @@ def product_list(request):
     context = {'products': products, 'categories': categories}
     return render(request, 'manager/products/product_list.html', context)
 
+
 def product_view(request):
     products, categories = fetch_products_and_categories()
     context = {'products': products, 'categories': categories}
     return render(request, 'sales/products/product_view.html', context)
+
 
 def get_products_by_category(request):
     category = request.GET.get('category')
@@ -201,6 +203,7 @@ def get_products_by_category(request):
     html = render(request, 'manager/products/product_table.html', {'products': products}).content
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
+
 
 def search_category(request):
     category = request.GET.get('category')
@@ -321,8 +324,7 @@ def check_list(request):
 def today_check(request):
     today = date.today()
     formatted_date = today.strftime("%Y-%m-%d")
-    print(formatted_date)
-    print(user.email)
+
 
     # THIS SQL SHOULD BE FIXED DATE IS NOT WORKING
     with connection.cursor() as cursor:
@@ -334,13 +336,14 @@ def today_check(request):
             ORDER BY c.print_date desc
         """
 
-        cursor.execute(query, [user.email,formatted_date])
+        cursor.execute(query, [user.email, formatted_date])
         checks = cursor.fetchall()
 
-    print(checks)
+
     context = {'checks': checks}
 
     return render(request, 'sales/my_info/checks_table.html', context)
+
 
 def in_store_product_list(request):
     with connection.cursor() as cursor:
@@ -363,6 +366,7 @@ def in_store_product_list(request):
         prod_name = cursor.fetchall()
         content = {'products': in_store_products, "prod_name": prod_name}
     return render(request, 'manager/in_store_products/in_store_product_list.html', content)
+
 
 def instoreproducts_view(request):
     with connection.cursor() as cursor:
@@ -497,7 +501,7 @@ def add_in_store_product(request):
         query = "SELECT * FROM product"
         cursor.execute(query)
         products = cursor.fetchall()
-        print(products)
+
 
     if request.method == 'POST':
         form = InStoreProductForm(request.POST)
@@ -551,6 +555,7 @@ def delete_customer_as_sale(request, id):
         query = "DELETE FROM customer_card WHERE card_number = %s"
         cursor.execute(query, [id])
     return redirect('/home/customers_view')
+
 
 def delete_category(request, id):
     with connection.cursor() as cursor:
@@ -654,6 +659,7 @@ def edit_customer_button(request, id):
             customer = cursor.fetchone()
     return render(request, 'manager/customers/edit_customer.html', {'customer': customer})
 
+
 def edit_customer_button_sales(request, id):
     if request.method == 'POST':
         form = EditCustomerForm(request.POST)
@@ -681,7 +687,6 @@ def edit_customer_button_sales(request, id):
             cursor.execute(customer_query, [id])
             customer = cursor.fetchone()
     return render(request, 'sales/customers/edit_cust_from_sale.html', {'customer': customer})
-
 
 
 def edit_category_button(request, id):
@@ -950,7 +955,7 @@ def sort_selected(request):
     choice = request.GET.get('choice')
     prom = request.GET.get('prom')
     order = request.GET.get('order')
-    print(order, choice)
+
 
     with connection.cursor() as cursor:
         query = f"""
@@ -968,6 +973,7 @@ def sort_selected(request):
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
 
+
 def get_all_checks_all_empl(request):
     start_date = request.GET.get('start_date')
     parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
@@ -975,7 +981,7 @@ def get_all_checks_all_empl(request):
     parsed_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
     employee = request.GET.get('empl_id')
-    print(employee)
+
 
     if employee == 'all':
         with connection.cursor() as cursor:
@@ -1007,13 +1013,11 @@ def get_all_checks_all_empl(request):
     return JsonResponse({'html': html})
 
 
-
 def get_all_checks_sum(request):
     start_date = request.GET.get('start_date')
     parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     end_date = request.GET.get('end_date')
     parsed_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
-
 
     employee = request.GET.get('empl_id')
     if employee == 'all':
@@ -1028,7 +1032,6 @@ def get_all_checks_sum(request):
 
             cursor.execute(query)
             checks = cursor.fetchall()
-            print(checks)
     else:
         with connection.cursor() as cursor:
             query = f"""
