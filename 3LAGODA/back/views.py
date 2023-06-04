@@ -152,8 +152,11 @@ def category_list(request):
         query = "SELECT * FROM category ORDER BY name"
         cursor.execute(query)
         categories = cursor.fetchall()
-
-    return render(request, 'manager/categories/category_list.html', {'categories': categories})
+        page_number = request.GET.get('page')
+        items_per_page = 10
+        paginator = Paginator(categories, items_per_page)
+        paginated_categories = paginator.get_page(page_number)
+        return render(request, 'manager/categories/category_list.html', {'categories': paginated_categories})
 
 
 def fetch_products_and_categories():

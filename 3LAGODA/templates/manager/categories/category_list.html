@@ -44,4 +44,24 @@
         </tbody>
     </table>
  </div>
+
+        {% if categories.has_other_pages %}
+        <div class="pagination">
+            {% if categories.has_previous %}
+                <a href="?page={{ categories.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            {% for page in categories.paginator.page_range %}
+                {% if page == categories.number %}
+                    <span class="current-page">{{ page }}</span>
+                {% else %}
+                    <a href="?page={{ page }}">{{ page }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if checks.has_next %}
+                <a href="?page={{ checks.next_page_number }}">Next</a>
+            {% endif %}
+        </div>
+    {% endif %}
 {% endblock %}

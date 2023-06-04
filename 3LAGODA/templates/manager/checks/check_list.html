@@ -12,7 +12,7 @@
 
 {% block content %}
     <div><a class="button" onclick="location.href='/manager/'"><</a></div>
-    <select id="empls" name="empls" >
+    <select id="empls" name="empls">
         <option value="all">All</option>
         {% for empl in employees %}
             <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>
@@ -25,7 +25,7 @@
 
     <button class="button" id="b-search-all-checks-all-empl" type="submit">Find checks</button>
     <br>
-    <select id="sum" name="sum" >
+    <select id="sum" name="sum">
         <option value="all">All</option>
         {% for empl in employees %}
             <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>
@@ -51,7 +51,7 @@
             $.ajax({
                 url: '/manager/checks/get_all_checks_sum/',
                 method: 'GET',
-                data: { start_date: requested_start_date, end_date:requested_end_date, empl_id: empl_id },
+                data: {start_date: requested_start_date, end_date: requested_end_date, empl_id: empl_id},
                 success: function (response) {
                     $('#check_list').html(response.html);
                 },
@@ -72,7 +72,7 @@
             $.ajax({
                 url: '/manager/checks/get_all_checks_all_empl/',
                 method: 'GET',
-                data: { start_date: requested_start_date, end_date:requested_end_date, empl_id: empl_id },
+                data: {start_date: requested_start_date, end_date: requested_end_date, empl_id: empl_id},
                 success: function (response) {
                     $('#check_list').html(response.html);
                 },
@@ -96,7 +96,7 @@
                 {% else %}
                     <a href="?page={{ page }}">{{ page }}</a>
                 {% endif %}
-                            {% endfor %}
+            {% endfor %}
 
             {% if checks.has_next %}
                 <a href="?page={{ checks.next_page_number }}">Next</a>
