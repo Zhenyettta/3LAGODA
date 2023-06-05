@@ -1,5 +1,6 @@
 import json
 from datetime import datetime, date
+from functools import wraps
 
 import bcrypt
 from django.core.paginator import Paginator
@@ -14,6 +15,16 @@ from .forms import LoginForm, EmployeeForm, EditEmployeeForm, CustomerForm, Edit
 from .user_data import User
 
 user = User()
+
+
+def sale_required(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if user.role == 'Sales':
+            return HttpResponse(status=204)
+        return view_func(request, *args, **kwargs)
+
+    return wrapper
 
 
 def show_form(request):
@@ -64,6 +75,7 @@ def home_page(request):
     return HttpResponse(status=204)
 
 
+@sale_required
 def manager_page(request):
     if user_is_manager():
         return render(request, 'manager/manager.html')
@@ -82,7 +94,7 @@ def redirect_to_manager_page():
     return HttpResponse(status=204)
 
 
-def user_is_manager():
+def user_is_manager() -> object:
     return user.role == 'Manager'
 
 
@@ -97,6 +109,7 @@ def encryption():
         cursor.execute(query)
 
 
+@sale_required
 def empl_list(request):
     with connection.cursor() as cursor:
         query = "SELECT * FROM employee WHERE email != %s ORDER BY surname, name, patronymic"
@@ -114,6 +127,7 @@ def my_info(request):
     return render(request, 'sales/my_info/my_info.html', {'employee': employee})
 
 
+@sale_required
 def cust_list(request):
     with connection.cursor() as cursor:
         query = "SELECT * FROM customer_card ORDER BY surname, name, patronymic"
@@ -147,6 +161,7 @@ def get_customer_by_name(request):
     return render(request, 'sales/customers/customers_table.html', {'customers': customers})
 
 
+@sale_required
 def category_list(request):
     with connection.cursor() as cursor:
         query = "SELECT * FROM category ORDER BY name"
@@ -177,6 +192,7 @@ def fetch_products_and_categories():
     return products, categories
 
 
+@sale_required
 def product_list(request):
     products, categories = fetch_products_and_categories()
     context = {'products': products, 'categories': categories}
@@ -189,6 +205,7 @@ def product_view(request):
     return render(request, 'sales/products/product_view.html', context)
 
 
+@sale_required
 def get_products_by_category(request):
     category = request.GET.get('category')
 
@@ -245,6 +262,7 @@ def get_product_by_name(request):
     return JsonResponse({'html': html})
 
 
+@sale_required
 def get_in_store_by_upc(request):
     upc = request.GET.get('upc')
 
@@ -265,6 +283,7 @@ def get_in_store_by_upc(request):
     return JsonResponse({'html': html})
 
 
+@sale_required
 def get_customer_by_percent(request):
     prom = request.GET.get('prom')
     with connection.cursor() as cursor:
@@ -281,6 +300,7 @@ def get_customer_by_percent(request):
     return JsonResponse({'html': html})
 
 
+@sale_required
 def get_empl_by_surname(request):
     surname = request.GET.get('surname')
     with connection.cursor() as cursor:
@@ -297,6 +317,7 @@ def get_empl_by_surname(request):
     return JsonResponse({'html': html})
 
 
+@sale_required
 def check_list(request):
     with connection.cursor() as cursor:
         query = """
@@ -328,7 +349,6 @@ def today_check(request):
     today = date.today()
     formatted_date = today.strftime("%Y-%m-%d")
 
-
     # THIS SQL SHOULD BE FIXED DATE IS NOT WORKING
     with connection.cursor() as cursor:
         query = """
@@ -342,12 +362,12 @@ def today_check(request):
         cursor.execute(query, [user.email, formatted_date])
         checks = cursor.fetchall()
 
-
     context = {'checks': checks}
 
     return render(request, 'sales/my_info/checks_table.html', context)
 
 
+@sale_required
 def in_store_product_list(request):
     with connection.cursor() as cursor:
         query = """
@@ -394,6 +414,7 @@ def instoreproducts_view(request):
     return render(request, 'sales/in_store_products/in_store_view.html', content)
 
 
+@sale_required
 def empl_only_sales_list(request):
     with connection.cursor() as cursor:
         query = "SELECT * FROM employee WHERE role='Sales' ORDER BY surname, name, patronymic"
@@ -403,6 +424,7 @@ def empl_only_sales_list(request):
     return render(request, 'manager/employee/empl_list.html', {'employees': employees})
 
 
+@sale_required
 def add_employee(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
@@ -435,6 +457,7 @@ def add_employee(request):
     return render(request, 'manager/employee/add_employee.html', {'form': form})
 
 
+@sale_required
 def add_customer(request):
     if request.method == 'POST':
         form = CustomerForm(request.POST)
@@ -459,6 +482,7 @@ def add_customer(request):
     return render(request, 'manager/customers/add_customer.html', {'form': form})
 
 
+@sale_required
 def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
@@ -473,6 +497,7 @@ def add_category(request):
     return render(request, 'manager/categories/add_category.html', {'form': form})
 
 
+@sale_required
 def add_product(request):
     with connection.cursor() as cursor:
         query = "SELECT * FROM category"
@@ -499,12 +524,12 @@ def add_product(request):
     return render(request, 'manager/products/add_product.html', context)
 
 
+@sale_required
 def add_in_store_product(request):
     with connection.cursor() as cursor:
         query = "SELECT * FROM product"
         cursor.execute(query)
         products = cursor.fetchall()
-
 
     if request.method == 'POST':
         form = InStoreProductForm(request.POST)
@@ -539,6 +564,7 @@ def is_email_used(email):
         return count > 0
 
 
+@sale_required
 def delete_employee(request, id):
     with connection.cursor() as cursor:
         query = "DELETE FROM employee WHERE employee_id = %s"
@@ -546,6 +572,7 @@ def delete_employee(request, id):
     return redirect('/manager/employees')
 
 
+@sale_required
 def delete_customer(request, id):
     with connection.cursor() as cursor:
         query = "DELETE FROM customer_card WHERE card_number = %s"
@@ -553,6 +580,7 @@ def delete_customer(request, id):
     return redirect('/manager/customers')
 
 
+@sale_required
 def delete_customer_as_sale(request, id):
     with connection.cursor() as cursor:
         query = "DELETE FROM customer_card WHERE card_number = %s"
@@ -560,6 +588,7 @@ def delete_customer_as_sale(request, id):
     return redirect('/home/customers_view')
 
 
+@sale_required
 def delete_category(request, id):
     with connection.cursor() as cursor:
         query = "DELETE FROM category WHERE category_number = %s"
@@ -567,6 +596,7 @@ def delete_category(request, id):
     return redirect('/manager/categories')
 
 
+@sale_required
 def delete_product(request, id):
     with connection.cursor() as cursor:
         query = "DELETE FROM product WHERE product_id = %s"
@@ -574,6 +604,7 @@ def delete_product(request, id):
     return redirect('/manager/products')
 
 
+@sale_required
 def delete_in_store_product(request, id):
     with connection.cursor() as cursor:
         query = "DELETE FROM store_product WHERE product_id = %s"
@@ -581,6 +612,7 @@ def delete_in_store_product(request, id):
     return redirect('/manager/instoreproducts')
 
 
+@sale_required
 def delete_check(request, id):
     with connection.cursor() as cursor:
         query = 'DELETE FROM "check" WHERE check_number = %s'
@@ -589,6 +621,7 @@ def delete_check(request, id):
     return redirect('/manager/checks')
 
 
+@sale_required
 def watch_check(request, id):
     with connection.cursor() as cursor:
         query = """
@@ -602,6 +635,7 @@ def watch_check(request, id):
     return render(request, 'manager/checks/watch_check.html', {'sales': sales})
 
 
+@sale_required
 def edit_employee_button(request, id):
     if request.method == 'POST':
         form = EditEmployeeForm(request.POST)
@@ -634,6 +668,7 @@ def edit_employee_button(request, id):
     return render(request, 'manager/employee/edit_employee.html', {'employee': employee})
 
 
+@sale_required
 def edit_customer_button(request, id):
     if request.method == 'POST':
         form = EditCustomerForm(request.POST)
@@ -663,6 +698,7 @@ def edit_customer_button(request, id):
     return render(request, 'manager/customers/edit_customer.html', {'customer': customer})
 
 
+@sale_required
 def edit_customer_button_sales(request, id):
     if request.method == 'POST':
         form = EditCustomerForm(request.POST)
@@ -692,6 +728,7 @@ def edit_customer_button_sales(request, id):
     return render(request, 'sales/customers/edit_cust_from_sale.html', {'customer': customer})
 
 
+@sale_required
 def edit_category_button(request, id):
     if request.method == 'POST':
         form = EditCategoryForm(request.POST)
@@ -713,6 +750,7 @@ def edit_category_button(request, id):
     return render(request, 'manager/categories/edit_category.html', {'category': category})
 
 
+@sale_required
 def edit_product_button(request, id):
     if request.method == 'POST':
         form = EditProductForm(request.POST)
@@ -744,6 +782,7 @@ def edit_product_button(request, id):
     return render(request, 'manager/products/edit_product.html', context)
 
 
+@sale_required
 def edit_in_store_product_button(request, id):
     if request.method == 'POST':
         form = EditInStoreProductForm(request.POST)
@@ -775,6 +814,7 @@ def edit_in_store_product_button(request, id):
     return render(request, 'manager/in_store_products/edit_in_store_product.html', context)
 
 
+@sale_required
 def create_employee(surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
                     zip_code,
                     email, password):
@@ -910,6 +950,7 @@ def sale(request):
     return render(request, 'sales/create_check.html', {'products': in_store_products})
 
 
+@sale_required
 def create_check(request):
     if request.method == 'GET':
         data = request.GET.get('data')
@@ -954,11 +995,11 @@ def create_check(request):
     return JsonResponse({'error': 'Invalid request method'})
 
 
+@sale_required
 def sort_selected(request):
     choice = request.GET.get('choice')
     prom = request.GET.get('prom')
     order = request.GET.get('order')
-
 
     with connection.cursor() as cursor:
         query = f"""
@@ -977,6 +1018,7 @@ def sort_selected(request):
     return JsonResponse({'html': html})
 
 
+@sale_required
 def get_all_checks_all_empl(request):
     start_date = request.GET.get('start_date')
     parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
@@ -984,7 +1026,6 @@ def get_all_checks_all_empl(request):
     parsed_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
     employee = request.GET.get('empl_id')
-
 
     if employee == 'all':
         with connection.cursor() as cursor:
@@ -1016,6 +1057,7 @@ def get_all_checks_all_empl(request):
     return JsonResponse({'html': html})
 
 
+@sale_required
 def get_all_checks_sum(request):
     start_date = request.GET.get('start_date')
     parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
@@ -1053,6 +1095,7 @@ def get_all_checks_sum(request):
     return JsonResponse({'html': html})
 
 
+@sale_required
 def find_product(request):
     product = request.GET.get('product')
     start_date = request.GET.get('requested_date')
