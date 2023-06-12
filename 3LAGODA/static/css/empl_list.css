@@ -226,3 +226,16 @@ input[type="date"] {
 .upc-enter {
     margin-right: 16px;
 }
+
+.td-quantity {
+    margin: auto 3px auto 0;
+    height: 25px;
+}
+
+.sale-table {
+    margin-top: 0;
+}
+
+.checkout-container {
+    margin-top: 80px;
+}

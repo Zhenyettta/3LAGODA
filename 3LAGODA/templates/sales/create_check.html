@@ -8,64 +8,64 @@
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
 
 {% endblock %}
 
 {% block content %}
-
-    <a class="button" onclick="location.href='/home/'"><</a>
-
+    <div class="header">
+        <a class="button button-back" onclick="location.href='/home/'"> <span class="arrow">➜</span> Back</a>
+    </div>
     <div class="checkout-container">
 
-    <div>Products:</div>
-        <table class="product-table">
-            <thead>
+        <h2 class="title">Products:</h2>
+    <table class="table styled-table sale-table">
+        <thead>
+        <tr>
+            <th>UPC</th>
+            <th>Product ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Count</th>
+            <th>Prom</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
             <tr>
-                <th>UPC</th>
-                <th>Product ID</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Count</th>
-                <th>Prom</th>
-                <th>Actions</th>
+                <td>{{ product.0 }}</td>
+                <td>{{ product.1 }}</td>
+                <td>{{ product.2 }}</td>
+                <td>{{ product.3 }}</td>
+                <td>{{ product.4 }}</td>
+                <td>{{ product.5 }}</td>
+                <td class="td-btn">
+                    <input class="td-quantity" type="number" name="quantity" min="1" value="1">
+                    <button class="add-to-cart-button button button-header" data-product-id="{{ product.1 }}">Add
+                    </button>
+                </td>
             </tr>
-            </thead>
-            <tbody>
-            {% for product in products %}
-                <tr>
-                    <td>{{ product.0 }}</td>
-                    <td>{{ product.1 }}</td>
-                    <td>{{ product.2 }}</td>
-                    <td>{{ product.3 }}</td>
-                    <td>{{ product.4 }}</td>
-                    <td>{{ product.5 }}</td>
-                    <td>
-                        <input type="number" name="quantity" min="1" value="1">
-                        <button class="add-to-cart-button" data-product-id="{{ product.1 }}">Додати</button>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {% endfor %}
+        </tbody>
+    </table>
 
-    <br>
-        <label>Check:</label>
-        <table class="cart-table">
-            <thead>
-            <tr>
-                <th>UPC</th>
-                <th>Product ID</th>
-                <th>Name</th>
-                <th>Selling price</th>
-                <th>Count</th>
-                <th>Prom</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody class="cart-items"></tbody>
-        </table>
-
-        <button id="send-data" class="sale-button" type="submit">Create Check</button>
+    <h2 class="title">Check:</h2>
+    <table class="cart-table table styled-table sale-table">
+        <thead>
+        <tr>
+            <th>UPC</th>
+            <th>Product ID</th>
+            <th>Name</th>
+            <th>Selling price</th>
+            <th>Count</th>
+            <th>Prom</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody class="cart-items"></tbody>
+    </table>
+    <button id="send-data" class="sale-button button button-header" type="submit">Create Check</button>
     </div>
 
     <script>
@@ -103,7 +103,7 @@
                 <td>${price}</td>
                 <td>${count}</td>
                 <td>${productData[5]}</td>
-                <td><button class="delete-button">Delete</button></td>
+                <td><button class="delete-button button button-header">Delete</button></td>
             `;
                     cartItemsContainer.appendChild(newRow);
                 }
