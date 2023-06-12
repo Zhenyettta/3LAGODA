@@ -7,37 +7,38 @@
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
     <meta http-equiv="refresh" content="no-cache, no-store, must-revalidate">
 {% endblock %}
 
 {% block content %}
-    <div><a class="button" onclick="location.href='/manager/'"><</a></div>
-    <select id="empls" name="empls">
-        <option value="all">All</option>
-        {% for empl in employees %}
-            <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>
-        {% endfor %}
-    </select>
+    <div class="header">
+        <a class="button button-header" onclick="location.href='/manager/'"> <span class="arrow">➜</span> Back </a>
+        <select id="empls" name="empls">
+            <option value="all">All</option>
+            {% for empl in employees %}
+                <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>
+            {% endfor %}
+        </select>
 
-    <input type="date" id="search-all-checks-all-empl-start">
-    <label>-</label>
-    <input type="date" id="search-all-checks-all-empl-end">
+        <input type="date" id="search-all-checks-all-empl-start">
+        <label>-</label>
+        <input type="date" id="search-all-checks-all-empl-end">
 
-    <button class="button" id="b-search-all-checks-all-empl" type="submit">Find checks</button>
-    <br>
-    <select id="sum" name="sum">
-        <option value="all">All</option>
-        {% for empl in employees %}
-            <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>
-        {% endfor %}
-    </select>
+        <button class="button" id="b-search-all-checks-all-empl" type="submit">Find checks</button>
+        <select id="sum" name="sum">
+            <option value="all">All</option>
+            {% for empl in employees %}
+                <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>
+            {% endfor %}
+        </select>
 
-    <input type="date" id="search-sum-start">
-    <label>-</label>
-    <input type="date" id="search-sum-end">
-    <button class="button" id="b-search-sum" type="submit">Find sum</button>
-    <div><a class="button" onclick="location.href='/manager/checks/'">Reset</a></div>
-    <br>
+        <input type="date" id="search-sum-start">
+        <label>-</label>
+        <input type="date" id="search-sum-end">
+        <button class="button" id="b-search-sum" type="submit">Find sum</button>
+        <div><a class="button" onclick="location.href='/manager/checks/'">Reset</a></div>
+    </div>
 
     {% include 'manager/checks/check_table.html' %}
 
