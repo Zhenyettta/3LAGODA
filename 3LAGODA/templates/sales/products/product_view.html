@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
-
 {% block title %}
     Product List
 {% endblock %}
@@ -12,30 +11,30 @@
 {% endblock %}
 
 {% block content %}
-    <div><a class="button button-back" onclick="location.href='/home/'"> <span class="arrow">➜</span> Back </a></div>
+    <div class="header">
+        <a class="button button-back" onclick="location.href='/home/'"> <span class="arrow">➜</span> Back </a>
 
-        <label>
             <select id="category-select">
                 <option disabled selected>default</option>
                 {% for category in categories %}
                     <option value='{{ category.0 }}'>{{ category.0 }}</option>
                 {% endfor %}
             </select>
-        </label>
 
-    <label>
-        <input type="text" class="search-input" id="search-input" placeholder="Name">
-        <button class="button button-header" id="b-search-by-name" type="submit">Search</button>
-    </label>
 
-        <button class="button button-header" onclick="location.href='/home/product_view/'">Clear</button>
+        <div class="search-wrapper">
+            <input type="text" class="search-input" id="search-input" placeholder="Name">
+            <button class="button button-header" id="b-search-by-name" type="submit">Search</button>
+            <button class="button button-header" onclick="location.href='/home/product_view/'">Clear</button>
+        </div>
+    </div>
 
     {% include 'sales/products/product_view_table.html' %}
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
-        <script>
+    <script>
 
-            document.getElementById("b-search-by-name").addEventListener("click", function () {
+        document.getElementById("b-search-by-name").addEventListener("click", function () {
             const name = document.getElementById("search-input").value;
             $.ajax({
                 url: '/home/product_view/get_product_by_name/',

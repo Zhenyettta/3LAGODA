@@ -241,7 +241,7 @@ input[type="date"] {
 }
 
 .checkout-container {
-    margin-top: 80px;
+    margin-top: 100px;
 }
 
 .current-page {
@@ -256,4 +256,9 @@ input[type="date"] {
     border-radius: 7px;
     background: #e2e2e285;
     color: #4A4A4A;
+}
+
+.h2{
+    color: #2d3142;
+    font-family: Arial;
 }

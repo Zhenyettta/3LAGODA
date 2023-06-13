@@ -7,22 +7,25 @@
 {% load static %}
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
 {% endblock %}
 
 {% block content %}
-    <a class="button" onclick="location.href='/home/'"><-Back</a>
-    <br>
-    <div>
-        <label for="is-prom">Prom</label>
-    <input type="checkbox" id="is-prom">
+    <div class="header">
+        <a class="button button-back" onclick="location.href='/home/'"> <span class="arrow">➜</span> Back </a>
 
-    <label for="not-prom">Not prom</label>
-    <input type="checkbox" id="not-prom">
+        <div class="search-wrapper">
+            <label for="is-prom">Prom</label>
+            <input type="checkbox" id="is-prom">
 
-    <button class="button" onclick="location.href='/home/instoreproducts_view/'">Reset</button>
+            <label for="not-prom">Not prom</label>
+            <input type="checkbox" id="not-prom">
+            <button class="button" onclick="location.href='/home/instoreproducts_view/'">Reset</button>
+        </div>
+
     </div>
 
-    <table id="is_store_table">
+    <table class="styled-table" id="is_store_table">
         <thead>
         <tr>
             <th>UPC</th>
