@@ -23,7 +23,7 @@
             <input type="hidden" name="gender">
             <ul class="dropdown-menu">
                 {% for empl in employees %}
-                     <li onclick="selectEmpl({{empl.0}})"> {{ empl.1 }} {{ empl.2 }} {{ empl.3 }} </li>
+                    <li onclick="selectEmpl({{ empl.0 }})"> {{ empl.1 }} {{ empl.2 }} {{ empl.3 }} </li>
                 {% endfor %}
             </ul>
         </div>
@@ -36,8 +36,9 @@
         <script>
             function selectEmpl(id) {
                 console.log(id);
-                document.getElementById("empls").value=id;
+                document.getElementById("empls").value = id;
             }
+
             $('.dropdown').click(function () {
                 $(this).attr('tabindex', 1).focus();
                 $(this).toggleClass('active');
@@ -74,16 +75,16 @@
         <input type="date" id="search-all-checks-all-empl-end">
 
         <button class="button button-header" id="b-search-all-checks-all-empl" type="submit">Find checks</button>
-{#        <select id="sum" name="sum">#}
-{#            <option value="all">All</option>#}
-{#            {% for empl in employees %}#}
-{#                <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>#}
-{#            {% endfor %}#}
-{#        </select>#}
+        {#        <select id="sum" name="sum">#}
+        {#            <option value="all">All</option>#}
+        {#            {% for empl in employees %}#}
+        {#                <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>#}
+        {#            {% endfor %}#}
+        {#        </select>#}
 
-{#        <input type="date" id="search-sum-start">#}
-{#        <label>-</label>#}
-{#        <input type="date" id="search-sum-end">#}
+        {#        <input type="date" id="search-sum-start">#}
+        {#        <label>-</label>#}
+        {#        <input type="date" id="search-sum-end">#}
         <button class="button button-header" id="b-search-sum" type="submit">Find sum</button>
         <a class="button button-header" onclick="location.href='/manager/checks/'">Reset</a>
         <a class="button button-header btn-all-only" onclick="window.print()">Print</a>
@@ -98,12 +99,29 @@
             const empl_id = document.getElementById("empls").value;
             const requested_start_date = document.getElementById("search-all-checks-all-empl-start").value;
             const requested_end_date = document.getElementById("search-all-checks-all-empl-end").value;
+
             $.ajax({
                 url: '/manager/checks/get_all_checks_sum/',
                 method: 'GET',
-                data: {start_date: requested_start_date, end_date: requested_end_date, empl_id: empl_id},
+                data: {
+                    start_date: requested_start_date,
+                    end_date: requested_end_date,
+                    empl_id: empl_id
+                },
                 success: function (response) {
                     $('#check_list').html(response.html);
+                    var paginationLinks = response.pagination_links;
+                    var paginationHTML = '';
+                    for (var i = 0; i < paginationLinks.length; i++) {
+                        var link = paginationLinks[i];
+                        if (link.current) {
+                            paginationHTML += '<span class="current-page">' + link.label + '</span>';
+                        } else {
+                            paginationHTML += '<a href="' + link.url + '">' + link.label + '</a>';
+                        }
+                    }
+                    $('#pagination-links').html(paginationHTML);
+                    setupNextPageListener();
                 },
                 error: function (error) {
                     console.log(error);
@@ -118,24 +136,82 @@
             const empl_id = document.getElementById("empls").value;
             const requested_start_date = document.getElementById("search-all-checks-all-empl-start").value;
             const requested_end_date = document.getElementById("search-all-checks-all-empl-end").value;
+            const page = 1;
 
             $.ajax({
                 url: '/manager/checks/get_all_checks_all_empl/',
                 method: 'GET',
-                data: {start_date: requested_start_date, end_date: requested_end_date, empl_id: empl_id},
+                data: {
+                    start_date: requested_start_date,
+                    end_date: requested_end_date,
+                    empl_id: empl_id,
+                    page: page
+                },
                 success: function (response) {
                     $('#check_list').html(response.html);
+                    var paginationLinks = response.pagination_links;
+                    var paginationHTML = '';
+                    for (var i = 0; i < paginationLinks.length; i++) {
+                        var link = paginationLinks[i];
+                        if (link.current) {
+                            paginationHTML += '<span class="current-page">' + link.label + '</span>';
+                        } else {
+                            paginationHTML += '<a href="' + link.url + '">' + link.label + '</a>';
+                        }
+                    }
+                    $('#pagination-links').html(paginationHTML);
+                    setupNextPageListener();
                 },
                 error: function (error) {
                     console.log(error);
                 }
             });
         });
+
+        function setupNextPageListener() {
+            $('#pagination-links a').click(function (event) {
+                event.preventDefault();
+
+                const empl_id = document.getElementById("empls").value;
+                const requested_start_date = document.getElementById("search-all-checks-all-empl-start").value;
+                const requested_end_date = document.getElementById("search-all-checks-all-empl-end").value;
+                const page = $(this).attr('href').split('=')[1];
+
+                $.ajax({
+                    url: '/manager/checks/get_all_checks_all_empl/',
+                    method: 'GET',
+                    data: {
+                        start_date: requested_start_date,
+                        end_date: requested_end_date,
+                        empl_id: empl_id,
+                        page: page
+                    },
+                    success: function (response) {
+                        $('#check_list').html(response.html);
+                        var paginationLinks = response.pagination_links;
+                        var paginationHTML = '';
+                        for (var i = 0; i < paginationLinks.length; i++) {
+                            var link = paginationLinks[i];
+                            if (link.current) {
+                                paginationHTML += '<span class="current-page">' + link.label + '</span>';
+                            } else {
+                                paginationHTML += '<a href="' + link.url + '">' + link.label + '</a>';
+                            }
+                        }
+                        $('#pagination-links').html(paginationHTML);
+                        setupNextPageListener();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+        }
     </script>
 
 
-    {% if checks.has_other_pages %}
-        <div class="pagination">
+    <div class="pagination">
+        <div id="pagination-links">
             {% if checks.has_previous %}
                 <a href="?page={{ checks.previous_page_number }}">Previous</a>
             {% endif %}
@@ -152,5 +228,7 @@
                 <a href="?page={{ checks.next_page_number }}">Next</a>
             {% endif %}
         </div>
-    {% endif %}
+    </div>
+
+
 {% endblock %}

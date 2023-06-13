@@ -1051,10 +1051,39 @@ def get_all_checks_all_empl(request):
             """
             cursor.execute(query)
             checks = cursor.fetchall()
-
-    html = render(request, 'manager/checks/check_table.html', {'checks': checks}).content
+    items_per_page = 10
+    paginator = Paginator(checks, items_per_page)
+    page_number = int(request.GET.get('page', 1))
+    paginated_checks = paginator.get_page(page_number)
+    html = render(request, 'manager/checks/check_table.html', {'checks': paginated_checks}).content
     html = html.decode('utf-8')
-    return JsonResponse({'html': html})
+
+    pagination_links = []
+    if paginated_checks.has_previous():
+        pagination_links.append({
+            'label': 'Previous',
+            'url': '?page=' + str(paginated_checks.previous_page_number())
+        })
+    for page in paginated_checks.paginator.page_range:
+        if page == paginated_checks.number:
+            pagination_links.append({
+                'label': str(page),
+                'url': '',
+                'current': True
+            })
+        else:
+            pagination_links.append({
+                'label': str(page),
+                'url': '?page=' + str(page),
+                'current': False
+            })
+    if paginated_checks.has_next():
+        pagination_links.append({
+            'label': 'Next',
+            'url': '?page=' + str(paginated_checks.next_page_number())
+        })
+
+    return JsonResponse({'html': html, 'pagination_links': pagination_links})
 
 
 @manager_required
@@ -1090,10 +1119,38 @@ def get_all_checks_sum(request):
 
             cursor.execute(query)
             checks = cursor.fetchall()
-
-    html = render(request, 'manager/checks/check_sum_table.html', {'checks': checks}).content
+    items_per_page = 10
+    paginator = Paginator(checks, items_per_page)
+    page_number = int(request.GET.get('page', 1))
+    paginated_checks = paginator.get_page(page_number)
+    html = render(request, 'manager/checks/check_sum_table.html', {'checks': paginated_checks}).content
     html = html.decode('utf-8')
-    return JsonResponse({'html': html})
+    pagination_links = []
+    if paginated_checks.has_previous():
+        pagination_links.append({
+            'label': 'Previous',
+            'url': '?page=' + str(paginated_checks.previous_page_number())
+        })
+    for page in paginated_checks.paginator.page_range:
+        if page == paginated_checks.number:
+            pagination_links.append({
+                'label': str(page),
+                'url': '',
+                'current': True
+            })
+        else:
+            pagination_links.append({
+                'label': str(page),
+                'url': '?page=' + str(page),
+                'current': False
+            })
+    if paginated_checks.has_next():
+        pagination_links.append({
+            'label': 'Next',
+            'url': '?page=' + str(paginated_checks.next_page_number())
+        })
+
+    return JsonResponse({'html': html, 'pagination_links': pagination_links})
 
 
 @manager_required

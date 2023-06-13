@@ -40,7 +40,7 @@ urlpatterns = [
     # Customer list implementation
     path('manager/customers/', views.cust_list, name='cust_list'),
     path('manager/customers/addcustomer', views.add_customer, name='add_customer'),
-    path('manager/customers/edit/<int:id>/', views.edit_customer_button, name='edit_customer'),
+    path('manager/customers/edit/<int:id>/', views.edit_customer_button, name='manager_edit_customer'),
     path('manager/customers/<int:id>/delete/', views.delete_customer, name='delete_customer'),
     path('manager/customers/get_customer_by_percent/', views.get_customer_by_percent, name='get_customer_by_percent'),
 

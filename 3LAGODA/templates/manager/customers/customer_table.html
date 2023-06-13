@@ -21,14 +21,16 @@
                 <td>{{ customer.8 }}</td>
                 <td>
                     <div class="td-btn">
-                        <a class="button button-header" href="{% url 'edit_customer' customer.0 %}">Edit</a>
+                        <a class="button button-header" href="{% url 'manager_edit_customer' customer.0 %}">Edit</a>
                         <form method="POST" action="{% url 'delete_customer' customer.0 %}">
                             {% csrf_token %}
-                            <button class="button button-header" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
+                            <button class="button button-header" type="submit"
+                                    onclick="return confirm('Are you sure?');">Delete
+                            </button>
                         </form>
                     </div>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
-    </table>
+</table>
