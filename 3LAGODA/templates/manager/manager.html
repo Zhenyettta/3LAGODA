@@ -30,14 +30,6 @@
     <div>
         <h1 class="title">Manager home page</h1>
 
-        <form action="{% url 'sale' %}" method="post">
-            {% csrf_token %}
-            <div class="form-field">
-                <button id="login-btn" class="btn btn-manager" type="submit">Sell</button>
-            </div>
-        </form>
-
-
         <form action="{% url 'empl_list' %}" method="post">
             {% csrf_token %}
             <div class="form-field">

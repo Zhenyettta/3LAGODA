@@ -42,15 +42,8 @@
 .pagination .current-page {
     padding: 5px 10px;
     margin: 0 5px;
-    border: 1px solid #ccc;
     text-decoration: none;
-    color: #333;
 }
-
-.pagination .current-page {
-    background-color: #ccc;
-}
-
 
 .button {
     background-color: #ef8354;

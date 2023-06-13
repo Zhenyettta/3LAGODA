@@ -13,12 +13,12 @@
 
 {% block content %}
     <div class="header">
-        <a class="button button-back" onclick="location.href='/manager/'"> <span class="arrow">➜</span> Back </a>
-        <a class="button button-header btn-addempl" onclick="location.href='/manager/employees/addemployee'">Add
-            Employee</a>
+        <button class="button button-back" onclick="location.href='/manager/'"> <span class="arrow">➜</span> Back </button>
+        <button class="button button-header btn-addempl" onclick="location.href='/manager/employees/addemployee'">Add
+            Employee</button>
         <a class="button button-header btn-all-only" href="{% url 'empl_list' %}">All</a>
         <a class="button button-header btn-all-only" href="{% url 'empl_only_sales_list' %}">Only Sales</a>
-        <a class="button button-header btn-all-only" onclick="window.print()">Print</a>
+        <button class="button button-header btn-all-only" onclick="window.print()">Print</button>
 
         <div class="search-wrapper">
             <input type="text" class="search-input" id="search-input" placeholder="Enter surname">

@@ -52,7 +52,6 @@
                 $(this).parents('.dropdown').find('span').text($(this).text());
                 $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
             });
-            /*End Dropdown Menu*/
 
 
             $('.dropdown-menu li').click(function () {
@@ -62,32 +61,17 @@
             });
         </script>
 
-
-        {#        <select id="empls" name="empls">#}
-        {#            <option value="all">All</option>#}
-        {#            {% for empl in employees %}#}
-        {#                <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>#}
-        {#            {% endfor %}#}
-        {#        </select>#}
-
         <input type="date" id="search-all-checks-all-empl-start">
         <label>-</label>
         <input type="date" id="search-all-checks-all-empl-end">
 
         <button class="button button-header" id="b-search-all-checks-all-empl" type="submit">Find checks</button>
-        {#        <select id="sum" name="sum">#}
-        {#            <option value="all">All</option>#}
-        {#            {% for empl in employees %}#}
-        {#                <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>#}
-        {#            {% endfor %}#}
-        {#        </select>#}
-
-        {#        <input type="date" id="search-sum-start">#}
-        {#        <label>-</label>#}
-        {#        <input type="date" id="search-sum-end">#}
         <button class="button button-header" id="b-search-sum" type="submit">Find sum</button>
-        <a class="button button-header" onclick="location.href='/manager/checks/'">Reset</a>
-        <a class="button button-header btn-all-only" onclick="window.print()">Print</a>
+        <div class="search-wrapper">
+            <button class="button button-header" onclick="location.href='/manager/checks/'">Reset</button>
+            <button class="button button-header btn-all-only" onclick="window.print()">Print</button>
+        </div>
+
     </div>
 
     {% include 'manager/checks/check_table.html' %}
@@ -213,19 +197,19 @@
     <div class="pagination">
         <div id="pagination-links">
             {% if checks.has_previous %}
-                <a href="?page={{ checks.previous_page_number }}">Previous</a>
+                <a class="pgn-btn" href="?page={{ checks.previous_page_number }}">Previous</a>
             {% endif %}
 
             {% for page in checks.paginator.page_range %}
                 {% if page == checks.number %}
                     <span class="current-page">{{ page }}</span>
                 {% else %}
-                    <a href="?page={{ page }}">{{ page }}</a>
+                    <a class="pgn-btn" href="?page={{ page }}">{{ page }}</a>
                 {% endif %}
             {% endfor %}
 
             {% if checks.has_next %}
-                <a href="?page={{ checks.next_page_number }}">Next</a>
+                <a class="pgn-btn" href="?page={{ checks.next_page_number }}">Next</a>
             {% endif %}
         </div>
     </div>

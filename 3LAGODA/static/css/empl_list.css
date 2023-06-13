@@ -9,7 +9,7 @@
     top: 0;
     display: flex;
     justify-content: flex-start;
-    width: 100vw;
+    width: 100%;
     background-color: #5495ef42;
     align-items: center;
     gap: 5px;
@@ -36,6 +36,8 @@
 
 .button-header {
     border-radius: 7px;
+    font-family: "Arial";
+    font-size: 14px;
 }
 
 .btn-addempl {
@@ -230,6 +232,8 @@ input[type="date"] {
 .td-quantity {
     margin: auto 3px auto 0;
     height: 25px;
+    border-radius: 7px;
+    border: 1px solid lightgray;
 }
 
 .sale-table {
@@ -238,4 +242,18 @@ input[type="date"] {
 
 .checkout-container {
     margin-top: 80px;
+}
+
+.current-page {
+    border: none;
+    border-radius: 7px;
+    background: #5495ef42;
+    color: #2d3142;
+}
+
+.pgn-btn {
+    border: none;
+    border-radius: 7px;
+    background: #e2e2e285;
+    color: #4A4A4A;
 }

@@ -9,7 +9,7 @@
                     <td>{{ product.5 }}</td>
                     <td>
                         <div class="td-btn">
-                            <a class="button button-header" href="{% url 'edit_in_store_product' product.1 %}">Edit</a>
+                            <button class="button button-header" href="{% url 'edit_in_store_product' product.1 %}">Edit</button>
                             <form method="POST" action="{% url 'delete_in_store_product' product.1 %}">
                                 {% csrf_token %}
                                 <button class="button button-header" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
