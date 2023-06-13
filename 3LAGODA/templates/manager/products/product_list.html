@@ -15,6 +15,7 @@
     <div class="header">
         <a class="button button-back" onclick="location.href='/manager/'"> <span class="arrow">➜</span> Back </a>
         <div><a class="button button-header" onclick="location.href='/manager/products/addproduct'">Add Product</a>
+
             <label>
                 <div class="dropdown">
                     <div class="select">
@@ -28,6 +29,8 @@
                         {% endfor %}
                     </ul>
                 </div>
+                <a class="button button-header" onclick="window.print()">Print</a>
+
 
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script>

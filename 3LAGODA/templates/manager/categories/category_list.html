@@ -15,37 +15,40 @@
     <div class="header">
         <a class="button button-back" onclick="location.href='/manager/'"> <span class="arrow">➜</span> Back </a>
         <a class="button button-header" onclick="location.href='/manager/categories/addcategory'">Add Category</a>
+        <a class="button button-header" onclick="window.print()">Print</a>
     </div>
- <div>
-    <table class="styled-table">
-        <thead>
-        <tr>
-            <th>Category ID</th>
-            <th>Name</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for category in categories %}
+    <div>
+        <table class="styled-table">
+            <thead>
             <tr>
-                <td>{{ category.0 }}</td>
-                <td>{{ category.1 }}</td>
-                <td>
-                     <div class="td-btn">
-                        <a class="button button-header" href="{% url 'edit_category' category.0 %}">Edit</a>
-                        <form method="POST" action="{% url 'delete_category' category.0 %}">
-                            {% csrf_token %}
-                            <button class="button button-header" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
-                        </form>
-                     </div>
-                </td>
+                <th>Category ID</th>
+                <th>Name</th>
+                <th>Actions</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
- </div>
+            </thead>
+            <tbody>
+            {% for category in categories %}
+                <tr>
+                    <td>{{ category.0 }}</td>
+                    <td>{{ category.1 }}</td>
+                    <td>
+                        <div class="td-btn">
+                            <a class="button button-header" href="{% url 'edit_category' category.0 %}">Edit</a>
+                            <form method="POST" action="{% url 'delete_category' category.0 %}">
+                                {% csrf_token %}
+                                <button class="button button-header" type="submit"
+                                        onclick="return confirm('Are you sure?');">Delete
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-        {% if categories.has_other_pages %}
+    {% if categories.has_other_pages %}
         <div class="pagination">
             {% if categories.has_previous %}
                 <a href="?page={{ categories.previous_page_number }}">Previous</a>

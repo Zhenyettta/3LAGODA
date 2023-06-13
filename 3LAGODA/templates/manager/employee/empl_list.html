@@ -18,6 +18,7 @@
             Employee</a>
         <a class="button button-header btn-all-only" href="{% url 'empl_list' %}">All</a>
         <a class="button button-header btn-all-only" href="{% url 'empl_only_sales_list' %}">Only Sales</a>
+        <a class="button button-header btn-all-only" onclick="window.print()">Print</a>
 
         <div class="search-wrapper">
             <input type="text" class="search-input" id="search-input" placeholder="Enter surname">
@@ -85,11 +86,5 @@
             });
         });
     </script>
-{#    <script>#}
-{#        // Automatically print the page when loaded#}
-{#        window.onload = function() {#}
-{#            window.print();#}
-{#        };#}
-{#    </script>#}
 
 {% endblock %}

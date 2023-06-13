@@ -37,7 +37,8 @@
         <label>-</label>
         <input type="date" id="search-sum-end">
         <button class="button" id="b-search-sum" type="submit">Find sum</button>
-        <div><a class="button" onclick="location.href='/manager/checks/'">Reset</a></div>
+        <a class="button" onclick="location.href='/manager/checks/'">Reset</a>
+        <a class="button button-header btn-all-only" onclick="window.print()">Print</a>
     </div>
 
     {% include 'manager/checks/check_table.html' %}

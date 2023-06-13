@@ -1083,7 +1083,8 @@ def get_all_checks_sum(request):
                 SELECT e.surname || ' ' || e.name || ' ' || e.patronymic, SUM(c.sum_total)
                 FROM "check" c
                 JOIN employee e ON c.employee_id = e.employee_id
-                WHERE c.employee_id = {employee} AND DATE(c.print_date AT TIME ZONE 'UTC')::date BETWEEN '{parsed_start_date}' AND '{parsed_end_date}'
+                WHERE c.employee_id = {employee} AND DATE(c.print_date AT TIME ZONE 'UTC')::date 
+                BETWEEN '{parsed_start_date}' AND '{parsed_end_date}'
                 GROUP BY e.surname, e.name, e.patronymic
             """
 
