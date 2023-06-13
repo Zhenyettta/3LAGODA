@@ -13,31 +13,79 @@
 
 {% block content %}
     <div class="header">
-        <a class="button button-header" onclick="location.href='/manager/'"> <span class="arrow">➜</span> Back </a>
-        <select id="empls" name="empls">
-            <option value="all">All</option>
+        <a class="button button-back" onclick="location.href='/manager/'"> <span class="arrow">➜</span> Back </a>
+
+        <div class="dropdown">
+            <div class="select">
+                <span>Select Employee</span>
+                <i class="fa fa-chevron-left"></i>
+            </div>
+            <input type="hidden" name="gender">
+            <ul class="dropdown-menu">
+                {% for empl in employees %}
+                     <li onclick="selectEmpl({{empl.0}})"> {{ empl.1 }} {{ empl.2 }} {{ empl.3 }} </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <select style="display: none" id="empls" name="empls">
             {% for empl in employees %}
                 <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>
             {% endfor %}
         </select>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            function selectEmpl(id) {
+                console.log(id);
+                document.getElementById("empls").value=id;
+            }
+            $('.dropdown').click(function () {
+                $(this).attr('tabindex', 1).focus();
+                $(this).toggleClass('active');
+                $(this).find('.dropdown-menu').slideToggle(300);
+            });
+            $('.dropdown').focusout(function () {
+                $(this).removeClass('active');
+                $(this).find('.dropdown-menu').slideUp(300);
+            });
+            $('.dropdown .dropdown-menu li').click(function () {
+                $(this).parents('.dropdown').find('span').text($(this).text());
+                $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
+            });
+            /*End Dropdown Menu*/
+
+
+            $('.dropdown-menu li').click(function () {
+                var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
+                    msg = '<span class="msg">Hidden input value: ';
+                $('.msg').html(msg + input + '</span>');
+            });
+        </script>
+
+
+        {#        <select id="empls" name="empls">#}
+        {#            <option value="all">All</option>#}
+        {#            {% for empl in employees %}#}
+        {#                <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>#}
+        {#            {% endfor %}#}
+        {#        </select>#}
 
         <input type="date" id="search-all-checks-all-empl-start">
         <label>-</label>
         <input type="date" id="search-all-checks-all-empl-end">
 
-        <button class="button" id="b-search-all-checks-all-empl" type="submit">Find checks</button>
-        <select id="sum" name="sum">
-            <option value="all">All</option>
-            {% for empl in employees %}
-                <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>
-            {% endfor %}
-        </select>
+        <button class="button button-header" id="b-search-all-checks-all-empl" type="submit">Find checks</button>
+{#        <select id="sum" name="sum">#}
+{#            <option value="all">All</option>#}
+{#            {% for empl in employees %}#}
+{#                <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>#}
+{#            {% endfor %}#}
+{#        </select>#}
 
-        <input type="date" id="search-sum-start">
-        <label>-</label>
-        <input type="date" id="search-sum-end">
-        <button class="button" id="b-search-sum" type="submit">Find sum</button>
-        <a class="button" onclick="location.href='/manager/checks/'">Reset</a>
+{#        <input type="date" id="search-sum-start">#}
+{#        <label>-</label>#}
+{#        <input type="date" id="search-sum-end">#}
+        <button class="button button-header" id="b-search-sum" type="submit">Find sum</button>
+        <a class="button button-header" onclick="location.href='/manager/checks/'">Reset</a>
         <a class="button button-header btn-all-only" onclick="window.print()">Print</a>
     </div>
 
@@ -47,9 +95,9 @@
 
     <script>
         document.getElementById("b-search-sum").addEventListener("click", function () {
-            const empl_id = document.getElementById("sum").value;
-            const requested_start_date = document.getElementById("search-sum-start").value;
-            const requested_end_date = document.getElementById("search-sum-end").value;
+            const empl_id = document.getElementById("empls").value;
+            const requested_start_date = document.getElementById("search-all-checks-all-empl-start").value;
+            const requested_end_date = document.getElementById("search-all-checks-all-empl-end").value;
             $.ajax({
                 url: '/manager/checks/get_all_checks_sum/',
                 method: 'GET',
