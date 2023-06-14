@@ -21,7 +21,6 @@ input {
 
 /* Style the Create Employee button */
 #create-employee-btn {
-    background-color: #007bff;
     border: none;
     border-radius: 5px;
     color: #fff;
@@ -30,10 +29,10 @@ input {
     padding: 10px 20px;
 }
 
-#create-employee-btn:hover {
-    background-color: #0069d9;
-    cursor: pointer;
-}
+/*#create-employee-btn:hover {*/
+/*    background-color: #0069d9;*/
+/*    cursor: pointer;*/
+/*}*/
 
 /* Style error messages */
 .error-message {

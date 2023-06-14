@@ -8,10 +8,15 @@
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/add_empl.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
 {% endblock %}
 
 {% block content %}
-    <a id="create-employee-btn" onclick="location.href='/manager/employees'"><</a>
+    <div class="header">
+        <a id="create-employee-btn" class="button-back"  onclick="location.href='/manager/employees'"> <span class="arrow">➜</span> Back </a>
+    </div>
+
     <form method="post">
         {% csrf_token %}
         <div>
