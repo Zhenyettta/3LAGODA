@@ -83,4 +83,25 @@
             }
         });
     </script>
+    <div class="pagination">
+        <div id="pagination-links">
+            {% if products.paginator.num_pages > 1 %}
+                {% if products.has_previous %}
+                    <a href="?page={{ products.previous_page_number }}">Previous</a>
+                {% endif %}
+
+                {% for page in products.paginator.page_range %}
+                    {% if page == products.number %}
+                        <span class="current-page">{{ page }}</span>
+                    {% else %}
+                        <a href="?page={{ page }}">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if products.has_next %}
+                    <a href="?page={{ products.next_page_number }}">Next</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

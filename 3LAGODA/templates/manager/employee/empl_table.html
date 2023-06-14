@@ -1,4 +1,4 @@
-<table class="table" id="empl_list">
+<table class="table styled-table" id="empl_list">
     <thead>
     <tr>
         <th class="no-border">Full Name</th>
@@ -28,11 +28,15 @@
             <td>{{ employee.11 }}</td>
             <td>{{ employee.12 }}</td>
             <td>
-                <a class="button" href="{% url 'edit_employee' employee.0 %}">Edit</a>
-                <form method="POST" action="{% url 'delete_employee' employee.0 %}">
-                    {% csrf_token %}
-                    <button class="button" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
-                </form>
+                <div class="td-btn">
+                    <a class="button button-header" href="{% url 'edit_employee' employee.0 %}">Edit</a>
+                    <form method="POST" action="{% url 'delete_employee' employee.0 %}">
+                        {% csrf_token %}
+                        <button class="button button-header" type="submit" onclick="return confirm('Are you sure?');">
+                            Delete
+                        </button>
+                    </form>
+                </div>
             </td>
         </tr>
     {% endfor %}

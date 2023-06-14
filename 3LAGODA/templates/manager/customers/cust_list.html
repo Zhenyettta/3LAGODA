@@ -45,4 +45,25 @@
             });
         });
     </script>
+    <div class="pagination">
+        <div id="pagination-links">
+            {% if customers.paginator.num_pages > 1 %}
+                {% if customers.has_previous %}
+                    <a class="pgn-btn" href="?page={{ customers.previous_page_number }}">Previous</a>
+                {% endif %}
+
+                {% for page in customers.paginator.page_range %}
+                    {% if page == customers.number %}
+                        <span class="current-page">{{ page }}</span>
+                    {% else %}
+                        <a class="pgn-btn" href="?page={{ page }}">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if customers.has_next %}
+                    <a class="pgn-btn" href="?page={{ customers.next_page_number }}">Next</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

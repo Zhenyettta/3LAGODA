@@ -34,6 +34,76 @@
         </select>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
+            function printAllChecks() {
+                const empl_id = document.getElementById("empls").value;
+                const requested_start_date = document.getElementById("search-all-checks-all-empl-start").value;
+                const requested_end_date = document.getElementById("search-all-checks-all-empl-end").value;
+                $.ajax({
+                    url: '/manager/checks/get_all_checks_all_empl/',
+                    method: 'GET',
+                    data: {
+                        start_date: requested_start_date,
+                        end_date: requested_end_date,
+                        empl_id: empl_id,
+                        page: -1  // Fetch all checks at once
+                    },
+                    success: function (response) {
+                        const checks = response.checks;
+                        const tableHTML = generateTableHTML(checks);
+                        const printWindow = window.open('', '_blank');
+                        printWindow.document.open();
+                        printWindow.document.write('<html><head><title>Print</title></head><body>');
+                        printWindow.document.write(tableHTML);
+                        printWindow.document.write('</body></html>');
+                        printWindow.document.close();
+                        printWindow.print();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+
+            function generateTableHTML(checks) {
+                let tableHTML = '<table class="table styled-table">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>Check Number</th>' +
+                    '<th>Employee</th>' +
+                    '<th>Card Number</th>' +
+                    '<th>Print Date</th>' +
+                    '<th>Sum Total</th>' +
+                    '<th>Vat</th>' +
+                    '<th>Action</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>';
+
+                for (let i = 0; i < checks.length; i++) {
+                    const check = checks[i];
+                    tableHTML += '<tr>' +
+                        '<td>' + check[0] + '</td>' +
+                        '<td>' + check[1] + '</td>' +
+                        '<td>' + check[2] + '</td>' +
+                        '<td>' + check[3] + '</td>' +
+                        '<td>' + check[4] + '</td>' +
+                        '<td>' + check[5] + '</td>' +
+                        '<td>' +
+                        '<div class="td-btn">' +
+                        '<a class="button button-header" href="' + check[6] + '">Watch</a>' +
+                        '<form method="POST" action="' + check[7] + '">' +
+                        '{% csrf_token %}' +
+                        '<button class="button button-header" type="submit" onclick="return confirm(\'Are you sure?\');">Delete</button>' +
+                        '</form>' +
+                        '</div>' +
+                        '</td>' +
+                        '</tr>';
+                }
+
+                tableHTML += '</tbody></table>';
+                return tableHTML;
+            }
+
             function selectEmpl(id) {
                 console.log(id);
                 document.getElementById("empls").value = id;
@@ -55,7 +125,7 @@
 
 
             $('.dropdown-menu li').click(function () {
-                var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
+                const input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
                     msg = '<span class="msg">Hidden input value: ';
                 $('.msg').html(msg + input + '</span>');
             });
@@ -94,18 +164,23 @@
                 },
                 success: function (response) {
                     $('#check_list').html(response.html);
-                    var paginationLinks = response.pagination_links;
-                    var paginationHTML = '';
-                    for (var i = 0; i < paginationLinks.length; i++) {
-                        var link = paginationLinks[i];
+                    const paginationLinks = response.pagination_links;
+                    let paginationHTML = '';
+                    for (let i = 0; i < paginationLinks.length; i++) {
+                        const link = paginationLinks[i];
                         if (link.current) {
                             paginationHTML += '<span class="current-page">' + link.label + '</span>';
                         } else {
                             paginationHTML += '<a href="' + link.url + '">' + link.label + '</a>';
                         }
                     }
-                    $('#pagination-links').html(paginationHTML);
-                    setupNextPageListener();
+
+                    if (paginationLinks.length > 1) {
+                        $('#pagination-links').html(paginationHTML);
+                        setupNextPageListener();
+                    } else {
+                        $('#pagination-links').empty();
+                    }
                 },
                 error: function (error) {
                     console.log(error);
@@ -133,18 +208,23 @@
                 },
                 success: function (response) {
                     $('#check_list').html(response.html);
-                    var paginationLinks = response.pagination_links;
-                    var paginationHTML = '';
-                    for (var i = 0; i < paginationLinks.length; i++) {
-                        var link = paginationLinks[i];
+
+                    const paginationLinks = response.pagination_links;
+                    let paginationHTML = '';
+                    for (let i = 0; i < paginationLinks.length; i++) {
+                        const link = paginationLinks[i];
                         if (link.current) {
                             paginationHTML += '<span class="current-page">' + link.label + '</span>';
                         } else {
                             paginationHTML += '<a href="' + link.url + '">' + link.label + '</a>';
                         }
                     }
-                    $('#pagination-links').html(paginationHTML);
-                    setupNextPageListener();
+                    if (paginationLinks.length > 1) {
+                        $('#pagination-links').html(paginationHTML);
+                        setupNextPageListener();
+                    } else {
+                        $('#pagination-links').empty();
+                    }
                 },
                 error: function (error) {
                     console.log(error);
@@ -172,10 +252,10 @@
                     },
                     success: function (response) {
                         $('#check_list').html(response.html);
-                        var paginationLinks = response.pagination_links;
-                        var paginationHTML = '';
-                        for (var i = 0; i < paginationLinks.length; i++) {
-                            var link = paginationLinks[i];
+                        const paginationLinks = response.pagination_links;
+                        let paginationHTML = '';
+                        for (let i = 0; i < paginationLinks.length; i++) {
+                            const link = paginationLinks[i];
                             if (link.current) {
                                 paginationHTML += '<span class="current-page">' + link.label + '</span>';
                             } else {
@@ -196,20 +276,22 @@
 
     <div class="pagination">
         <div id="pagination-links">
-            {% if checks.has_previous %}
-                <a class="pgn-btn" href="?page={{ checks.previous_page_number }}">Previous</a>
-            {% endif %}
-
-            {% for page in checks.paginator.page_range %}
-                {% if page == checks.number %}
-                    <span class="current-page">{{ page }}</span>
-                {% else %}
-                    <a class="pgn-btn" href="?page={{ page }}">{{ page }}</a>
+            {% if checks.paginator.num_pages > 1 %}
+                {% if checks.has_previous %}
+                    <a class="pgn-btn" href="?page={{ checks.previous_page_number }}">Previous</a>
                 {% endif %}
-            {% endfor %}
 
-            {% if checks.has_next %}
-                <a class="pgn-btn" href="?page={{ checks.next_page_number }}">Next</a>
+                {% for page in checks.paginator.page_range %}
+                    {% if page == checks.number %}
+                        <span class="current-page">{{ page }}</span>
+                    {% else %}
+                        <a class="pgn-btn" href="?page={{ page }}">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if checks.has_next %}
+                    <a class="pgn-btn" href="?page={{ checks.next_page_number }}">Next</a>
+                {% endif %}
             {% endif %}
         </div>
     </div>

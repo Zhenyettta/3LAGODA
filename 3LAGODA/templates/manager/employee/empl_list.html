@@ -13,11 +13,13 @@
 
 {% block content %}
     <div class="header">
-        <button class="button button-back" onclick="location.href='/manager/'"> <span class="arrow">➜</span> Back </button>
+        <button class="button button-back" onclick="location.href='/manager/'"><span class="arrow">➜</span> Back
+        </button>
         <button class="button button-header btn-addempl" onclick="location.href='/manager/employees/addemployee'">Add
-            Employee</button>
-        <a class="button button-header btn-all-only" href="{% url 'empl_list' %}">All</a>
-        <a class="button button-header btn-all-only" href="{% url 'empl_only_sales_list' %}">Only Sales</a>
+            Employee
+        </button>
+        <button class="button button-header btn-all-only" id="search-all">All</button>
+        <button class="button button-header btn-all-only" id="search-sales">Only Sales</button>
         <button class="button button-header btn-all-only" onclick="window.print()">Print</button>
 
         <div class="search-wrapper">
@@ -26,48 +28,9 @@
         </div>
 
     </div>
-    <table class="table styled-table" id="empl_list">
-        <thead>
-        <tr>
-            <th class="no-border">Full Name</th>
-            <th>Role</th>
-            <th>Salary</th>
-            <th>Date of Birth</th>
-            <th>Date of Start</th>
-            <th>Phone Number</th>
-            <th>City</th>
-            <th>Street</th>
-            <th>Zip Code</th>
-            <th>Email</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for employee in employees %}
-            <tr>
-                <td>{{ employee.1 }} {{ employee.2 }} {{ employee.3 }}</td>
-                <td>{{ employee.4 }}</td>
-                <td>{{ employee.5 }}</td>
-                <td>{{ employee.6 }}</td>
-                <td>{{ employee.7 }}</td>
-                <td>{{ employee.8 }}</td>
-                <td>{{ employee.9 }}</td>
-                <td>{{ employee.10 }}</td>
-                <td>{{ employee.11 }}</td>
-                <td>{{ employee.12 }}</td>
-                <td>
-                    <div class="td-btn">
-                        <a class="button button-header" href="{% url 'edit_employee' employee.0 %}">Edit</a>
-                        <form method="POST" action="{% url 'delete_employee' employee.0 %}">
-                            {% csrf_token %}
-                            <button class="button button-header" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div>
+        {% include 'manager/employee/empl_table.html' %}
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -85,6 +48,53 @@
                 }
             });
         });
+        document.getElementById("search-all").addEventListener("click", function () {
+            $.ajax({
+                url: '/manager/employees/get_empl_by_surname/',
+                method: 'GET',
+                data: {surname: surname},
+                success: function (response) {
+                    $('#empl_list').html(response.html);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+        document.getElementById("b-search-by-surname").addEventListener("click", function () {
+            const surname = document.getElementById("search-input").value;
+            $.ajax({
+                url: '/manager/employees/get_empl_by_surname/',
+                method: 'GET',
+                data: {surname: surname},
+                success: function (response) {
+                    $('#empl_list').html(response.html);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
     </script>
+    <div class="pagination">
+        <div id="pagination-links">
+            {% if employees.paginator.num_pages > 1 %}
+                {% if employees.has_previous %}
+                    <a class="pgn-btn" href="?page={{ employees.previous_page_number }}">Previous</a>
+                {% endif %}
 
+                {% for page in employees.paginator.page_range %}
+                    {% if page == employees.number %}
+                        <span class="current-page">{{ page }}</span>
+                    {% else %}
+                        <a class="pgn-btn" href="?page={{ page }}">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if employees.has_next %}
+                    <a class="pgn-btn" href="?page={{ employees.next_page_number }}">Next</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

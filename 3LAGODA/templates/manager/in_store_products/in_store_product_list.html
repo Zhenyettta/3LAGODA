@@ -63,7 +63,8 @@
             <label>
                 <input type="date" id="search-product">
                 <input type="date" id="search-product-end">
-                <button class="button button-header" id="b-search-product" type="submit">Find product</button>
+                <button class="button button-header" id="b-search-product" onclick="boba()" type="submit">Find product
+                </button>
             </label>
         </div>
 
@@ -111,11 +112,10 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        document.getElementById("b-search-product").addEventListener("click", function () {
-            const product = document.getElementById("products").value;
+        function boba() {
+            const product = document.querySelector(".dropdown .select span").textContent;
             const requested_date = document.getElementById("search-product").value;
             const requested_date_end = document.getElementById("search-product-end").value;
-
             $.ajax({
                 url: '/manager/instoreproducts/find_product/',
                 method: 'GET',
@@ -127,7 +127,7 @@
                     console.log(error);
                 }
             });
-        });
+        }
 
         function sortTable(choice, element) {
             const isProm = document.getElementById("is-prom").checked;
@@ -250,4 +250,25 @@
             });
         });
     </script>
+    <div class="pagination">
+        <div id="pagination-links">
+            {% if products.paginator.num_pages > 1 %}
+                {% if products.has_previous %}
+                    <a class="pgn-btn" href="?page={{ products.previous_page_number }}">Previous</a>
+                {% endif %}
+
+                {% for page in products.paginator.page_range %}
+                    {% if page == products.number %}
+                        <span class="current-page">{{ page }}</span>
+                    {% else %}
+                        <a class="pgn-btn" href="?page={{ page }}">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if products.has_next %}
+                    <a class="pgn-btn" href="?page={{ products.next_page_number }}">Next</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

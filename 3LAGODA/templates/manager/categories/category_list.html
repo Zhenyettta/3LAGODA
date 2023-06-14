@@ -13,8 +13,10 @@
 
 {% block content %}
     <div class="header">
-        <button class="button button-back" onclick="location.href='/manager/'"> <span class="arrow">➜</span> Back </button>
-        <button class="button button-header" onclick="location.href='/manager/categories/addcategory'">Add Category</button>
+        <button class="button button-back" onclick="location.href='/manager/'"><span class="arrow">➜</span> Back
+        </button>
+        <button class="button button-header" onclick="location.href='/manager/categories/addcategory'">Add Category
+        </button>
         <button class="button button-header" onclick="window.print()">Print</button>
     </div>
     <div>
@@ -48,23 +50,25 @@
         </table>
     </div>
 
-    {% if categories.has_other_pages %}
-        <div class="pagination">
-            {% if categories.has_previous %}
-                <a class="pgn-btn" href="?page={{ categories.previous_page_number }}">Previous</a>
-            {% endif %}
-
-            {% for page in categories.paginator.page_range %}
-                {% if page == categories.number %}
-                    <span class="current-page">{{ page }}</span>
-                {% else %}
-                    <a class="pgn-btn" href="?page={{ page }}">{{ page }}</a>
+    <div class="pagination">
+        <div id="pagination-links">
+            {% if categories.paginator.num_pages > 1 %}
+                {% if categories.has_previous %}
+                    <a class="pgn-btn" href="?page={{ categories.previous_page_number }}">Previous</a>
                 {% endif %}
-            {% endfor %}
 
-            {% if checks.has_next %}
-                <a class="pgn-btn" href="?page={{ checks.next_page_number }}">Next</a>
+                {% for page in categories.paginator.page_range %}
+                    {% if page == categories.number %}
+                        <span class="current-page">{{ page }}</span>
+                    {% else %}
+                        <a class="pgn-btn" href="?page={{ page }}">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if categories.has_next %}
+                    <a class="pgn-btn" href="?page={{ categories.next_page_number }}">Next</a>
+                {% endif %}
             {% endif %}
         </div>
-    {% endif %}
+    </div>
 {% endblock %}
