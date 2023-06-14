@@ -49,10 +49,23 @@
             });
         });
         document.getElementById("search-all").addEventListener("click", function () {
+            const surname = '';
             $.ajax({
                 url: '/manager/employees/get_empl_by_surname/',
                 method: 'GET',
                 data: {surname: surname},
+                success: function (response) {
+                    $('#empl_list').html(response.html);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+        document.getElementById("search-sales").addEventListener("click", function () {
+            $.ajax({
+                url: '/manager/employees/onlysales/',
+                method: 'GET',
                 success: function (response) {
                     $('#empl_list').html(response.html);
                 },

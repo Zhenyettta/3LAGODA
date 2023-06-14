@@ -446,9 +446,10 @@ def get_empl_by_surname(request):
         query = """
             SELECT *
             FROM employee e
-            WHERE e.surname LIKE %s;
+            WHERE e.surname LIKE %s
+            ORDER BY surname, name, patronymic
             """
-        cursor.execute(query, [surname + '%'])
+        cursor.execute(query, ['%' + surname + '%'])
         employees = cursor.fetchall()
 
     html = render(request, 'manager/employee/empl_table.html', {'employees': employees}).content
@@ -630,11 +631,17 @@ def instoreproducts_view(request):
 @manager_required
 def empl_only_sales_list(request):
     with connection.cursor() as cursor:
-        query = "SELECT * FROM employee WHERE role='Sales' ORDER BY surname, name, patronymic"
+        query = """
+        SELECT * FROM employee 
+        WHERE role='Sales' 
+        ORDER BY surname, name, patronymic
+        """
         cursor.execute(query)
         employees = cursor.fetchall()
 
-    return render(request, 'manager/employee/empl_list.html', {'employees': employees})
+    html = render(request, 'manager/employee/empl_table.html', {'employees': employees}).content
+    html = html.decode('utf-8')
+    return JsonResponse({'html': html})
 
 
 @manager_required

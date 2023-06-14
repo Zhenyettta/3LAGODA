@@ -32,105 +32,6 @@
                 <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>
             {% endfor %}
         </select>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-            function printAllChecks() {
-                const empl_id = document.getElementById("empls").value;
-                const requested_start_date = document.getElementById("search-all-checks-all-empl-start").value;
-                const requested_end_date = document.getElementById("search-all-checks-all-empl-end").value;
-                $.ajax({
-                    url: '/manager/checks/get_all_checks_all_empl/',
-                    method: 'GET',
-                    data: {
-                        start_date: requested_start_date,
-                        end_date: requested_end_date,
-                        empl_id: empl_id,
-                        page: -1  // Fetch all checks at once
-                    },
-                    success: function (response) {
-                        const checks = response.checks;
-                        const tableHTML = generateTableHTML(checks);
-                        const printWindow = window.open('', '_blank');
-                        printWindow.document.open();
-                        printWindow.document.write('<html><head><title>Print</title></head><body>');
-                        printWindow.document.write(tableHTML);
-                        printWindow.document.write('</body></html>');
-                        printWindow.document.close();
-                        printWindow.print();
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                });
-            }
-
-            function generateTableHTML(checks) {
-                let tableHTML = '<table class="table styled-table">' +
-                    '<thead>' +
-                    '<tr>' +
-                    '<th>Check Number</th>' +
-                    '<th>Employee</th>' +
-                    '<th>Card Number</th>' +
-                    '<th>Print Date</th>' +
-                    '<th>Sum Total</th>' +
-                    '<th>Vat</th>' +
-                    '<th>Action</th>' +
-                    '</tr>' +
-                    '</thead>' +
-                    '<tbody>';
-
-                for (let i = 0; i < checks.length; i++) {
-                    const check = checks[i];
-                    tableHTML += '<tr>' +
-                        '<td>' + check[0] + '</td>' +
-                        '<td>' + check[1] + '</td>' +
-                        '<td>' + check[2] + '</td>' +
-                        '<td>' + check[3] + '</td>' +
-                        '<td>' + check[4] + '</td>' +
-                        '<td>' + check[5] + '</td>' +
-                        '<td>' +
-                        '<div class="td-btn">' +
-                        '<a class="button button-header" href="' + check[6] + '">Watch</a>' +
-                        '<form method="POST" action="' + check[7] + '">' +
-                        '{% csrf_token %}' +
-                        '<button class="button button-header" type="submit" onclick="return confirm(\'Are you sure?\');">Delete</button>' +
-                        '</form>' +
-                        '</div>' +
-                        '</td>' +
-                        '</tr>';
-                }
-
-                tableHTML += '</tbody></table>';
-                return tableHTML;
-            }
-
-            function selectEmpl(id) {
-                console.log(id);
-                document.getElementById("empls").value = id;
-            }
-
-            $('.dropdown').click(function () {
-                $(this).attr('tabindex', 1).focus();
-                $(this).toggleClass('active');
-                $(this).find('.dropdown-menu').slideToggle(300);
-            });
-            $('.dropdown').focusout(function () {
-                $(this).removeClass('active');
-                $(this).find('.dropdown-menu').slideUp(300);
-            });
-            $('.dropdown .dropdown-menu li').click(function () {
-                $(this).parents('.dropdown').find('span').text($(this).text());
-                $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
-            });
-
-
-            $('.dropdown-menu li').click(function () {
-                const input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
-                    msg = '<span class="msg">Hidden input value: ';
-                $('.msg').html(msg + input + '</span>');
-            });
-        </script>
-
         <input type="date" id="search-all-checks-all-empl-start">
         <label>-</label>
         <input type="date" id="search-all-checks-all-empl-end">
@@ -145,101 +46,65 @@
     </div>
 
     {% include 'manager/checks/check_table.html' %}
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script>
-        document.getElementById("b-search-sum").addEventListener("click", function () {
-            const empl_id = document.getElementById("empls").value;
-            const requested_start_date = document.getElementById("search-all-checks-all-empl-start").value;
-            const requested_end_date = document.getElementById("search-all-checks-all-empl-end").value;
+        function selectEmpl(id) {
+            console.log(id);
+            document.getElementById("empls").value = id;
+        }
 
-            $.ajax({
-                url: '/manager/checks/get_all_checks_sum/',
-                method: 'GET',
-                data: {
-                    start_date: requested_start_date,
-                    end_date: requested_end_date,
-                    empl_id: empl_id
-                },
-                success: function (response) {
-                    $('#check_list').html(response.html);
-                    const paginationLinks = response.pagination_links;
-                    let paginationHTML = '';
-                    for (let i = 0; i < paginationLinks.length; i++) {
-                        const link = paginationLinks[i];
-                        if (link.current) {
-                            paginationHTML += '<span class="current-page">' + link.label + '</span>';
-                        } else {
-                            paginationHTML += '<a href="' + link.url + '">' + link.label + '</a>';
-                        }
-                    }
-
-                    if (paginationLinks.length > 1) {
-                        $('#pagination-links').html(paginationHTML);
-                        setupNextPageListener();
-                    } else {
-                        $('#pagination-links').empty();
-                    }
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-        });
-    </script>
-
-
-    <script>
-        document.getElementById("b-search-all-checks-all-empl").addEventListener("click", function () {
-            const empl_id = document.getElementById("empls").value;
-            const requested_start_date = document.getElementById("search-all-checks-all-empl-start").value;
-            const requested_end_date = document.getElementById("search-all-checks-all-empl-end").value;
-            const page = 1;
-
-            $.ajax({
-                url: '/manager/checks/get_all_checks_all_empl/',
-                method: 'GET',
-                data: {
-                    start_date: requested_start_date,
-                    end_date: requested_end_date,
-                    empl_id: empl_id,
-                    page: page
-                },
-                success: function (response) {
-                    $('#check_list').html(response.html);
-
-                    const paginationLinks = response.pagination_links;
-                    let paginationHTML = '';
-                    for (let i = 0; i < paginationLinks.length; i++) {
-                        const link = paginationLinks[i];
-                        if (link.current) {
-                            paginationHTML += '<span class="current-page">' + link.label + '</span>';
-                        } else {
-                            paginationHTML += '<a href="' + link.url + '">' + link.label + '</a>';
-                        }
-                    }
-                    if (paginationLinks.length > 1) {
-                        $('#pagination-links').html(paginationHTML);
-                        setupNextPageListener();
-                    } else {
-                        $('#pagination-links').empty();
-                    }
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
+        $('.dropdown').click(function () {
+            $(this).attr('tabindex', 1).focus();
+            $(this).toggleClass('active');
+            $(this).find('.dropdown-menu').slideToggle(300);
         });
 
-        function setupNextPageListener() {
-            $('#pagination-links a').click(function (event) {
-                event.preventDefault();
+        $('.dropdown').focusout(function () {
+            $(this).removeClass('active');
+            $(this).find('.dropdown-menu').slideUp(300);
+        });
 
-                const empl_id = document.getElementById("empls").value;
-                const requested_start_date = document.getElementById("search-all-checks-all-empl-start").value;
-                const requested_end_date = document.getElementById("search-all-checks-all-empl-end").value;
-                const page = $(this).attr('href').split('=')[1];
+        $('.dropdown .dropdown-menu li').click(function () {
+            $(this).parents('.dropdown').find('span').text($(this).text());
+            $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
+        });
+
+        $('.dropdown-menu li').click(function () {
+            const input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
+                msg = '<span class="msg">Hidden input value: ';
+            $('.msg').html(msg + input + '</span>');
+        });
+
+        $(document).ready(function () {
+            $('#b-search-sum').click(function () {
+                const empl_id = $('#empls').val();
+                const requested_start_date = $('#search-all-checks-all-empl-start').val();
+                const requested_end_date = $('#search-all-checks-all-empl-end').val();
+
+                $.ajax({
+                    url: '/manager/checks/get_all_checks_sum/',
+                    method: 'GET',
+                    data: {
+                        start_date: requested_start_date,
+                        end_date: requested_end_date,
+                        empl_id: empl_id
+                    },
+                    success: function (response) {
+                        $('#check_list').html(response.html);
+                        const paginationLinks = response.pagination_links;
+                        updatePagination(paginationLinks)
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+
+            $('#b-search-all-checks-all-empl').click(function () {
+                const empl_id = $('#empls').val();
+                const requested_start_date = $('#search-all-checks-all-empl-start').val();
+                const requested_end_date = $('#search-all-checks-all-empl-end').val();
+                const page = 1;
 
                 $.ajax({
                     url: '/manager/checks/get_all_checks_all_empl/',
@@ -253,24 +118,72 @@
                     success: function (response) {
                         $('#check_list').html(response.html);
                         const paginationLinks = response.pagination_links;
-                        let paginationHTML = '';
-                        for (let i = 0; i < paginationLinks.length; i++) {
-                            const link = paginationLinks[i];
-                            if (link.current) {
-                                paginationHTML += '<span class="current-page">' + link.label + '</span>';
-                            } else {
-                                paginationHTML += '<a href="' + link.url + '">' + link.label + '</a>';
-                            }
-                        }
-                        $('#pagination-links').html(paginationHTML);
-                        setupNextPageListener();
+                        updatePagination(paginationLinks)
                     },
                     error: function (error) {
                         console.log(error);
                     }
                 });
             });
-        }
+
+            function updatePagination(paginationLinks) {
+                let paginationHTML = '';
+                for (let i = 0; i < paginationLinks.length; i++) {
+                    const link = paginationLinks[i];
+                    if (link.current) {
+                        paginationHTML += '<span class="current-page">' + link.label + '</span>';
+                    } else {
+                        paginationHTML += '<a href="' + link.url + '">' + link.label + '</a>';
+                    }
+                }
+                if (paginationLinks.length > 1) {
+                    $('#pagination-links').html(paginationHTML);
+                    setupNextPageListener();
+                } else {
+                    $('#pagination-links').empty();
+                }
+            }
+
+            function setupNextPageListener() {
+                $('#pagination-links a').click(function (event) {
+                    event.preventDefault();
+
+                    const empl_id = $('#empls').val();
+                    const requested_start_date = $('#search-all-checks-all-empl-start').val();
+                    const requested_end_date = $('#search-all-checks-all-empl-end').val();
+                    const page = $(this).attr('href').split('=')[1];
+
+                    $.ajax({
+                        url: '/manager/checks/get_all_checks_all_empl/',
+                        method: 'GET',
+                        data: {
+                            start_date: requested_start_date,
+                            end_date: requested_end_date,
+                            empl_id: empl_id,
+                            page: page
+                        },
+                        success: function (response) {
+                            $('#check_list').html(response.html);
+                            const paginationLinks = response.pagination_links;
+                            let paginationHTML = '';
+                            for (let i = 0; i < paginationLinks.length; i++) {
+                                const link = paginationLinks[i];
+                                if (link.current) {
+                                    paginationHTML += '<span class="current-page">' + link.label + '</span>';
+                                } else {
+                                    paginationHTML += '<a href="' + link.url + '">' + link.label + '</a>';
+                                }
+                            }
+                            $('#pagination-links').html(paginationHTML);
+                            setupNextPageListener();
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                });
+            }
+        });
     </script>
 
 
