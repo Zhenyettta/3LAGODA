@@ -491,15 +491,15 @@ def today_check(request):
     print(formatted_date)
 
     with connection.cursor() as cursor:
-        query = f"""
+        query = """
             SELECT c.check_number, c.card_number, c.print_date, c.sum_total, c.vat
             FROM "check" c
             JOIN employee e ON c.employee_id = e.employee_id
-            WHERE e.email = %s AND DATE(c.print_date AT TIME ZONE 'UTC')::date = '{formatted_date}' 
+            WHERE e.email = %s AND DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
             ORDER BY c.print_date desc
         """
 
-        cursor.execute(query, [user.email])
+        cursor.execute(query, [user.email, formatted_date])
         checks = cursor.fetchall()
 
     context = {'checks': checks}
