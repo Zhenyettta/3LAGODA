@@ -26,15 +26,15 @@
             </tr>
         </thead>
         <tbody id="today">
-            <tr>
-                {% for check in checks  %}
-                    <td>{{ check.0 }}</td>
-                    <td>{{ check.2 }}</td>
-                    <td>{{ check.3 }}</td>
-                    <td>{{ check.4 }}</td>
-                    <td>{{ check.5 }}</td>
-                {% endfor %}
-            </tr>
+        <tr>
+            {% for check in checks %}
+                <td>{{ check.0 }}</td>
+                <td>{{ check.1 }}</td>
+                <td>{{ check.2 }}</td>
+                <td>{{ check.3 }}</td>
+                <td>{{ check.4 }}</td>
+            {% endfor %}
+        </tr>
         </tbody>
     </table>
 {% endblock %}
