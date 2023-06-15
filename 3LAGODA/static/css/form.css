@@ -117,3 +117,17 @@ input[type="date"] {
 .el-wrapper {
     width: 100%;
 }
+
+h2 {
+    width: calc(100% + 21.5px);
+    display: flex;
+    justify-content: center;
+    font-family: "Arial";
+    color: #2d3142;
+}
+
+.btn-div {
+    width: calc(100% + 21.5px);
+    display: flex;
+    justify-content: center;
+}

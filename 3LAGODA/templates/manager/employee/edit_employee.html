@@ -7,59 +7,75 @@
 
 {% block head %}
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/edit_empl.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
 {% endblock %}
 
 {% block content %}
-    <h1>Edit Employee Menu</h1>
-    <a class="edit-employee-btn" onclick="location.href='/manager/employees'"
-       style="background-color: #4CAF50; color: white; padding: 10px 20px;
-                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;"><</a>
-    <form method="post">
+
+    <div class="header">
+        <button class="button button-back" id="create-employee-btn" onclick="location.href='/manager/employees'"> <span
+                class="arrow">➜</span> Back
+        </button>
+    </div>
+
+    <form class="form" method="post">
         {% csrf_token %}
+        <h2>Edit Employee Menu</h2>
         <label>
-            <input type="text" id="surname" name="surname" value="{{ employee.1 }}">
+            <input class="input" placeholder="Surname" type="text" id="surname" name="surname" value="{{ employee.1 }}">
         </label>
         <label>
-            <input type="text" id="name" name="name" value="{{ employee.2 }}">
+            <input class="input" placeholder="Name" type="text" id="name" name="name" value="{{ employee.2 }}">
         </label>
         <label>
-            <input type="text" id="patronymic" name="patronymic" value="{{ employee.3 }}">
+            <input class="input" placeholder="Patronymic" type="text" id="patronymic" name="patronymic"
+                   value="{{ employee.3 }}">
         </label>
-        <label>
-            <input type="text" id="role" name="role" value="{{ employee.4 }}">
-        </label>
-        <label>
-            <input type="text" id="salary" name="salary" value="{{ employee.5 }}">
-        </label>
-        <label>
-            <input type="date" id="date_of_birth" name="date_of_birth" value="{{ employee.6|date:'Y-m-d' }}">
-        </label>
+        <div class="form-wrapper">
+            <label class="el-wrapper">
+                <input class="input" placeholder="Role" type="text" id="role" name="role" value="{{ employee.4 }}">
+            </label>
+            <label class="el-wrapper">
+                <input class="input" placeholder="Salary" type="text" id="salary" name="salary"
+                       value="{{ employee.5 }}">
+            </label>
+        </div>
+        <div class="form-wrapper">
+            <div class="el-wrapper">
+                <label class="label" for="date_of_birth">Date of Birth:</label>
+                <input class="input" placeholder="Date of birth" type="date" id="date_of_birth" name="date_of_birth"
+                       value="{{ employee.6|date:'Y-m-d' }}">
+            </div>
+
+            <div class="el-wrapper">
+                <label class="label" for="date_of_start">Date of Start:</label>
+                <input class="input" placeholder="Date of start" type="date" id="date_of_start" name="date_of_start"
+                       value="{{ employee.7|date:'Y-m-d' }}">
+            </div>
+        </div>
 
         <label>
-            <input type="date" id="date_of_start" name="date_of_start" value="{{ employee.7|date:'Y-m-d' }}">
-        </label>
-        <label>
-            <input type="text" id="phone_number" name="phone_number" value="{{ employee.8 }}">
+            <input class="input" placeholder="Phone number" type="text" id="phone_number" name="phone_number"
+                   value="{{ employee.8 }}">
         </label>
 
+        <div class="form-wrapper">
+            <label class="el-wrapper">
+                <input class="input" placeholder="City" type="text" id="city" name="city" value="{{ employee.9 }}">
+            </label>
+            <label class="el-wrapper">
+                <input class="input" placeholder="Zip code" type="text" id="zip_code" name="zip_code"
+                   value="{{ employee.11 }}">
+            </label>
+        </div>
         <label>
-            <input type="text" id="city" name="city" value="{{ employee.9 }}">
+            <input class="input" placeholder="Street" type="text" id="street" name="street" value="{{ employee.10 }}">
         </label>
         <label>
-            <input type="text" id="street" name="street" value="{{ employee.10 }}">
+            <input class="input" placeholder="Email" type="text" id="email" name="email" value="{{ employee.12 }}">
         </label>
-
         <label>
-            <input type="text" id="zip_code" name="zip_code" value="{{ employee.11 }}">
-        </label>
-
-        <label>
-            <input type="text" id="email" name="email" value="{{ employee.12 }}">
-        </label>
-
-        <label>
-            <input type="password" name="password" id="password" placeholder="Password">
+            <input class="input" placeholder="Password" type="password" name="password" id="password">
         </label>
         <div style="text-align: center;
                     margin-top: 3vh">
