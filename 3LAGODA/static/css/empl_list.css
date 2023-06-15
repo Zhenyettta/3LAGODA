@@ -75,7 +75,7 @@
     margin-top: 80px;
     border-collapse: collapse;
     font-size: 0.9em;
-    font-family: sans-serif;
+    font-family: "Arial";
     min-width: 400px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
@@ -130,6 +130,7 @@
     width: 100%;
     padding-left: 10px;
     border-radius: 7px;
+    font-family: "Arial";
 }
 
 .dropdown .select > i {
@@ -200,6 +201,7 @@ input[type="date"] {
     height: 30px;
     outline: none;
     border-radius: 7px;
+    font-family: "Arial";
 }
 
 #search-input {
@@ -260,7 +262,7 @@ input[type="date"] {
 
 .h2 {
     color: #2d3142;
-    font-family: Arial;
+    font-family: "Arial";
 }
 
 @media print {
