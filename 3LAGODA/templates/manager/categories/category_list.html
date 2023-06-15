@@ -50,25 +50,5 @@
         </table>
     </div>
 
-    <div class="pagination">
-        <div id="pagination-links">
-            {% if categories.paginator.num_pages > 1 %}
-                {% if categories.has_previous %}
-                    <a class="pgn-btn" href="?page={{ categories.previous_page_number }}">Previous</a>
-                {% endif %}
 
-                {% for page in categories.paginator.page_range %}
-                    {% if page == categories.number %}
-                        <span class="current-page">{{ page }}</span>
-                    {% else %}
-                        <a class="pgn-btn" href="?page={{ page }}">{{ page }}</a>
-                    {% endif %}
-                {% endfor %}
-
-                {% if categories.has_next %}
-                    <a class="pgn-btn" href="?page={{ categories.next_page_number }}">Next</a>
-                {% endif %}
-            {% endif %}
-        </div>
-    </div>
 {% endblock %}

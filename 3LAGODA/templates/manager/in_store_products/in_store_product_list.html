@@ -18,7 +18,8 @@
         <a class="button button-back" onclick="location.href='/manager/'"> <span class="arrow">➜</span> Back </a>
         <div>
             <button class="button button-header" onclick="location.href='/manager/instoreproducts/addproduct'">Add
-                Product</button>
+                Product
+            </button>
         </div>
 
         <div>
@@ -76,7 +77,7 @@
             <label for="not-prom">Not prom</label>
             <input type="checkbox" id="not-prom" onclick="sortTable(5, this)">
         </div>
-     <a class="button button-header btn-all-only" onclick="window.print()">Print</a>
+        <a class="button button-header btn-all-only" onclick="window.print()">Print</a>
 
         <label class="upc-enter">
             <input type="text" id="search-input" placeholder="Enter UPC">
@@ -122,6 +123,7 @@
                 data: {requested_date: requested_date, product: product, requested_date_end: requested_date_end},
                 success: function (response) {
                     $('#is_store_table').html(response.html);
+
                 },
                 error: function (error) {
                     console.log(error);
@@ -200,7 +202,9 @@
                 method: 'GET',
                 data: {choice: column, prom: checkboxChecked, order: selectedValue},
                 success: function (response) {
+
                     $('#in_store_list').html(response.html);
+
                 },
                 error: function (error) {
                     console.log(error);
@@ -215,6 +219,7 @@
                 data: {upc: upc},
                 success: function (response) {
                     $('#in_store_list').html(response.html);
+
                 },
                 error: function (error) {
                     console.log(error);
@@ -242,7 +247,9 @@
                 method: 'GET',
                 data: {requested_date: requested_date, empl_id: empl_id},
                 success: function (response) {
+
                     $('#check_list').html(response.html);
+
                 },
                 error: function (error) {
                     console.log(error);
@@ -250,25 +257,5 @@
             });
         });
     </script>
-    <div class="pagination">
-        <div id="pagination-links">
-            {% if products.paginator.num_pages > 1 %}
-                {% if products.has_previous %}
-                    <a class="pgn-btn" href="?page={{ products.previous_page_number }}">Previous</a>
-                {% endif %}
 
-                {% for page in products.paginator.page_range %}
-                    {% if page == products.number %}
-                        <span class="current-page">{{ page }}</span>
-                    {% else %}
-                        <a class="pgn-btn" href="?page={{ page }}">{{ page }}</a>
-                    {% endif %}
-                {% endfor %}
-
-                {% if products.has_next %}
-                    <a class="pgn-btn" href="?page={{ products.next_page_number }}">Next</a>
-                {% endif %}
-            {% endif %}
-        </div>
-    </div>
 {% endblock %}

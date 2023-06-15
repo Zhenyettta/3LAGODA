@@ -91,8 +91,7 @@
                     },
                     success: function (response) {
                         $('#check_list').html(response.html);
-                        const paginationLinks = response.pagination_links;
-                        updatePagination(paginationLinks)
+
                     },
                     error: function (error) {
                         console.log(error);
@@ -117,8 +116,7 @@
                     },
                     success: function (response) {
                         $('#check_list').html(response.html);
-                        const paginationLinks = response.pagination_links;
-                        updatePagination(paginationLinks)
+
                     },
                     error: function (error) {
                         console.log(error);
@@ -126,88 +124,6 @@
                 });
             });
 
-            function updatePagination(paginationLinks) {
-                let paginationHTML = '';
-                for (let i = 0; i < paginationLinks.length; i++) {
-                    const link = paginationLinks[i];
-                    if (link.current) {
-                        paginationHTML += '<span class="current-page">' + link.label + '</span>';
-                    } else {
-                        paginationHTML += '<a href="' + link.url + '">' + link.label + '</a>';
-                    }
-                }
-                if (paginationLinks.length > 1) {
-                    $('#pagination-links').html(paginationHTML);
-                    setupNextPageListener();
-                } else {
-                    $('#pagination-links').empty();
-                }
-            }
-
-            function setupNextPageListener() {
-                $('#pagination-links a').click(function (event) {
-                    event.preventDefault();
-
-                    const empl_id = $('#empls').val();
-                    const requested_start_date = $('#search-all-checks-all-empl-start').val();
-                    const requested_end_date = $('#search-all-checks-all-empl-end').val();
-                    const page = $(this).attr('href').split('=')[1];
-
-                    $.ajax({
-                        url: '/manager/checks/get_all_checks_all_empl/',
-                        method: 'GET',
-                        data: {
-                            start_date: requested_start_date,
-                            end_date: requested_end_date,
-                            empl_id: empl_id,
-                            page: page
-                        },
-                        success: function (response) {
-                            $('#check_list').html(response.html);
-                            const paginationLinks = response.pagination_links;
-                            let paginationHTML = '';
-                            for (let i = 0; i < paginationLinks.length; i++) {
-                                const link = paginationLinks[i];
-                                if (link.current) {
-                                    paginationHTML += '<span class="current-page">' + link.label + '</span>';
-                                } else {
-                                    paginationHTML += '<a href="' + link.url + '">' + link.label + '</a>';
-                                }
-                            }
-                            $('#pagination-links').html(paginationHTML);
-                            setupNextPageListener();
-                        },
-                        error: function (error) {
-                            console.log(error);
-                        }
-                    });
-                });
-            }
         });
     </script>
-
-
-    <div class="pagination">
-        <div id="pagination-links">
-            {% if checks.paginator.num_pages > 1 %}
-                {% if checks.has_previous %}
-                    <a class="pgn-btn" href="?page={{ checks.previous_page_number }}">Previous</a>
-                {% endif %}
-
-                {% for page in checks.paginator.page_range %}
-                    {% if page == checks.number %}
-                        <span class="current-page">{{ page }}</span>
-                    {% else %}
-                        <a class="pgn-btn" href="?page={{ page }}">{{ page }}</a>
-                    {% endif %}
-                {% endfor %}
-
-                {% if checks.has_next %}
-                    <a class="pgn-btn" href="?page={{ checks.next_page_number }}">Next</a>
-                {% endif %}
-            {% endif %}
-        </div>
-    </div>
-
-
 {% endblock %}

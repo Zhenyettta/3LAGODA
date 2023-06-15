@@ -3,7 +3,6 @@ from datetime import datetime, date
 from functools import wraps
 
 import bcrypt
-from django.core.paginator import Paginator
 from django.db import connection
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
@@ -115,41 +114,9 @@ def empl_list(request):
         query = "SELECT * FROM employee WHERE email != %s ORDER BY surname, name, patronymic"
         cursor.execute(query, [user.email])
         employees = cursor.fetchall()
-        page_number = request.GET.get('page', 1)
-        items_per_page = 10
-        paginator = Paginator(employees, items_per_page)
-        paginated_employees = paginator.get_page(page_number)
-        pagination_links = []
-
-        if paginated_employees.has_previous():
-            pagination_links.append({
-                'label': 'Previous',
-                'url': '?page=' + str(paginated_employees.previous_page_number())
-            })
-
-        for page in paginated_employees.paginator.page_range:
-            if page == paginated_employees.number:
-                pagination_links.append({
-                    'label': str(page),
-                    'url': '',
-                    'current': True
-                })
-            else:
-                pagination_links.append({
-                    'label': str(page),
-                    'url': '?page=' + str(page),
-                    'current': False
-                })
-
-        if paginated_employees.has_next():
-            pagination_links.append({
-                'label': 'Next',
-                'url': '?page=' + str(paginated_employees.next_page_number())
-            })
 
         context = {
-            'employees': paginated_employees,
-            'pagination_links': pagination_links
+            'employees': employees
         }
         return render(request, 'manager/employee/empl_list.html', context)
 
@@ -168,41 +135,9 @@ def cust_list(request):
         query = "SELECT * FROM customer_card ORDER BY surname, name, patronymic"
         cursor.execute(query)
         customers = cursor.fetchall()
-        page_number = request.GET.get('page', 1)
-        items_per_page = 10
-        paginator = Paginator(customers, items_per_page)
-        paginated_customers = paginator.get_page(page_number)
-        pagination_links = []
-
-        if paginated_customers.has_previous():
-            pagination_links.append({
-                'label': 'Previous',
-                'url': '?page=' + str(paginated_customers.previous_page_number())
-            })
-
-        for page in paginated_customers.paginator.page_range:
-            if page == paginated_customers.number:
-                pagination_links.append({
-                    'label': str(page),
-                    'url': '',
-                    'current': True
-                })
-            else:
-                pagination_links.append({
-                    'label': str(page),
-                    'url': '?page=' + str(page),
-                    'current': False
-                })
-
-        if paginated_customers.has_next():
-            pagination_links.append({
-                'label': 'Next',
-                'url': '?page=' + str(paginated_customers.next_page_number())
-            })
 
         context = {
-            'customers': paginated_customers,
-            'pagination_links': pagination_links
+            'customers': customers
         }
         return render(request, 'manager/customers/cust_list.html', context)
 
@@ -237,41 +172,9 @@ def category_list(request):
         query = "SELECT * FROM category ORDER BY name"
         cursor.execute(query)
         categories = cursor.fetchall()
-        page_number = request.GET.get('page', 1)
-        items_per_page = 10
-        paginator = Paginator(categories, items_per_page)
-        paginated_categories = paginator.get_page(page_number)
-        pagination_links = []
-
-        if paginated_categories.has_previous():
-            pagination_links.append({
-                'label': 'Previous',
-                'url': '?page=' + str(paginated_categories.previous_page_number())
-            })
-
-        for page in paginated_categories.paginator.page_range:
-            if page == paginated_categories.number:
-                pagination_links.append({
-                    'label': str(page),
-                    'url': '',
-                    'current': True
-                })
-            else:
-                pagination_links.append({
-                    'label': str(page),
-                    'url': '?page=' + str(page),
-                    'current': False
-                })
-
-        if paginated_categories.has_next():
-            pagination_links.append({
-                'label': 'Next',
-                'url': '?page=' + str(paginated_categories.next_page_number())
-            })
 
         context = {
-            'categories': paginated_categories,
-            'pagination_links': pagination_links
+            'categories': categories
         }
         return render(request, 'manager/categories/category_list.html', context)
 
@@ -297,42 +200,9 @@ def fetch_products_and_categories():
 @manager_required
 def product_list(request):
     products, categories = fetch_products_and_categories()
-    items_per_page = 10
-    paginator = Paginator(products, items_per_page)
-    page_number = int(request.GET.get('page', 1))
-    paginated_products = paginator.get_page(page_number)
-    pagination_links = []
-
-    if paginated_products.has_previous():
-        pagination_links.append({
-            'label': 'Previous',
-            'url': '?page=' + str(paginated_products.previous_page_number())
-        })
-
-    for page in paginated_products.paginator.page_range:
-        if page == paginated_products.number:
-            pagination_links.append({
-                'label': str(page),
-                'url': '',
-                'current': True
-            })
-        else:
-            pagination_links.append({
-                'label': str(page),
-                'url': '?page=' + str(page),
-                'current': False
-            })
-
-    if paginated_products.has_next():
-        pagination_links.append({
-            'label': 'Next',
-            'url': '?page=' + str(paginated_products.next_page_number())
-        })
-
     context = {
-        'products': paginated_products,
+        'products': products,
         'categories': categories,
-        'pagination_links': pagination_links
     }
 
     return render(request, 'manager/products/product_list.html', context)
@@ -475,12 +345,8 @@ def check_list(request):
         """
         cursor.execute(query_empl)
         employees = cursor.fetchall()
-    page_number = request.GET.get('page')
-    items_per_page = 10
-    paginator = Paginator(checks, items_per_page)
-    paginated_checks = paginator.get_page(page_number)
 
-    context = {'checks': paginated_checks, 'employees': employees}
+    context = {'checks': checks, 'employees': employees}
 
     return render(request, 'manager/checks/check_list.html', context)
 
@@ -488,7 +354,6 @@ def check_list(request):
 def today_check(request):
     today = date.today()
     formatted_date = datetime.strptime(str(today), '%Y-%m-%d').date()
-    print(formatted_date)
 
     with connection.cursor() as cursor:
         query = """
@@ -527,42 +392,10 @@ def in_store_product_list(request):
 
         cursor.execute(query)
         prod_name = cursor.fetchall()
-        items_per_page = 10
-        paginator = Paginator(in_store_products, items_per_page)
-        page_number = int(request.GET.get('page', 1))
-        paginated_in_store_products = paginator.get_page(page_number)
-        pagination_links = []
-
-        if paginated_in_store_products.has_previous():
-            pagination_links.append({
-                'label': 'Previous',
-                'url': '?page=' + str(paginated_in_store_products.previous_page_number())
-            })
-
-        for page in paginated_in_store_products.paginator.page_range:
-            if page == paginated_in_store_products.number:
-                pagination_links.append({
-                    'label': str(page),
-                    'url': '',
-                    'current': True
-                })
-            else:
-                pagination_links.append({
-                    'label': str(page),
-                    'url': '?page=' + str(page),
-                    'current': False
-                })
-
-        if paginated_in_store_products.has_next():
-            pagination_links.append({
-                'label': 'Next',
-                'url': '?page=' + str(paginated_in_store_products.next_page_number())
-            })
 
         context = {
-            'products': paginated_in_store_products,
+            'products': in_store_products,
             'prod_name': prod_name,
-            'pagination_links': pagination_links
         }
 
     return render(request, 'manager/in_store_products/in_store_product_list.html', context)
@@ -588,42 +421,10 @@ def instoreproducts_view(request):
         cursor.execute(query)
         prod_name = cursor.fetchall()
 
-        items_per_page = 10
-        paginator = Paginator(in_store_products, items_per_page)
-        page_number = int(request.GET.get('page', 1))
-        paginated_in_store_products = paginator.get_page(page_number)
-        pagination_links = []
-
-        if paginated_in_store_products.has_previous():
-            pagination_links.append({
-                'label': 'Previous',
-                'url': '?page=' + str(paginated_in_store_products.previous_page_number())
-            })
-
-        for page in paginated_in_store_products.paginator.page_range:
-            if page == paginated_in_store_products.number:
-                pagination_links.append({
-                    'label': str(page),
-                    'url': '',
-                    'current': True
-                })
-            else:
-                pagination_links.append({
-                    'label': str(page),
-                    'url': '?page=' + str(page),
-                    'current': False
-                })
-
-        if paginated_in_store_products.has_next():
-            pagination_links.append({
-                'label': 'Next',
-                'url': '?page=' + str(paginated_in_store_products.next_page_number())
-            })
-
         context = {
-            'products': paginated_in_store_products,
+            'products': in_store_products,
             'prod_name': prod_name,
-            'pagination_links': pagination_links
+
         }
     return render(request, 'sales/in_store_products/in_store_view.html', context)
 
@@ -1202,11 +1003,8 @@ def create_check(request):
                 """
                 cursor.execute(query)
                 checks = cursor.fetchall()
-                page_number = request.GET.get('page')
-                items_per_page = 10
-                paginator = Paginator(checks, items_per_page)
-                paginated_checks = paginator.get_page(page_number)
-                context = {'checks': paginated_checks}
+
+                context = {'checks': checks}
 
                 html = render(request, 'manager/checks/check_list.html', {'products': context}).content
                 html = html.decode('utf-8')
@@ -1271,42 +1069,11 @@ def get_all_checks_all_empl(request):
             """
             cursor.execute(query)
             checks = cursor.fetchall()
-    items_per_page = 10
-    paginator = Paginator(checks, items_per_page)
-    page_number = int(request.GET.get('page', 1))
-    if page_number == -1:
-        paginated_checks = checks
-    else:
-        paginated_checks = paginator.get_page(page_number)
-    html = render(request, 'manager/checks/check_table.html', {'checks': paginated_checks}).content
+
+    html = render(request, 'manager/checks/check_table.html', {'checks': checks}).content
     html = html.decode('utf-8')
 
-    pagination_links = []
-    if paginated_checks.has_previous():
-        pagination_links.append({
-            'label': 'Previous',
-            'url': '?page=' + str(paginated_checks.previous_page_number())
-        })
-    for page in paginated_checks.paginator.page_range:
-        if page == paginated_checks.number:
-            pagination_links.append({
-                'label': str(page),
-                'url': '',
-                'current': True
-            })
-        else:
-            pagination_links.append({
-                'label': str(page),
-                'url': '?page=' + str(page),
-                'current': False
-            })
-    if paginated_checks.has_next():
-        pagination_links.append({
-            'label': 'Next',
-            'url': '?page=' + str(paginated_checks.next_page_number())
-        })
-
-    return JsonResponse({'html': html, 'pagination_links': pagination_links})
+    return JsonResponse({'html': html})
 
 
 @manager_required
@@ -1342,38 +1109,11 @@ def get_all_checks_sum(request):
 
             cursor.execute(query)
             checks = cursor.fetchall()
-    items_per_page = 10
-    paginator = Paginator(checks, items_per_page)
-    page_number = int(request.GET.get('page', 1))
-    paginated_checks = paginator.get_page(page_number)
-    html = render(request, 'manager/checks/check_sum_table.html', {'checks': paginated_checks}).content
-    html = html.decode('utf-8')
-    pagination_links = []
-    if paginated_checks.has_previous():
-        pagination_links.append({
-            'label': 'Previous',
-            'url': '?page=' + str(paginated_checks.previous_page_number())
-        })
-    for page in paginated_checks.paginator.page_range:
-        if page == paginated_checks.number:
-            pagination_links.append({
-                'label': str(page),
-                'url': '',
-                'current': True
-            })
-        else:
-            pagination_links.append({
-                'label': str(page),
-                'url': '?page=' + str(page),
-                'current': False
-            })
-    if paginated_checks.has_next():
-        pagination_links.append({
-            'label': 'Next',
-            'url': '?page=' + str(paginated_checks.next_page_number())
-        })
 
-    return JsonResponse({'html': html, 'pagination_links': pagination_links})
+    html = render(request, 'manager/checks/check_sum_table.html', {'checks': checks}).content
+    html = html.decode('utf-8')
+
+    return JsonResponse({'html': html})
 
 
 @manager_required
