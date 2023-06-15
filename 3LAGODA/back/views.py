@@ -660,8 +660,10 @@ def watch_check(request, id):
 def edit_employee_button(request, id):
     if request.method == 'POST':
         form = EditEmployeeForm(request.POST)
+
         if form.is_valid():
             data = form.cleaned_data
+
             edit_employee(
                 id,
                 data['surname'],
@@ -892,6 +894,9 @@ def edit_employee(id, surname, name, patronymic, role, salary, date_of_birth, da
                   zip_code, email, password):
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()) if password else None
     with connection.cursor() as cursor:
+        if role == "":
+            cursor.execute("SELECT role FROM employee where employee_id =%s", [id])
+            role = cursor.fetchall()[0]
         if password:
             query = """
             UPDATE employee
