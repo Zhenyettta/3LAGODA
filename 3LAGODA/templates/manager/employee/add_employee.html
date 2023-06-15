@@ -35,7 +35,16 @@
         <div class="form-wrapper">
             <div class="el-wrapper">
                 <label class="label" for="role">Role:</label>
-                <div><input class="input" type="text" id="role" name="role" required></div>
+                <div>
+                    <label class="label" for="role">Role:</label>
+                    <div>
+                        <select class="input" id="role" name="role" required>
+                            <option value="" disabled selected>Select role</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Manager">Manager</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="el-wrapper">
                 <label class="label" for="salary">Salary:</label>

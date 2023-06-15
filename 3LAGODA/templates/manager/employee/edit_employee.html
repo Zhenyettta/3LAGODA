@@ -33,7 +33,14 @@
         </label>
         <div class="form-wrapper">
             <label class="el-wrapper">
-                <input class="input" placeholder="Role" type="text" id="role" name="role" value="{{ employee.4 }}">
+
+                <select class="input" id="role" name="role" required>
+                    <option value="" disabled>Choose role</option>
+                    <option value="{{ employee.4 }}" disabled selected hidden="hidden">{{ employee.4 }}</option>
+                    <option value="Sales">Sales</option>
+                    <option value="Manager">Manager</option>
+                </select>
+
             </label>
             <label class="el-wrapper">
                 <input class="input" placeholder="Salary" type="text" id="salary" name="salary"
@@ -65,7 +72,7 @@
             </label>
             <label class="el-wrapper">
                 <input class="input" placeholder="Zip code" type="text" id="zip_code" name="zip_code"
-                   value="{{ employee.11 }}">
+                       value="{{ employee.11 }}">
             </label>
         </div>
         <label>
