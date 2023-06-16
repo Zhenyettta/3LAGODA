@@ -374,11 +374,11 @@ def today_check(request):
 
     return render(request, 'sales/my_info/checks_table.html', context)
 
-def date_working_checks(request):
 
+def date_working_checks(request):
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
-    print(start_date,end_date)
+    print(start_date, end_date)
     with connection.cursor() as cursor:
         query = """
             SELECT c.check_number, c.card_number, c.print_date, c.sum_total, c.vat
@@ -393,6 +393,7 @@ def date_working_checks(request):
 
     context = {'checks': checks}
     return render(request, 'sales/my_info/checks_table.html', context)
+
 
 @manager_required
 def in_store_product_list(request):
@@ -745,7 +746,6 @@ def edit_customer_button(request, id):
     return render(request, 'manager/customers/edit_customer.html', {'customer': customer})
 
 
-@manager_required
 def edit_customer_button_sales(request, id):
     if request.method == 'POST':
         form = EditCustomerForm(request.POST)
@@ -761,7 +761,7 @@ def edit_customer_button_sales(request, id):
                 data['street'],
                 data['zip_code'],
                 data['percent'])
-            return customers_view(request)
+            return redirect('customers_view')
 
     else:
         customer_query = """
@@ -1000,7 +1000,6 @@ def sale(request):
     return render(request, 'sales/create_check.html', {'products': in_store_products})
 
 
-@manager_required
 def create_check(request):
     if request.method == 'GET':
         data = request.GET.get('data')
@@ -1035,10 +1034,7 @@ def create_check(request):
 
                 context = {'checks': checks}
 
-                html = render(request, 'manager/checks/check_list.html', {'products': context}).content
-                html = html.decode('utf-8')
-
-                return JsonResponse({'html': html})
+                return redirect('sale')
     return JsonResponse({'error': 'Invalid request method'})
 
 

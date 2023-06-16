@@ -41,10 +41,37 @@ form .form-field::before {
 }
 
 form .form-field:nth-child(2)::before {
-    background-image: url('../images/user-icon.png');
-    width: 20px;
-    height: 20px;
-    top: 15px;
+    width: 30px;
+    height: 30px;
+    top: 10px;
+}
+
+form .field-1:nth-child(2)::before {
+    background-image: url('../images/sale-icon.png');
+}
+
+form .field-2:nth-child(2)::before {
+    background-image: url('../images/customer-icon.png');
+}
+
+form .field-3:nth-child(2)::before {
+    background-image: url('../images/category-icon.png');
+}
+
+form .field-4:nth-child(2)::before {
+    background-image: url('../images/product-icon.png');
+}
+
+form .field-5:nth-child(2)::before {
+    background-image: url('../images/in-store-product-icon.png');
+}
+
+form .field-6:nth-child(2)::before {
+    background-image: url('../images/check-icon.png');
+}
+
+form .field-7:nth-child(2)::before {
+    background-image: url('../images/sell-icon.png');
 }
 
 form .form-field:nth-child(3)::before {
