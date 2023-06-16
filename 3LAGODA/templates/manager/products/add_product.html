@@ -6,16 +6,21 @@
 
 {% load static %}
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/add_empl.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
 {% endblock %}
 
 {% block content %}
-    <a id="create-employee-btn" onclick="location.href='/manager/products'"><</a>
+    <div class="header">
+        <button class="button button-back" id="create-employee-btn" onclick="location.href='/manager/products'"><span
+                class="arrow">➜</span> Back
+        </button>
+    </div>
 
-    <form method="post">
+    <form class="form" style="width: 300px" method="post">
         {% csrf_token %}
+        <h2>New product form</h2>
         <div>
-            <label for="category">Select a category:</label>
+            <label class="label" for="category">Select a category:</label>
             <select id="category" name="category">
                 {% for category in categories %}
                     <option value="{{ category.0 }}">{{ category.1 }}</option>
@@ -25,16 +30,17 @@
         </div>
 
         <div>
-            <label for="name">Name:</label>
-            <div><input type="text" id="name" name="name" required></div>
+            <label class="label" for="name">Name:</label>
+            <div><input class="input" type="text" id="name" name="name" required></div>
         </div>
 
         <div>
-            <label for="characteristics">Characteristics:</label>
-            <div><input type="text" id="characteristics" name="characteristics" required></div>
+            <label class="label" for="characteristics">Characteristics:</label>
+            <div><input class="input" type="text" id="characteristics" name="characteristics" required></div>
         </div>
-        <div>
-            <button id="create-employee-btn">Create Product</button>
+
+        <div class="btn-div">
+            <button class="button button-confirm" id="create-employee-btn">Create product</button>
         </div>
     </form>
 
