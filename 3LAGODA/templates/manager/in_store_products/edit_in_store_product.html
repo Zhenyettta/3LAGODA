@@ -16,18 +16,23 @@
         </button>
     </div>
 
-
-
     <form class="form" method="post">
         {% csrf_token %}
-        <h2> Edit product menu</h2>
-        <div>
-            <button class="button button-confirm" id="create-employee-btn" onclick="generateUPC()">Generate UPC</button>
+        <h2 style="margin-bottom: 7px"> Edit product menu</h2>
+        <div class=" form-wrapper btn-div" style="width: calc(100% + 21.5px);">
+            <div class="el-wrapper">
+                <label>
+                    <input class="input" type="text" id="upc" name="upc" value="{{ product.0 }}">
+                </label>
+            </div>
+
+            <div class="el-wrapper" style="width: 300px">
+                <button class="button button-confirm" style="margin-top: 6.5px;" id="create-employee-btn" onclick="generateUPC()">Generate UPC
+                </button>
+            </div>
         </div>
-        <label class="label" for="upc">UPC:
-            <input class="input" type="text" id="upc" name="upc" value="{{ product.0 }}">
-        </label>
-        <label class="label" for="id">ID:
+
+        <label style="margin-top: 7px" class="label" for="id">ID:
             <input class="input" type="number" id="id" name="id" value="{{ product.1 }}" readonly>
         </label>
 
