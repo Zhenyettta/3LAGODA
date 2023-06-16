@@ -28,8 +28,8 @@
             </tr>
         </thead>
         <tbody id="today">
+        {% for check in checks %}
         <tr>
-            {% for check in checks %}
                 <td>{{ check.0 }}</td>
                 <td>{{ check.1 }}</td>
                 <td>{{ check.2 }}</td>
@@ -38,9 +38,9 @@
                 <td>
                 <button class="button button-header">Watch</button>
                 </td>
-
-            {% endfor %}
         </tr>
+        {% endfor %}
+
         </tbody>
     </table>
 {% endblock %}

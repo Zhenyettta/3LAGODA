@@ -374,6 +374,25 @@ def today_check(request):
 
     return render(request, 'sales/my_info/checks_table.html', context)
 
+def date_working_checks(request):
+
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    print(start_date,end_date)
+    with connection.cursor() as cursor:
+        query = """
+            SELECT c.check_number, c.card_number, c.print_date, c.sum_total, c.vat
+            FROM "check" c
+            JOIN employee e ON c.employee_id = e.employee_id
+            WHERE e.email = %s AND DATE(c.print_date AT TIME ZONE 'UTC')::date BETWEEN %s AND %s
+            ORDER BY c.print_date desc
+        """
+
+        cursor.execute(query, [user.email, start_date, end_date])
+        checks = cursor.fetchall()
+
+    context = {'checks': checks}
+    return render(request, 'sales/my_info/checks_table.html', context)
 
 @manager_required
 def in_store_product_list(request):

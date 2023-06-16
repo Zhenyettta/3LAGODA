@@ -96,5 +96,6 @@ urlpatterns = [
 
     path('home/my_info/', views.my_info, name='my_info'),
     path('home/my_info/today_check/', views.today_check, name='today_check'),
+    path('home/my_info/date_working_checks/', views.date_working_checks, name='date_working_checks'),
 
 ]
