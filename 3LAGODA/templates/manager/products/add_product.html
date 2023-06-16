@@ -21,7 +21,7 @@
         <h2>New product form</h2>
         <div>
             <label class="label" for="category">Select a category:</label>
-            <select id="category" name="category">
+            <select style="height: 37px; width: 320px;" class="input" id="category" name="category">
                 {% for category in categories %}
                     <option value="{{ category.0 }}">{{ category.1 }}</option>
                 {% endfor %}

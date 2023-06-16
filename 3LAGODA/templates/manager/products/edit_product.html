@@ -21,7 +21,7 @@
         <h2>Edit product menu</h2>
 
         <label>
-            <select id="category" name="category">
+            <select style="height: 37px; width: 320px" class="input" id="category" name="category">
                 {% for category in categories %}
                     <option value="{{ category.0 }}"
                             {% if category.0 == product.0 %}selected{% endif %}>{{ category.1 }}</option>
