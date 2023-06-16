@@ -37,6 +37,20 @@
             </form>
         </div>
 
+        <form action="{% url 'sale' %}" method="post">
+            {% csrf_token %}
+            <div class="form-field field-7">
+                <button id="login-btn" class="btn btn-manager" type="submit">Sells</button>
+            </div>
+        </form>
+
+        <form action="{% url 'find_check_view' %}" method="post">
+            {% csrf_token %}
+            <div class="form-field field-7">
+                <button id="login-btn" class="btn btn-manager" type="submit">Find Check</button>
+            </div>
+        </form>
+
         <form action="{% url 'customers_view' %}" method="post">
             {% csrf_token %}
             <div class="form-field field-2">
@@ -55,13 +69,6 @@
             {% csrf_token %}
             <div class="form-field field-5">
                 <button id="login-btn" class="btn btn-manager" type="submit">In store products</button>
-            </div>
-        </form>
-
-        <form action="{% url 'sale' %}" method="post">
-            {% csrf_token %}
-            <div class="form-field field-7">
-                <button id="login-btn" class="btn btn-manager" type="submit">Sells</button>
             </div>
         </form>
 

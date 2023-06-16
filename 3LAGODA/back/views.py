@@ -216,6 +216,8 @@ def product_view(request):
     context = {'products': products, 'categories': categories}
     return render(request, 'sales/products/product_view.html', context)
 
+def find_check_view(request):
+    return render(request, 'sales/find_check/find_check_view.html')
 
 @manager_required
 def get_products_by_category(request):
@@ -374,6 +376,8 @@ def today_check(request):
 
     return render(request, 'sales/my_info/checks_table.html', context)
 
+def found_check_info(request):
+    return HttpResponse()
 
 def date_working_checks(request):
     start_date = request.GET.get('start_date')

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Employee List
+{% endblock %}
+
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="header">
+        <a class="button button-back" onclick="location.href='/home/'"> <span class="arrow">➜</span> Back </a>
+    </div>
+
+    {% include 'sales/my_info/my_info_table.html' %}
+
+    <br>
+    <button class="button button-header" id="b-work-for-today" type="submit" onclick="location.href='/home/my_info/today_check/'">Today</button>
+    <br>
+
+    <div class="check-input">
+        <label for="check-number">Check Number:</label>
+        <input type="text" id="check-number" name="check-number">
+    </div>
+
+    <button class="button button-header" id="b-find" type="submit" onclick="findCheck()">Find</button>
+
+    <script>
+        function findCheck() {
+            var checkNumber = document.getElementById("check-number").value;
+            var url = '/home/find_check_view/found_check?check_number=' + checkNumber;
+            window.location.href = url;
+        }
+    </script>
+{% endblock %}
