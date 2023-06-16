@@ -23,5 +23,32 @@
         <button class="button button-header" id="b-work-for-today" type="submit" onclick="location.href='/home/my_info/today_check/'">Today</button>
     <br>
 
+    <div class="date-input">
+        <input type="date" id="start-date" name="start-date">
+         <label>-</label>
+         <input type="date" id="end-date" name="end-date">
+         <button class="button button-header" id="b-find" type="submit" onclick="findWorkingChecks()">Find</button>
+
+     </div>
+
+<script>
+    function findWorkingChecks() {
+        var startDate = document.getElementById("start-date").value;
+        var endDate = document.getElementById("end-date").value;
+
+        if (startDate && endDate) {
+            if (startDate <= endDate) {
+                var url = '/home/my_info/date_working_checks/?start_date=' + startDate + '&end_date=' + endDate;
+                window.location.href = url;
+            } else {
+                alert("Start date cannot be greater than end date.");
+            }
+        } else {
+            alert("Please provide both start and end dates.");
+        }
+    }
+</script>
+
+
 
 {% endblock %}
