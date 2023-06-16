@@ -108,6 +108,12 @@ input[type="date"] {
     width: 100%;
 }
 
+.btn-div {
+    width: calc(100% + 21.5px);
+    display: flex;
+    justify-content: center;
+}
+
 .form-wrapper{
     display: flex;
     width: 100%;
@@ -124,10 +130,4 @@ h2 {
     justify-content: center;
     font-family: "Arial";
     color: #2d3142;
-}
-
-.btn-div {
-    width: calc(100% + 21.5px);
-    display: flex;
-    justify-content: center;
 }

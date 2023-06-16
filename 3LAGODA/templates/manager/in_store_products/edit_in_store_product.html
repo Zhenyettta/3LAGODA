@@ -6,52 +6,53 @@
 
 {% load static %}
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/edit_empl.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
 {% endblock %}
 
 {% block content %}
-    <h1>Edit Employee Menu</h1>
-    <a class="edit-employee-btn" onclick="location.href='/manager/instoreproducts'"
-       style="background-color: #4CAF50; color: white; padding: 10px 20px;
-                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;"><</a>
-    <div>
-        <button id="create-employee-btn" onclick="generateUPC()">Generate UPC</button>
+    <div class="header">
+        <button class="button button-back" onclick="location.href='/manager/instoreproducts'">
+            <span class="arrow">➜</span> Back
+        </button>
     </div>
 
-    <form method="post">
+
+
+    <form class="form" method="post">
         {% csrf_token %}
-        <label for="upc">UPC:
-            <input type="text" id="upc" name="upc" value="{{ product.0 }}">
+        <h2> Edit product menu</h2>
+        <div>
+            <button class="button button-confirm" id="create-employee-btn" onclick="generateUPC()">Generate UPC</button>
+        </div>
+        <label class="label" for="upc">UPC:
+            <input class="input" type="text" id="upc" name="upc" value="{{ product.0 }}">
         </label>
-        <label for="id">ID:
-            <input type="number" id="id" name="id" value="{{ product.1 }}" readonly>
-        </label>
-
-        <label for=name>Name:
-            <input type="text" id="name" name="name" value="{{ product.2 }}" readonly>
-        </label>
-        <label for="price">Price:
-            <input type="number" id="price" name="price" value="{{ product.3 }}">
+        <label class="label" for="id">ID:
+            <input class="input" type="number" id="id" name="id" value="{{ product.1 }}" readonly>
         </label>
 
-        <label for="count">Count:
-            <input type="number" id="count" name="count" value="{{ product.4 }}">
+        <label class="label" for=name>Name:
+            <input class="input" type="text" id="name" name="name" value="{{ product.2 }}" readonly>
+        </label>
+        <label class="label" for="price">Price:
+            <input class="input" type="number" id="price" name="price" value="{{ product.3 }}">
         </label>
 
-        <label for="prom">Prom:
-            <input type="checkbox" id="prom" name="prom"
-                    {% if product.5 %}
-                   checked
-                    {% endif %}>
+        <label class="label" for="count">Count:
+            <input class="input" type="number" id="count" name="count" value="{{ product.4 }}">
         </label>
+        <div class="btn-div">
+            <label class="label" for="prom">Prom:
+                <input type="checkbox" id="prom" name="prom"
+                        {% if product.5 %}
+                       checked
+                        {% endif %}>
+            </label>
+        </div>
 
-        <div style="text-align: center;
-                    margin-top: 3vh">
-            <button
-                    style="background-color: #4CAF50; color: white; padding: 10px 20px;
-                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;">
-                Update
-            </button>
+
+        <div class="btn-div">
+            <button class="button button-confirm"> Update</button>
         </div>
     </form>
 

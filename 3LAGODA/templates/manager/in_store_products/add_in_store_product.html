@@ -6,62 +6,63 @@
 
 {% load static %}
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/add_empl.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
 {% endblock %}
 
 {% block content %}
-    <a id="create-employee-btn" onclick="location.href='/manager/instoreproducts'"><</a>
-    <div>
-        <button id="create-employee-btn" onclick="generateUPC()">Generate UPC</button>
+    <div class="header">
+        <button class="button button-back" id="create-employee-btn" onclick="location.href='/manager/instoreproducts'">
+            <span class="arrow">➜</span> Back
+        </button>
     </div>
 
-    <form method="post">
+    <form class="form" method="post">
         {% csrf_token %}
-        <div>
-            <label for="product">Select a product:</label>
-            <select id="product" name="product" onchange="updateFields(this)">
+        <h2 style="margin-bottom: 0px">Add product form</h2>
+        <div class=" form-wrapper btn-div" style="width: calc(100% + 21.5px);">
+            <div class="el-wrapper" style="margin-bottom: 15px">
+                <label class="label" for="upc">UPC:</label>
+                <div><input class="input" type="text" id="upc" name="upc" required></div>
+            </div>
+
+            <div class="el-wrapper" style="padding: 12px 0; width: 300px">
+                <button class="button button-confirm" id="create-employee-btn" onclick="generateUPC()">Generate UPC
+                </button>
+            </div>
+        </div>
+
+        <div class="btn-div">
+            <select class="input" id="product" name="product" onchange="updateFields(this)">
                 <option value="" disabled selected hidden>Select product</option>
                 {% for product in products %}
                     <option value="{{ product.0 }}">{{ product.2 }}</option>
                 {% endfor %}
             </select>
-
         </div>
 
         <div>
-            <label for="upc">UPC:</label>
-            <div><input type="text" id="upc" name="upc" required></div>
+            <label class="label" for="id">ID:</label>
+            <div><input class="input" type="text" id="id" name="id" readonly></div>
         </div>
 
-
-        <div>
-            <label for="id">ID:</label>
-            <div><input type="text" id="id" name="id" readonly></div>
+        <div class="form-wrapper">
+            <div class="el-wrapper">
+                <label class="label" for="price">Price:</label>
+                <div><input class="input" type="number" id="price" name="price" required></div>
+            </div>
+            <div class="el-wrapper">
+                <label class="label" for="count">Count:</label>
+                <div><input class="input" type="number" id="count" name="count" required></div>
+            </div>
         </div>
 
-        <div>
-            <label for="name">Name:</label>
-            <div><input type="text" id="name" name="name" readonly></div>
-        </div>
-
-        <div>
-            <label for="price">Price:</label>
-            <div><input type="number" id="price" name="price" required></div>
-        </div>
-
-        <div>
-            <label for="count">Count:</label>
-            <div><input type="number" id="count" name="count" required></div>
-        </div>
-
-        <div>
-            <label for="prom">Prom:</label>
+        <div class="btn-div">
+            <label class="label" for="prom">Prom:</label>
             <div><input type="checkbox" id="prom" name="prom"></div>
         </div>
 
-
-        <div>
-            <button id="create-employee-btn">Create Product</button>
+        <div class="btn-div">
+            <button class="button button-confirm" id="create-employee-btn">Create Product</button>
         </div>
     </form>
 
