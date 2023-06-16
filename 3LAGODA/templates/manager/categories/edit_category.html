@@ -6,27 +6,25 @@
 
 {% block head %}
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/edit_empl.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
 {% endblock %}
 
 {% block content %}
-    <h1>Edit Category Menu</h1>
-    <a class="edit-employee-btn" onclick="location.href='/manager/categories'"
-       style="background-color: #4CAF50; color: white; padding: 10px 20px;
-                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;"><</a>
-    <form method="post">
+    <div class="header">
+        <button class="button button-back" onclick="location.href='/manager/categories'"> <span
+                class="arrow">➜</span> Back
+        </button>
+    </div>
+
+    <form class="form" style="width: 300px" method="post">
         {% csrf_token %}
+        <h2>Edit category menu</h2>
         <label>
-            <input type="text" id="name" name="name" value="{{ category.0 }}">
+            <input class="input" placeholder="Category name" type="text" id="name" name="name" value="{{ category.0 }}">
         </label>
 
-        <div style="text-align: center;
-                    margin-top: 3vh">
-            <button
-                    style="background-color: #4CAF50; color: white; padding: 10px 20px;
-                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;">
-                Update
-            </button>
+        <div class="btn-div">
+            <button class="button button-confirm"> Update </button>
         </div>
     </form>
 {% endblock %}

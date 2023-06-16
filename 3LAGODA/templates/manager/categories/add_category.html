@@ -7,19 +7,25 @@
 
 {% block head %}
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/add_empl.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
 {% endblock %}
 
 {% block content %}
-    <a id="create-employee-btn" onclick="location.href='/manager/categories'"><</a>
-    <form method="post">
+    <div class="header">
+        <button class="button button-back" id="create-employee-btn" onclick="location.href='/manager/categories'"> <span
+                class="arrow">➜</span> Back
+        </button>
+    </div>
+
+    <form class="form" style="width: 300px" method="post">
         {% csrf_token %}
+        <h2>New category form</h2>
         <div>
-            <label for="name">Name:</label>
-            <div><input type="text" id="name" name="name" required></div>
+            <label class="label" for="name">Name:</label>
+            <div><input class="input" type="text" id="name" name="name" required></div>
         </div>
-        <div>
-            <button id="create-employee-btn">Create Category</button>
+        <div class="btn-div">
+            <button class="button button-confirm" id="create-employee-btn">Create Category</button>
         </div>
     </form>
 
