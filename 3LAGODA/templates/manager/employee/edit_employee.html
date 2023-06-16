@@ -20,7 +20,7 @@
 
     <form class="form" method="post">
         {% csrf_token %}
-        <h2>Edit Employee Menu</h2>
+        <h2>Edit employee menu</h2>
         <label>
             <input class="input" placeholder="Surname" type="text" id="surname" name="surname" value="{{ employee.1 }}">
         </label>
@@ -61,10 +61,15 @@
             </div>
         </div>
 
-        <label>
-            <input class="input" placeholder="Phone number" type="text" id="phone_number" name="phone_number"
+        <div class="form-wrapper">
+            <label class="el-wrapper">
+                <input class="input" placeholder="Phone number" type="text" id="phone_number" name="phone_number"
                    value="{{ employee.8 }}">
-        </label>
+            </label>
+            <label class="el-wrapper">
+                <input class="input" placeholder="Email" type="text" id="email" name="email" value="{{ employee.12 }}">
+            </label>
+        </div>
 
         <div class="form-wrapper">
             <label class="el-wrapper">
@@ -79,18 +84,10 @@
             <input class="input" placeholder="Street" type="text" id="street" name="street" value="{{ employee.10 }}">
         </label>
         <label>
-            <input class="input" placeholder="Email" type="text" id="email" name="email" value="{{ employee.12 }}">
-        </label>
-        <label>
             <input class="input" placeholder="Password" type="password" name="password" id="password">
         </label>
-        <div style="text-align: center;
-                    margin-top: 3vh">
-            <button id="edit-employee-btn"
-                    style="background-color: #4CAF50; color: white; padding: 10px 20px;
-                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;">
-                Update
-            </button>
+        <div class="btn-div">
+            <button class="button button-confirm" id="edit-employee-btn">Update</button>
         </div>
     </form>
 {% endblock %}
