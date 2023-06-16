@@ -7,52 +7,53 @@
 
 {% block head %}
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/edit_empl.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
 {% endblock %}
 
 {% block content %}
-    <h1>Edit Employee Menu</h1>
-    <a class="edit-employee-btn" onclick="location.href='/manager/customers'"
-       style="background-color: #4CAF50; color: white; padding: 10px 20px;
-                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;"><</a>
-    <form method="post">
+    <div class="header">
+        <button class="button button-back" onclick="location.href='/manager/customers'"> <span
+                class="arrow">➜</span> Back
+        </button>
+    </div>
+
+    <form class="form" method="post">
         {% csrf_token %}
+        <h2>Edit customer menu</h2>
         <label>
-            <input type="text" id="surname" name="surname" value="{{ customer.1 }}">
+            <input class="input" placeholder="Surname" type="text" id="surname" name="surname" value="{{ customer.1 }}">
         </label>
         <label>
-            <input type="text" id="name" name="name" value="{{ customer.2 }}">
+            <input class="input" placeholder="Name" type="text" id="name" name="name" value="{{ customer.2 }}">
         </label>
         <label>
-            <input type="text" id="patronymic" name="patronymic" value="{{ customer.3 }}">
-        </label>
-
-        <label>
-            <input type="text" id="phone_number" name="phone_number" value="{{ customer.4 }}">
+            <input class="input" placeholder="Patronymic" type="text" id="patronymic" name="patronymic" value="{{ customer.3 }}">
         </label>
 
         <label>
-            <input type="text" id="city" name="city" value="{{ customer.5 }}">
+            <input class="input" placeholder="Phone number" type="text" id="phone_number" name="phone_number" value="{{ customer.4 }}">
         </label>
+
+        <div class="form-wrapper">
+            <label class="el-wrapper">
+                <input class="input" placeholder="City" type="text" id="city" name="city" value="{{ customer.5 }}">
+            </label>
+            <label class="el-wrapper">
+                <input class="input" placeholder="Zip code" type="text" id="zip_code" name="zip_code"
+                       value="{{ customer.7 }}">
+            </label>
+        </div>
+
         <label>
-            <input type="text" id="street" name="street" value="{{ customer.6 }}">
+            <input class="input" placeholder="Street" type="text" id="street" name="street" value="{{ customer.6 }}">
         </label>
 
         <label>
-            <input type="text" id="zip_code" name="zip_code" value="{{ customer.7 }}">
+            <input class="input" placeholder="Percent of discount" type="text" id="percent" name="percent" value="{{ customer.8 }}">
         </label>
 
-        <label>
-            <input type="text" id="percent" name="percent" value="{{ customer.8 }}">
-        </label>
-
-        <div style="text-align: center;
-                    margin-top: 3vh">
-            <button
-                    style="background-color: #4CAF50; color: white; padding: 10px 20px;
-                     font-size: 16px; border: none; cursor: pointer; border-radius: 4px;">
-                Update
-            </button>
+        <div class="btn-div">
+            <button class="button button-confirm"> Update</button>
         </div>
     </form>
 {% endblock %}
