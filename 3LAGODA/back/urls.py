@@ -84,6 +84,7 @@ urlpatterns = [
 
     #In Store
     path('home/instoreproducts_view/', views.instoreproducts_view, name='instoreproducts_view'),
+    path('home/instoreproducts_view/sale_sort_selected/', views.sale_sort_selected, name='sale_sort_selected'),
 
     #Customers
     path('home/customers_view/', views.customers_view, name='customers_view'),

@@ -1064,6 +1064,27 @@ def sort_selected(request):
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
 
+def sale_sort_selected(request):
+    choice = request.GET.get('choice')
+    prom = request.GET.get('prom')
+    order = request.GET.get('order')
+    print(f"1:{choice}, 2:{prom}, 3:{order}")
+
+    with connection.cursor() as cursor:
+        query = f"""
+            SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional
+            FROM store_product s
+            JOIN product p on s.product_id = p.product_id
+            WHERE is_promotional IN ({prom})
+            ORDER BY {choice} {order}
+            """
+
+        cursor.execute(query)
+        products = cursor.fetchall()
+
+    html = render(request, 'sales/in_store_products/in_store_table_view.html', {'products': products}).content
+    html = html.decode('utf-8')
+    return JsonResponse({'html': html})
 
 @manager_required
 def get_all_checks_all_empl(request):

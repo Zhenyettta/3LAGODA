@@ -14,14 +14,18 @@
     <div class="header">
         <a class="button button-back" onclick="location.href='/home/'"> <span class="arrow">➜</span> Back </a>
 
-        <div class="search-wrapper">
+        <div>
             <label for="is-prom">Prom</label>
-            <input type="checkbox" id="is-prom">
+            <input type="checkbox" id="is-prom" onclick="sortTable(4, this)">
 
             <label for="not-prom">Not prom</label>
-            <input type="checkbox" id="not-prom">
+            <input type="checkbox" id="not-prom" onclick="sortTable(5, this)">
+        </div>
+
+        <div class="search-wrapper">
             <button class="button" onclick="location.href='/home/instoreproducts_view/'">Reset</button>
         </div>
+
 
     </div>
 
@@ -30,14 +34,14 @@
         <tr>
             <th>UPC</th>
             <th>Product ID</th>
-            <th>Name
-                <button class="sort-button" data="name">▲</button>
+              <th>Name
+                <button class="sort-button" data="name" onclick="sortTable(1, this)">▲</button>
             </th>
             <th>Selling price
-                <button class="sort-button" data="price">▲</button>
+                <button class="sort-button" data="price" onclick="sortTable(2, this)">▲</button>
             </th>
             <th>Count
-                <button class="sort-button" data="count">▲</button>
+                <button class="sort-button" data="count" onclick="sortTable(3, this)">▲</button>
             </th>
             <th>Prom</th>
         </tr>
@@ -46,5 +50,86 @@
         {% include 'sales/in_store_products/in_store_table_view.html' %}
         </tbody>
     </table>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function sortTable(choice, element) {
+                const isProm = document.getElementById("is-prom").checked;
+                const notProm = document.getElementById("not-prom").checked;
+                const checkboxChecked = getCheckboxChecked(isProm, notProm);
+                const selectedValue = getSelectedValue(element);
+
+                toggleCheckboxes(isProm, notProm);
+                const column = getColumn(choice);
+                sendAjaxRequest(column, checkboxChecked, selectedValue);
+                toggleSortButtons(element);
+            }
+
+        function getCheckboxChecked(isProm, notProm) {
+            if (isProm) {
+                return "True";
+            } else if (notProm) {
+                return "False";
+            } else {
+                return "True, False";
+            }
+        }
+
+        function getSelectedValue(element) {
+            if (element.classList.contains("sort-button")) {
+                return element.innerHTML === "▼" ? "ASC" : "DESC";
+            }
+            return "DESC";
+        }
+
+        function toggleCheckboxes(isProm, notProm) {
+            const isPromCheckbox = document.getElementById("is-prom");
+            const notPromCheckbox = document.getElementById("not-prom");
+
+            notPromCheckbox.disabled = isProm;
+            isPromCheckbox.disabled = notProm;
+        }
+
+        function getColumn(choice) {
+            switch (choice) {
+                case 1:
+                    return 'name';
+                case 2:
+                    return 'price';
+                case 3:
+                    return 'count';
+                default:
+                    return setChoice();
+            }
+        }
+
+        function sendAjaxRequest(column, checkboxChecked, selectedValue) {
+            $.ajax({
+                url: '/home/instoreproducts_view/sale_sort_selected/',
+                method: 'GET',
+                data: {choice: column, prom: checkboxChecked, order: selectedValue},
+                success: function (response) {
+
+                    $('#in_store_list').html(response.html);
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function toggleSortButtons(element) {
+            const selectedValue = element.innerHTML;
+            if (selectedValue === '▲') {
+                $('.sort-button').not(element).html('▲');
+                element.innerHTML = '▼';
+            } else {
+                element.innerHTML = '▲';
+            }
+        }
+
+    </script>
 
 {% endblock %}
