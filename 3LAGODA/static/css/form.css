@@ -38,6 +38,12 @@ label {
     font-family: "Arial";
 }
 
+.checkbox {
+    margin: 2.2px;
+    position: absolute;
+    bottom: 0;
+}
+
 .label {
     display: block;
     font-weight: bold;
@@ -112,6 +118,7 @@ input[type="date"] {
     width: calc(100% + 21.5px);
     display: flex;
     justify-content: center;
+    position: relative;
 }
 
 .form-wrapper{
