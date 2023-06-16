@@ -16,6 +16,9 @@ from .user_data import User
 user = User()
 
 
+# TODO віктор абобус
+
+
 def manager_required(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
@@ -548,7 +551,9 @@ def add_product(request):
 @manager_required
 def add_in_store_product(request):
     with connection.cursor() as cursor:
-        query = "SELECT * FROM product"
+        query = f"""SELECT * FROM product p
+        where p.product_id not in (SELECT sp2.product_id FROM store_product sp2)
+        """
         cursor.execute(query)
         products = cursor.fetchall()
 
@@ -563,7 +568,7 @@ def add_in_store_product(request):
                 data['prom'],
                 data['upc'],
             )
-            return in_store_product_list(request)
+            return redirect('in_store_product_list')
         else:
             print(form.errors)
     else:
@@ -818,7 +823,7 @@ def edit_in_store_product_button(request, id):
                 data['upc'],
                 data['prom'],
             )
-            return in_store_product_list(request)
+            return redirect('in_store_product_list')
     else:
         product_query = """
             SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional
