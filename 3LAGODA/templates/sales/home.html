@@ -31,7 +31,7 @@
         <div id="my_info">
             <form action="{% url 'my_info' %}" method="post">
                 {% csrf_token %}
-                <div class="form-field">
+                <div class="form-field field-1">
                     <button id="login-btn" class="btn btn-manager" type="submit">My Info</button>
                 </div>
             </form>
@@ -39,29 +39,29 @@
 
         <form action="{% url 'customers_view' %}" method="post">
             {% csrf_token %}
-            <div class="form-field">
+            <div class="form-field field-2">
                 <button id="login-btn" class="btn btn-manager" type="submit">Customers</button>
             </div>
         </form>
 
         <form action="{% url 'product_view' %}" method="post">
             {% csrf_token %}
-            <div class="form-field">
-                <button id="login-btn" class="btn btn-manager" type="submit">Product</button>
+            <div class="form-field field-4">
+                <button id="login-btn" class="btn btn-manager" type="submit">Products</button>
             </div>
         </form>
 
         <form action="{% url 'instoreproducts_view' %}" method="post">
             {% csrf_token %}
-            <div class="form-field">
-                <button id="login-btn" class="btn btn-manager" type="submit">InStoreProduct</button>
+            <div class="form-field field-5">
+                <button id="login-btn" class="btn btn-manager" type="submit">In store products</button>
             </div>
         </form>
 
         <form action="{% url 'sale' %}" method="post">
             {% csrf_token %}
-            <div class="form-field">
-                <button id="login-btn" class="btn btn-manager" type="submit">Sell</button>
+            <div class="form-field field-7">
+                <button id="login-btn" class="btn btn-manager" type="submit">Sells</button>
             </div>
         </form>
 
