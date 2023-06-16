@@ -745,7 +745,7 @@ def edit_customer_button(request, id):
     return render(request, 'manager/customers/edit_customer.html', {'customer': customer})
 
 
-@manager_required
+
 def edit_customer_button_sales(request, id):
     if request.method == 'POST':
         form = EditCustomerForm(request.POST)
@@ -761,7 +761,7 @@ def edit_customer_button_sales(request, id):
                 data['street'],
                 data['zip_code'],
                 data['percent'])
-            return customers_view(request)
+            return redirect('customers_view')
 
     else:
         customer_query = """
