@@ -108,6 +108,18 @@
             }
         }
 
+        function setChoice() {
+            const buttons = document.getElementsByClassName("sort-button");
+            for (let i = 0; i < buttons.length; i++) {
+                const button = buttons[i];
+                const value = button.innerHTML;
+                if (value === "▼") {
+                    return button.getAttribute("data");
+                }
+            }
+            return "name";
+        }
+
         function sendAjaxRequest(column, checkboxChecked, selectedValue) {
             $.ajax({
                 url: '/home/instoreproducts_view/sale_sort_selected/',

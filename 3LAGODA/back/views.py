@@ -584,7 +584,7 @@ def add_category(request):
             create_category(
                 data['name'],
             )
-            return category_list(request)
+            return redirect('category_list')
     else:
         form = CategoryForm()
     return render(request, 'manager/categories/add_category.html', {'form': form})
@@ -833,7 +833,7 @@ def edit_category_button(request, id):
             edit_category(
                 id,
                 data['name'])
-            return category_list(request)
+            return redirect('category_list')
     else:
         category_query = """
             SELECT name
@@ -857,7 +857,7 @@ def edit_product_button(request, id):
                 data['category'],
                 data['name'],
                 data['characteristics'])
-            return product_list(request)
+            return redirect('product_list')
     else:
         product_query = """
             SELECT category_number, name, characteristics
