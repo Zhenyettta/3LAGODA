@@ -216,8 +216,10 @@ def product_view(request):
     context = {'products': products, 'categories': categories}
     return render(request, 'sales/products/product_view.html', context)
 
+
 def find_check_view(request):
     return render(request, 'sales/find_check/find_check_view.html')
+
 
 @manager_required
 def get_products_by_category(request):
@@ -296,6 +298,7 @@ def get_in_store_by_upc(request):
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
 
+
 def get_in_store_by_upc_sale(request):
     upc = request.GET.get('upc')
 
@@ -314,7 +317,6 @@ def get_in_store_by_upc_sale(request):
     html = render(request, 'sales/in_store_products/in_store_table_view.html', {'products': products}).content
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
-
 
 
 @manager_required
@@ -396,6 +398,7 @@ def today_check(request):
 
     return render(request, 'sales/my_info/checks_table.html', context)
 
+
 def found_check_info(request):
     checkNumber = request.GET.get('check_number')
 
@@ -420,9 +423,10 @@ def found_check_info(request):
         cursor.execute(query1, [checkNumber])
         sales = cursor.fetchall()
 
-    context = {'checks': checks, 'sales':sales}
+    context = {'checks': checks, 'sales': sales}
 
     return render(request, 'sales/find_check/found_check.html', context)
+
 
 def date_working_checks(request):
     start_date = request.GET.get('start_date')
@@ -1043,6 +1047,7 @@ def sale(request):
         SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional 
         FROM store_product s 
         JOIN product p on s.product_id = p.product_id
+        ORDER BY p.name;
         """
         cursor.execute(query)
         in_store_products = cursor.fetchall()
@@ -1056,32 +1061,34 @@ def create_check(request):
             data = json.loads(data)
             price = sum(float(item[3]) * int(item[4]) for item in data)
 
+            user_id = user.id  # Assuming you have the user ID stored in 'user.id'
+
             with connection.cursor() as cursor:
                 query = """
                     INSERT INTO "check" (employee_id, card_number, sum_total, vat)
                     VALUES (%s, %s, %s, %s)
                     RETURNING check_number;
                 """
-                cursor.execute(query, [user.id, 2, price, 20])
+                cursor.execute(query, [user_id, 2, price, 20])
                 check_number = cursor.fetchone()[0]
 
                 query_sale = """
                     INSERT INTO sale (upc, price, check_number, product_count)
                     VALUES (%s, %s, %s, %s);
                 """
-                cursor.executemany(query_sale, [(item[0], item[3], check_number, item[4]) for item in data])
-
-                query = """
-                    SELECT c.check_number, e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')',
-                    c.card_number, c.print_date, c.sum_total, c.vat
-                    FROM "check" c
-                    JOIN employee e ON c.employee_id = e.employee_id
-                    ORDER BY c.print_date desc
+                query_count = """
+                    UPDATE store_product
+                    SET count = CASE
+                        WHEN count >= %s THEN (count - %s)
+                        ELSE 0
+                    END
+                    WHERE upc = %s;
                 """
-                cursor.execute(query)
-                checks = cursor.fetchall()
+                cursor.executemany(query_sale, [(item[0], item[3], check_number, item[4]) for item in data])
+                cursor.executemany(query_count, [(item[4], item[4], item[0]) for item in data])
 
                 return redirect('sale')
+
     return JsonResponse({'error': 'Invalid request method'})
 
 
@@ -1107,6 +1114,7 @@ def sort_selected(request):
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
 
+
 def sale_sort_selected(request):
     choice = request.GET.get('choice')
     prom = request.GET.get('prom')
@@ -1128,6 +1136,7 @@ def sale_sort_selected(request):
     html = render(request, 'sales/in_store_products/in_store_table_view.html', {'products': products}).content
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
+
 
 @manager_required
 def get_all_checks_all_empl(request):

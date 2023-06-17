@@ -19,36 +19,36 @@
     <div class="checkout-container">
 
         <h2 class=" h2 title">Products</h2>
-    <table class="table styled-table sale-table">
-        <thead>
-        <tr>
-            <th>UPC</th>
-            <th>Product ID</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Count</th>
-            <th>Prom</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for product in products %}
+        <table class="table styled-table sale-table">
+            <thead>
             <tr>
-                <td>{{ product.0 }}</td>
-                <td>{{ product.1 }}</td>
-                <td>{{ product.2 }}</td>
-                <td>{{ product.3 }}</td>
-                <td>{{ product.4 }}</td>
-                <td>{{ product.5 }}</td>
-                <td class="td-btn">
-                    <input class="td-quantity" type="number" name="quantity" min="1" value="1">
-                    <button class="add-to-cart-button button button-header" data-product-id="{{ product.1 }}">Add
-                    </button>
-                </td>
+                <th>UPC</th>
+                <th>Product ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Count</th>
+                <th>Prom</th>
+                <th>Actions</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.0 }}</td>
+                    <td>{{ product.1 }}</td>
+                    <td>{{ product.2 }}</td>
+                    <td>{{ product.3 }}</td>
+                    <td>{{ product.4 }}</td>
+                    <td>{{ product.5 }}</td>
+                    <td class="td-btn">
+                        <input class="td-quantity" type="number" name="quantity" min="1" value="1">
+                        <button class="add-to-cart-button button button-header" data-product-id="{{ product.1 }}">Add
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
         <h2 class=" h2 title">Check</h2>
         <table class="cart-table table styled-table sale-table">
@@ -91,34 +91,38 @@
                     row.querySelector('td:nth-child(2)').textContent === productId
                 );
 
+                const productCount = parseInt(productData[4]);
 
-                if (count > 0) {
-                    productRow.querySelector('td:nth-child(5)').textContent = parseInt(productData[4]) - count;
+                if (count > 0 && count <= productCount && productCount !== 0) {
+                    productRow.querySelector('td:nth-child(5)').textContent = productCount - count;
                 }
 
                 if (promotionalCheckbox) {
                     price *= 0.8;
                 }
+                if (count <= productCount && productCount !== 0) {
 
-                if (existingCartItem) {
-                    const existingCountCell = existingCartItem.querySelector('td:nth-child(5)');
-                    const existingCount = parseInt(existingCountCell.textContent);
-                    existingCountCell.textContent = existingCount + count;
-                } else {
-                    const newRow = document.createElement('tr');
-                    newRow.innerHTML = `
-                    <td>${productData[0]}</td>
-                    <td>${productData[1]}</td>
-                    <td>${productData[2]}</td>
-                    <td>${price}</td>
-                    <td>${count}</td>
-                    <td>${productData[5]}</td>
-                    <td><button class="delete-button button button-header">Delete</button></td>
-                `;
-                    cartItemsContainer.appendChild(newRow);
+                    if (existingCartItem) {
+                        const existingCountCell = existingCartItem.querySelector('td:nth-child(5)');
+                        const existingCount = parseInt(existingCountCell.textContent);
+                        existingCountCell.textContent = existingCount + count;
+                    } else {
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+                <td>${productData[0]}</td>
+                <td>${productData[1]}</td>
+                <td>${productData[2]}</td>
+                <td>${price}</td>
+                <td>${count}</td>
+                <td>${productData[5]}</td>
+                <td><button class="delete-button button button-header">Delete</button></td>
+            `;
+                        cartItemsContainer.appendChild(newRow);
+                    }
                 }
             });
-        });
+        })
+        ;
 
         cartItemsContainer.addEventListener('click', (event) => {
             if (event.target.classList.contains('delete-button')) {
