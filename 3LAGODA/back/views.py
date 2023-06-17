@@ -3,7 +3,7 @@ from datetime import datetime, date
 from functools import wraps
 
 import bcrypt
-from django.db import connection
+from django.db import connection, IntegrityError
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import redirect
@@ -709,9 +709,12 @@ def delete_customer_as_sale(request, id):
 
 @manager_required
 def delete_category(request, id):
-    with connection.cursor() as cursor:
-        query = "DELETE FROM category WHERE category_number = %s"
-        cursor.execute(query, [id])
+    try:
+        with connection.cursor() as cursor:
+            query = "DELETE FROM category WHERE category_number = %s"
+            cursor.execute(query, [id])
+    except IntegrityError:
+        pass
     return redirect('/manager/categories')
 
 
@@ -939,52 +942,70 @@ def create_employee(surname, name, patronymic, role, salary, date_of_birth, date
                     zip_code,
                     email, password):
     employee_query = """
-        INSERT INTO employee (surname, name, patronymic, role, salary, date_of_birth,
-        date_of_start, phone_number, city, street, zip_code, email, password)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-    """
+            INSERT INTO employee (surname, name, patronymic, role, salary, date_of_birth,
+                date_of_start, phone_number, city, street, zip_code, email, password)
+            SELECT %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+            WHERE NOT EXISTS (
+                SELECT 1 FROM employee WHERE phone_number = %s
+            )
+        """
     with connection.cursor() as cursor:
         cursor.execute(
             employee_query,
             [surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
-             zip_code, email, password]
+             zip_code, email, password, phone_number]
         )
 
 
 def create_customer(surname, name, patronymic, phone_number, city, street, zip_code, percent):
     customer_query = """
-        INSERT INTO customer_card (surname, name, patronymic, phone_number, city, street, zip_code, percent)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-    """
+            INSERT INTO customer_card (surname, name, patronymic, phone_number, city, street, zip_code, percent)
+            SELECT %s, %s, %s, %s, %s, %s, %s, %s
+            WHERE NOT EXISTS (
+                SELECT 1 FROM customer_card WHERE phone_number = %s
+            )
+        """
     with connection.cursor() as cursor:
         cursor.execute(
             customer_query,
-            [surname, name, patronymic, phone_number, city, street, zip_code, percent]
+            [surname, name, patronymic, phone_number, city, street, zip_code, percent, phone_number]
         )
 
 
 def create_category(name):
-    category_query = "INSERT INTO category (name) VALUES (%s)"
+    category_query = """
+            INSERT INTO category (name)
+            SELECT %s
+            WHERE NOT EXISTS (
+                SELECT 1 FROM category WHERE name = %s
+            )
+        """
     with connection.cursor() as cursor:
-        cursor.execute(category_query, [name])
+        cursor.execute(category_query, [name, name])
 
 
 def create_product(category, name, characteristics):
     with connection.cursor() as cursor:
         query = """
-        INSERT INTO product (category_number, name, characteristics)
-        VALUES (%s, %s, %s)
-        """
-        cursor.execute(query, [category, name, characteristics])
+            INSERT INTO product (category_number, name, characteristics)
+            SELECT %s, %s, %s
+            WHERE NOT EXISTS (
+                SELECT 1 FROM product WHERE name = %s
+            )
+            """
+        cursor.execute(query, [category, name, characteristics, name])
 
 
 def create_in_store_product(id, price, count, is_promotional, upc):
     with connection.cursor() as cursor:
         query = """
-        INSERT INTO store_product (product_id, price, count, is_promotional, upc)
-        VALUES (%s, %s, %s, %s, %s)
-        """
-        cursor.execute(query, [id, price, count, is_promotional, upc])
+            INSERT INTO store_product (product_id, price, count, is_promotional, upc)
+            SELECT %s, %s, %s, %s, %s
+            WHERE NOT EXISTS (
+                SELECT 1 FROM store_product WHERE upc = %s
+            )
+            """
+        cursor.execute(query, [id, price, count, is_promotional, upc, upc])
 
 
 def edit_employee(id, surname, name, patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street,
@@ -1161,13 +1182,17 @@ def sale_sort_selected(request):
 @manager_required
 def get_all_checks_all_empl(request):
     start_date = request.GET.get('start_date')
-    parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     end_date = request.GET.get('end_date')
+    if start_date == '': start_date = '1000-01-01'
+    if end_date == '': end_date = str(date.today())
+    parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     parsed_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
     employee = request.GET.get('empl_id')
 
-    if employee == 'all':
+    print(employee)
+
+    if employee == '':
         with connection.cursor() as cursor:
             query = f"""
                 SELECT c.check_number, e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')'
@@ -1201,12 +1226,14 @@ def get_all_checks_all_empl(request):
 @manager_required
 def get_all_checks_sum(request):
     start_date = request.GET.get('start_date')
-    parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     end_date = request.GET.get('end_date')
+    if start_date == '': start_date = '1000-01-01'
+    if end_date == '': end_date = str(date.today())
+    parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     parsed_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
     employee = request.GET.get('empl_id')
-    if employee == 'all':
+    if employee == '':
         with connection.cursor() as cursor:
             query = f"""
                 SELECT e.surname || ' ' || e.name || ' ' || e.patronymic, SUM(c.sum_total)
@@ -1243,7 +1270,8 @@ def find_product(request):
     product = request.GET.get('product')
     start_date = request.GET.get('requested_date')
     end_date = request.GET.get('requested_date_end')
-
+    if start_date == '': start_date = '1000-01-01'
+    if end_date == '': end_date = str(date.today())
     parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     parsed_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 

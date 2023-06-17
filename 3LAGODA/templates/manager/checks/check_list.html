@@ -22,6 +22,7 @@
             </div>
             <input type="hidden" name="gender">
             <ul class="dropdown-menu">
+
                 {% for empl in employees %}
                     <li onclick="selectEmpl({{ empl.0 }})"> {{ empl.1 }} {{ empl.2 }} {{ empl.3 }} </li>
                 {% endfor %}
@@ -29,6 +30,7 @@
         </div>
 
         <select style="display: none" id="empls" name="empls">
+            <option onclick="selectEmpl('all')" selected disabled hidden="hidden"></option>
             {% for empl in employees %}
                 <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>
             {% endfor %}
