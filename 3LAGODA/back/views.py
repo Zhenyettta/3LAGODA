@@ -391,7 +391,16 @@ def found_check_info(request):
         cursor.execute(query, [checkNumber])
         checks = cursor.fetchall()
 
-    context = {'checks': checks}
+        query1 = """
+        SELECT s.upc, p.name, s.price, s.product_count FROM sale s
+        JOIN store_product on s.upc = store_product.upc
+        JOIN product p on p.product_id = store_product.product_id
+        WHERE check_number = %s
+        """
+        cursor.execute(query1, [checkNumber])
+        sales = cursor.fetchall()
+
+    context = {'checks': checks, 'sales':sales}
 
     return render(request, 'sales/find_check/found_check.html', context)
 

@@ -25,7 +25,6 @@
             <th>Print Date</th>
             <th>Sum Total</th>
             <th>Vat</th>
-            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -34,12 +33,29 @@
             {% for field in check %}
             <td>{{ field }}</td>
             {% endfor %}
-            <td>
-                <button class="button button-header" type="submit">Watch</button>
-            </td>
+
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
+    <table class="table styled-table" id="sale_list">
+    <thead>
+        <tr>
+            <th>UPC</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sale in sales %}
+        <tr>
+            {% for field in sale %}
+            <td>{{ field }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
