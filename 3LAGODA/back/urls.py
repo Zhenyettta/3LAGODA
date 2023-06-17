@@ -82,13 +82,15 @@ urlpatterns = [
     path('home/product_view/search_category/', views.search_category, name='search_category'),
     path('home/product_view/get_product_by_name/', views.get_product_by_name, name='get_product_by_name'),
 
-    #In Store
+    # In Store
     path('home/instoreproducts_view/', views.instoreproducts_view, name='instoreproducts_view'),
     path('home/instoreproducts_view/sale_sort_selected/', views.sale_sort_selected, name='sale_sort_selected'),
-    path('home/instoreproducts_view/get_in_store_by_upc_sale/', views.get_in_store_by_upc_sale, name='get_in_store_by_upc_sale'),
+    path('home/instoreproducts_view/get_in_store_by_upc_sale/', views.get_in_store_by_upc_sale,
+         name='get_in_store_by_upc_sale'),
 
-    #Customers
+    # Customers
     path('home/customers_view/', views.customers_view, name='customers_view'),
+    path('home/customers/addcustomer', views.add_customer_sales, name='add_customer'),
     path('home/customers_view/edit/<int:id>/', views.edit_customer_button_sales, name='edit_customer'),
     path('home/customers_view/<int:id>/delete/', views.delete_customer_as_sale, name='delete_customer'),
     path('home/customers_list/get_customer_by_name/', views.get_customer_by_name, name='get_customer_by_name'),

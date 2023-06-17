@@ -50,22 +50,22 @@
         </tbody>
     </table>
 
-    <h2 class=" h2 title">Checkg</h2>
-    <table class="cart-table table styled-table sale-table">
-        <thead>
-        <tr>
-            <th>UPC</th>
-            <th>Product ID</th>
-            <th>Name</th>
-            <th>Selling price</th>
-            <th>Count</th>
-            <th>Prom</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody class="cart-items"></tbody>
-    </table>
-    <button id="send-data" class="sale-button button button-header" type="submit">Create Check</button>
+        <h2 class=" h2 title">Check</h2>
+        <table class="cart-table table styled-table sale-table">
+            <thead>
+            <tr>
+                <th>UPC</th>
+                <th>Product ID</th>
+                <th>Name</th>
+                <th>Selling price</th>
+                <th>Count</th>
+                <th>Prom</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody class="cart-items"></tbody>
+        </table>
+        <button id="send-data" class="sale-button button button-header" type="submit">Create Check</button>
     </div>
 
     <script>
@@ -79,12 +79,22 @@
                 const productData = [...productRow.children].map((td) => td.textContent);
                 const countInput = productRow.querySelector('input[name="quantity"]');
                 let price = productData[3];
-                const count = parseInt(countInput.value);
+                let count = 1;
+
+                if (countInput.value) {
+                    count = parseInt(countInput.value);
+                }
+
                 const productId = button.dataset.productId;
                 const promotionalCheckbox = productData[5] === 'True';
                 const existingCartItem = Array.from(cartItemsContainer.children).find((row) =>
                     row.querySelector('td:nth-child(2)').textContent === productId
                 );
+
+
+                if (count > 0) {
+                    productRow.querySelector('td:nth-child(5)').textContent = parseInt(productData[4]) - count;
+                }
 
                 if (promotionalCheckbox) {
                     price *= 0.8;
@@ -97,14 +107,14 @@
                 } else {
                     const newRow = document.createElement('tr');
                     newRow.innerHTML = `
-                <td>${productData[0]}</td>
-                <td>${productData[1]}</td>
-                <td>${productData[2]}</td>
-                <td>${price}</td>
-                <td>${count}</td>
-                <td>${productData[5]}</td>
-                <td><button class="delete-button button button-header">Delete</button></td>
-            `;
+                    <td>${productData[0]}</td>
+                    <td>${productData[1]}</td>
+                    <td>${productData[2]}</td>
+                    <td>${price}</td>
+                    <td>${count}</td>
+                    <td>${productData[5]}</td>
+                    <td><button class="delete-button button button-header">Delete</button></td>
+                `;
                     cartItemsContainer.appendChild(newRow);
                 }
             });

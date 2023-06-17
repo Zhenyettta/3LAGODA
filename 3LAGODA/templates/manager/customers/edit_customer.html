@@ -21,35 +21,42 @@
         {% csrf_token %}
         <h2>Edit customer menu</h2>
         <label>
-            <input class="input" placeholder="Surname" type="text" id="surname" name="surname" value="{{ customer.1 }}">
+            <input class="input" placeholder="Surname" type="text" id="surname" name="surname"
+                   {% if customer.1 %}value="{{ customer.1 }}"{% endif %}>
         </label>
         <label>
-            <input class="input" placeholder="Name" type="text" id="name" name="name" value="{{ customer.2 }}">
+            <input class="input" placeholder="Name" type="text" id="name" name="name"
+                   {% if customer.2 %}value="{{ customer.2 }}"{% endif %}>
         </label>
         <label>
-            <input class="input" placeholder="Patronymic" type="text" id="patronymic" name="patronymic" value="{{ customer.3 }}">
+            <input class="input" placeholder="Patronymic" type="text" id="patronymic" name="patronymic"
+                   {% if customer.3 %}value="{{ customer.3 }}"{% endif %}>
         </label>
 
         <label>
-            <input class="input" placeholder="Phone number" type="text" id="phone_number" name="phone_number" value="{{ customer.4 }}">
+            <input class="input" placeholder="Phone number" type="text" id="phone_number" name="phone_number"
+                   {% if customer.4 %}value="{{ customer.4 }}"{% endif %}>
         </label>
 
         <div class="form-wrapper">
             <label class="el-wrapper">
-                <input class="input" placeholder="City" type="text" id="city" name="city" value="{{ customer.5 }}">
+                <input class="input" placeholder="City" type="text" id="city" name="city"
+                       {% if customer.5 %}value="{{ customer.5 }}"{% endif %}>
             </label>
             <label class="el-wrapper">
                 <input class="input" placeholder="Zip code" type="text" id="zip_code" name="zip_code"
-                       value="{{ customer.7 }}">
+                       {% if customer.7 %}value="{{ customer.7 }}"{% endif %}>
             </label>
         </div>
 
         <label>
-            <input class="input" placeholder="Street" type="text" id="street" name="street" value="{{ customer.6 }}">
+            <input class="input" placeholder="Street" type="text" id="street" name="street"
+                   {% if customer.6 %}value="{{ customer.6 }}"{% endif %}>
         </label>
 
         <label>
-            <input class="input" placeholder="Percent of discount" type="text" id="percent" name="percent" value="{{ customer.8 }}">
+            <input class="input" placeholder="Percent of discount" type="text" id="percent" name="percent"
+                   {% if customer.8 %}value="{{ customer.8 }}"{% endif %}>
         </label>
 
         <div class="btn-div">

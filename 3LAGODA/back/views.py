@@ -1081,8 +1081,6 @@ def create_check(request):
                 cursor.execute(query)
                 checks = cursor.fetchall()
 
-                context = {'checks': checks}
-
                 return redirect('sale')
     return JsonResponse({'error': 'Invalid request method'})
 
@@ -1237,3 +1235,27 @@ def find_product(request):
     html = render(request, 'manager/in_store_products/in_store_sum.html', {'products': products}).content
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
+
+
+def add_customer_sales(request):
+    if request.method == 'POST':
+        form = CustomerForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            for key, value in data.items():
+                if value == "":
+                    data[key] = None
+            create_customer(
+                data['surname'],
+                data['name'],
+                data['patronymic'],
+                data['phone_number'],
+                data['city'],
+                data['street'],
+                data['zip_code'],
+                data['percent'],
+            )
+            return redirect('customers_view')
+    else:
+        form = CustomerForm()
+    return render(request, 'sales/customers/add_customer.html', {'form': form})

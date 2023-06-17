@@ -29,12 +29,13 @@
         </label>
         <label>
             <input class="input" placeholder="Patronymic" type="text" id="patronymic" name="patronymic"
-                   value="{{ employee.3 }}">
+                   {% if employee.3 %}value="{{ employee.3 }}"{% endif %}>
         </label>
         <div style="gap: 15px;" class="form-wrapper">
             <label class="el-wrapper">
 
-                <select style="height: 36px; width: 246px; margin-top: 1px" class="input" id="role" name="role" required>
+                <select style="height: 36px; width: 246px; margin-top: 1px" class="input" id="role" name="role"
+                        required>
                     <option value="" disabled>Choose role</option>
                     <option value="{{ employee.4 }}" disabled selected hidden="hidden">{{ employee.4 }}</option>
                     <option value="Sales">Sales</option>
@@ -64,7 +65,7 @@
         <div class="form-wrapper">
             <label class="el-wrapper">
                 <input class="input" placeholder="Phone number" type="text" id="phone_number" name="phone_number"
-                   value="{{ employee.8 }}">
+                       value="{{ employee.8 }}">
             </label>
             <label class="el-wrapper">
                 <input class="input" placeholder="Email" type="text" id="email" name="email" value="{{ employee.12 }}">

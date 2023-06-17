@@ -72,6 +72,13 @@
             </div>
         </form>
 
+        <form action="{% url 'sale' %}" method="post">
+            {% csrf_token %}
+            <div class="form-field field-6">
+                <button id="login-btn" class="btn btn-manager" type="submit">Create check</button>
+            </div>
+        </form>
+
     </div>
 
 
