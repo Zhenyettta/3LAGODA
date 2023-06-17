@@ -451,6 +451,8 @@ def found_check_info(request):
 def date_working_checks(request):
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
+    if start_date == '': start_date = '1000-01-01'
+    if end_date == '': end_date = str(date.today())
     print(start_date, end_date)
     with connection.cursor() as cursor:
         query = """
@@ -1268,6 +1270,7 @@ def get_all_checks_sum(request):
 @manager_required
 def find_product(request):
     product = request.GET.get('product')
+    if product == "Select Product": product = '%'
     start_date = request.GET.get('requested_date')
     end_date = request.GET.get('requested_date_end')
     if start_date == '': start_date = '1000-01-01'
@@ -1282,7 +1285,7 @@ def find_product(request):
             JOIN "check" c ON s.check_number = c.check_number
             JOIN store_product sp ON s.UPC = sp.UPC
             JOIN product p ON p.product_id = sp.product_id
-            WHERE p.name = '{product}'
+            WHERE p.name like '{product}'
             AND DATE(c.print_date AT TIME ZONE 'UTC')::date BETWEEN '{parsed_start_date}' AND '{parsed_end_date}'
             GROUP BY p.name
         """

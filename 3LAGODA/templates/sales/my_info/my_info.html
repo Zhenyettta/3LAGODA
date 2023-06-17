@@ -38,19 +38,13 @@
             var startDate = document.getElementById("start-date").value;
             var endDate = document.getElementById("end-date").value;
 
-            if (startDate && endDate) {
-                if (startDate <= endDate) {
-                    var url = '/home/my_info/date_working_checks/?start_date=' + startDate + '&end_date=' + endDate;
-                    window.location.href = url;
-                } else {
-                    alert("Start date cannot be greater than end date.");
-                }
+            if (startDate <= endDate) {
+                var url = '/home/my_info/date_working_checks/?start_date=' + startDate + '&end_date=' + endDate;
+                window.location.href = url;
             } else {
-                alert("Please provide both start and end dates.");
+                alert("Start date cannot be greater than end date.");
             }
         }
+
     </script>
-
-
-
 {% endblock %}
