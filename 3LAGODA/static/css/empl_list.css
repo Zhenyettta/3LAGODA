@@ -131,7 +131,19 @@
     padding-left: 10px;
     border-radius: 7px;
     font-family: "Arial";
+    width: calc(100% - 20px);
+    justify-content: space-between;
+}
 
+.select span, i {
+    display: block;
+}
+
+.select span {
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 140px;
+    text-overflow: ellipsis;
 }
 
 .dropdown .select > i {
