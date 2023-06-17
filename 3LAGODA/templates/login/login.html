@@ -12,7 +12,7 @@
 {% block content %}
     <div id="bg"></div>
 
-    <form action="{% url 'submit_form' %}" method="post">
+    <form id="login-form" action="{% url 'submit_form' %}" method="post">
         {% csrf_token %}
 
         {% for field in form %}
@@ -23,18 +23,43 @@
 
 
         <div class="form-field">
-            <button id="login-btn" class="btn" type="submit" onclick="animateButton('red')">Log in</button>
+            <button id="login-btn" class="btn" type="submit">Log in</button>
         </div>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function animateButton(color) {
-            var btn = $('#login-btn');
-            setTimeout(function () {
-                btn.css('background-color', color);
-                btn.css('transition', '0.3s');
-            }, 2000);
-        }
+        $(document).ready(function () {
+            $('#login-form').submit(function (event) {
+                event.preventDefault();  // Prevent form submission
+
+                const form = $(this);
+                const method = form.attr('method');
+
+
+                $.ajax({
+                    url: '/submit_form/',
+                    method: method,
+                    data: form.serialize(),
+                    success: function (response) {
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        }
+                    },
+                    error: function () {
+                        animateButton('red');
+                    }
+                });
+            });
+
+            function animateButton(color) {
+                const btn = $('#login-btn');
+                setTimeout(function () {
+                    btn.css('background-color', color);
+                    btn.css('transition', '1s');
+                }, 1000);
+            }
+        });
     </script>
 {% endblock %}

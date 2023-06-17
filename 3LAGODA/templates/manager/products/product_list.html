@@ -23,50 +23,41 @@
                 <span>Select Category</span>
                 <i style="margin-left: 24px" class="fa fa-chevron-down"></i>
             </div>
-            <input type="hidden" name="gender">
+            <input type="hidden" id="gender" name="gender">
             <ul class="dropdown-menu">
                 {% for category in categories %}
                     <li>{{ category.0 }}</li>
                 {% endfor %}
             </ul>
-
-
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script>
-                $('.dropdown').click(function () {
-                    $(this).attr('tabindex', 1).focus();
-                    $(this).toggleClass('active');
-                    $(this).find('.dropdown-menu').slideToggle(300);
-                });
-                $('.dropdown').focusout(function () {
-                    $(this).removeClass('active');
-                    $(this).find('.dropdown-menu').slideUp(300);
-                });
-                $('.dropdown .dropdown-menu li').click(function () {
-                    $(this).parents('.dropdown').find('span').text($(this).text());
-                    $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
-                });
-                /*End Dropdown Menu*/
-
-
-                $('.dropdown-menu li').click(function () {
-                    var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
-                        msg = '<span class="msg">Hidden input value: ';
-                    $('.msg').html(msg + input + '</span>');
-                });
-            </script>
         </div>
-    <div class="search-wrapper">
-        <button class="button button-header" onclick="window.print()">Print</button>
+        <div class="search-wrapper">
+            <input type="text" class="search-input" id="search-input" placeholder="Name">
+            <button class="button button-header" id="b-search-by-name" type="submit">Search</button>
+            <button class="button button-header" onclick="location.href='/manager/products/'">Clear</button>
+            <button class="button button-header" onclick="window.print()">Print</button>
+        </div>
     </div>
 
-    </div>
     {% include 'manager/products/product_table.html' %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        document.getElementById("b-search-by-name").addEventListener("click", function () {
+            const name = document.getElementById("search-input").value;
+            $.ajax({
+                url: '/manager/products/get_product_by_name_manager/',
+                method: 'GET',
+                data: {name: name},
+                success: function (response) {
+                    $('#product-table').html(response.html);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
         $(document).ready(function () {
-            $('#category-select').change(function () {
-                const selectedCategory = $(this).val();
+            $('#gender').siblings('.dropdown-menu').find('li').click(function () {
+                var selectedCategory = $(this).text().trim();
                 updateProductList(selectedCategory);
             });
 
@@ -84,7 +75,31 @@
                 });
             }
         });
+
+
+        $('.dropdown').click(function () {
+            $(this).attr('tabindex', 1).focus();
+            $(this).toggleClass('active');
+            $(this).find('.dropdown-menu').slideToggle(300);
+        });
+        $('.dropdown').focusout(function () {
+            $(this).removeClass('active');
+            $(this).find('.dropdown-menu').slideUp(300);
+        });
+        $('.dropdown .dropdown-menu li').click(function () {
+            $(this).parents('.dropdown').find('span').text($(this).text());
+            $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
+        });
+        /*End Dropdown Menu*/
+
+
+        $('.dropdown-menu li').click(function () {
+            var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
+                msg = '<span class="msg">Hidden input value: ';
+            $('.msg').html(msg + input + '</span>');
+        });
     </script>
+
 
 
 {% endblock %}

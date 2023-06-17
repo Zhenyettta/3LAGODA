@@ -4,7 +4,7 @@ from functools import wraps
 
 import bcrypt
 from django.db import connection
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -42,11 +42,11 @@ def submit_form(request):
             if authenticate_user(email, password):
                 print(repr(user))
                 if user_is_manager():
-                    return redirect_to_manager_page()
+                    return JsonResponse({'redirect': '/manager'})
                 else:
-                    return redirect_to_home_page()
+                    return JsonResponse({'redirect': '/home'})
 
-    return HttpResponse(status=204)
+    return JsonResponse({'error': 'Form submission failed'}, status=400)
 
 
 def extract_form_data(form):
@@ -86,13 +86,13 @@ def manager_page(request):
 
 def redirect_to_home_page():
     if not user_is_manager():
-        return HttpResponseRedirect('/home')
+        return redirect('/home')
     return HttpResponse(status=204)
 
 
 def redirect_to_manager_page():
     if user_is_manager():
-        return HttpResponseRedirect('/manager')
+        return redirect('/manager')
     return HttpResponse(status=204)
 
 

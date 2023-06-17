@@ -20,7 +20,6 @@
                 <option value='{{ category.0 }}'>{{ category.0 }}</option>
             {% endfor %}
         </select>
-{# pelimeni yarika#}
         <div class="dropdown">
             <div class="select">
                 <span>Select Category</span>
@@ -37,9 +36,10 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
             function selectCat(id) {
-            console.log(id);
-            document.getElementById("category-select").value = id;
-        }
+                console.log(id);
+                document.getElementById("category-select").value = id;
+            }
+
             $('.dropdown').click(function () {
                 $(this).attr('tabindex', 1).focus();
                 $(this).toggleClass('active');
