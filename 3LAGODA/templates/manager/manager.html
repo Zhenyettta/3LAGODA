@@ -54,14 +54,14 @@
         <form action="{% url 'product_list' %}" method="post">
             {% csrf_token %}
             <div class="form-field field-4">
-                <button id="login-btn" class="btn btn-manager" type="submit">Product</button>
+                <button id="login-btn" class="btn btn-manager" type="submit">Products</button>
             </div>
         </form>
 
         <form action="{% url 'in_store_product_list' %}" method="post">
             {% csrf_token %}
             <div class="form-field field-5">
-                <button id="login-btn" class="btn btn-manager" type="submit">In Store Product</button>
+                <button id="login-btn" class="btn btn-manager" type="submit">In store products</button>
             </div>
         </form>
 
