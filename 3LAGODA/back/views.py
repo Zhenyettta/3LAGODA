@@ -296,6 +296,26 @@ def get_in_store_by_upc(request):
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
 
+def get_in_store_by_upc_sale(request):
+    upc = request.GET.get('upc')
+
+    with connection.cursor() as cursor:
+        query = """
+       SELECT s.upc, s.product_id, p.name, s.price, s.count, s.is_promotional 
+        FROM store_product s 
+        JOIN product p on s.product_id = p.product_id
+        WHERE s.upc LIKE %s
+        ORDER BY s.count
+        """
+
+        cursor.execute(query, [upc + '%'])
+        products = cursor.fetchall()
+
+    html = render(request, 'sales/in_store_products/in_store_table_view.html', {'products': products}).content
+    html = html.decode('utf-8')
+    return JsonResponse({'html': html})
+
+
 
 @manager_required
 def get_customer_by_percent(request):

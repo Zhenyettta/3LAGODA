@@ -23,6 +23,10 @@
         </div>
 
         <div class="search-wrapper">
+            <label class="upc-enter">
+            <input type="text" id="search-input" placeholder="Enter UPC">
+            <button class="button button-header" id="b-search-by-upc" type="submit">Search</button>
+        </label>
             <button class="button button-header" onclick="location.href='/home/instoreproducts_view/'">Reset</button>
         </div>
 
@@ -128,6 +132,26 @@
             } else {
                 element.innerHTML = '▲';
             }
+        }
+
+        document.getElementById("b-search-by-upc").addEventListener("click", function () {
+            const upc = document.getElementById("search-input").value;
+            sendSearchRequest(upc);
+        });
+
+        function sendSearchRequest(upc) {
+            $.ajax({
+                url: '/home/instoreproducts_view/get_in_store_by_upc_sale/',
+                method: 'GET',
+                data: {upc: upc},
+                success: function (response) {
+                    $('#in_store_list').html(response.html);
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
         }
 
     </script>
