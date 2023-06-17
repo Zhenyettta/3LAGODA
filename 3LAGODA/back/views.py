@@ -377,7 +377,23 @@ def today_check(request):
     return render(request, 'sales/my_info/checks_table.html', context)
 
 def found_check_info(request):
-    return HttpResponse()
+    checkNumber = request.GET.get('check_number')
+
+    with connection.cursor() as cursor:
+        query = """
+            SELECT c.check_number, e.surname || ' ' || e.name || ' ' || e.patronymic, c.card_number, c.print_date, c.sum_total, c.vat
+            FROM "check" c
+            JOIN employee e ON c.employee_id = e.employee_id
+            WHERE c.check_number = %s
+            ORDER BY c.print_date desc
+        """
+
+        cursor.execute(query, [checkNumber])
+        checks = cursor.fetchall()
+
+    context = {'checks': checks}
+
+    return render(request, 'sales/find_check/found_check.html', context)
 
 def date_working_checks(request):
     start_date = request.GET.get('start_date')

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Product List
+{% endblock %}
+
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
+    <meta http-equiv="refresh" content="no-cache, no-store, must-revalidate">
+{% endblock %}
+
+{% block content %}
+    <div class="header">
+        <a class="button button-back" onclick="location.href='/home/find_check_view/'"> <span class="arrow">➜</span> Back </a>
+    </div>
+
+    <table class="table styled-table" id="check_list">
+    <thead>
+        <tr>
+            <th>Check Number</th>
+            <th>Employee</th>
+            <th>Card Number</th>
+            <th>Print Date</th>
+            <th>Sum Total</th>
+            <th>Vat</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for check in checks %}
+        <tr>
+            {% for field in check %}
+            <td>{{ field }}</td>
+            {% endfor %}
+            <td>
+                <button class="button button-header" type="submit">Watch</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

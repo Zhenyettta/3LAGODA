@@ -15,18 +15,15 @@
         <a class="button button-back" onclick="location.href='/home/'"> <span class="arrow">➜</span> Back </a>
     </div>
 
-    {% include 'sales/my_info/my_info_table.html' %}
-
     <br>
-    <button class="button button-header" id="b-work-for-today" type="submit" onclick="location.href='/home/my_info/today_check/'">Today</button>
+    <br>
+    <br>
     <br>
 
     <div class="check-input">
-        <label for="check-number">Check Number:</label>
-        <input type="text" id="check-number" name="check-number">
+        <input type="text" id="check-number" placeholder="Check Number:" name="check-number">
+        <button class="button button-header" id="b-find" type="submit" onclick="findCheck()">Find</button>
     </div>
-
-    <button class="button button-header" id="b-find" type="submit" onclick="findCheck()">Find</button>
 
     <script>
         function findCheck() {
