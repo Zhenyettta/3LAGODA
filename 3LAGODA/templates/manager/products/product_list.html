@@ -13,51 +13,53 @@
 
 {% block content %}
     <div class="header">
-        <button class="button button-back" onclick="location.href='/manager/'"> <span class="arrow">➜</span> Back </button>
-        <div><button class="button button-header" onclick="location.href='/manager/products/addproduct'">Add Product</button>
+        <button class="button button-back" onclick="location.href='/manager/'"><span class="arrow">➜</span> Back
+        </button>
+        <button class="button button-header" onclick="location.href='/manager/products/addproduct'">Add Product
+        </button>
 
-            <label>
-                <div class="dropdown">
-                    <div class="select">
-                        <span>Select Category</span>
-                        <i class="fa fa-chevron-left"></i>
-                    </div>
-                    <input type="hidden" name="gender">
-                    <ul class="dropdown-menu">
-                        {% for category in categories %}
-                            <li>{{ category.0 }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <button class="button button-header" onclick="window.print()">Print</button>
-
-
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                <script>
-                    $('.dropdown').click(function () {
-                        $(this).attr('tabindex', 1).focus();
-                        $(this).toggleClass('active');
-                        $(this).find('.dropdown-menu').slideToggle(300);
-                    });
-                    $('.dropdown').focusout(function () {
-                        $(this).removeClass('active');
-                        $(this).find('.dropdown-menu').slideUp(300);
-                    });
-                    $('.dropdown .dropdown-menu li').click(function () {
-                        $(this).parents('.dropdown').find('span').text($(this).text());
-                        $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
-                    });
-                    /*End Dropdown Menu*/
+        <div class="dropdown">
+            <div class="select">
+                <span>Select Category</span>
+                <i style="margin-left: 24px" class="fa fa-chevron-down"></i>
+            </div>
+            <input type="hidden" name="gender">
+            <ul class="dropdown-menu">
+                {% for category in categories %}
+                    <li>{{ category.0 }}</li>
+                {% endfor %}
+            </ul>
 
 
-                    $('.dropdown-menu li').click(function () {
-                        var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
-                            msg = '<span class="msg">Hidden input value: ';
-                        $('.msg').html(msg + input + '</span>');
-                    });
-                </script>
-            </label>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+                $('.dropdown').click(function () {
+                    $(this).attr('tabindex', 1).focus();
+                    $(this).toggleClass('active');
+                    $(this).find('.dropdown-menu').slideToggle(300);
+                });
+                $('.dropdown').focusout(function () {
+                    $(this).removeClass('active');
+                    $(this).find('.dropdown-menu').slideUp(300);
+                });
+                $('.dropdown .dropdown-menu li').click(function () {
+                    $(this).parents('.dropdown').find('span').text($(this).text());
+                    $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
+                });
+                /*End Dropdown Menu*/
+
+
+                $('.dropdown-menu li').click(function () {
+                    var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
+                        msg = '<span class="msg">Hidden input value: ';
+                    $('.msg').html(msg + input + '</span>');
+                });
+            </script>
         </div>
+    <div class="search-wrapper">
+        <button class="button button-header" onclick="window.print()">Print</button>
+    </div>
+
     </div>
     {% include 'manager/products/product_table.html' %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

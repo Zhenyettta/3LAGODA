@@ -18,7 +18,7 @@
         <div class="dropdown">
             <div class="select">
                 <span>Select Employee</span>
-                <i class="fa fa-chevron-left"></i>
+                <i style="margin-left: 24px" class="fa fa-chevron-down"></i>
             </div>
             <input type="hidden" name="gender">
             <ul class="dropdown-menu">
@@ -27,6 +27,7 @@
                 {% endfor %}
             </ul>
         </div>
+
         <select style="display: none" id="empls" name="empls">
             {% for empl in employees %}
                 <option value='{{ empl.0 }}'>{{ empl.1 }} {{ empl.2 }} {{ empl.3 }}</option>
