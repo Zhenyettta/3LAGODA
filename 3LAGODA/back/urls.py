@@ -56,6 +56,8 @@ urlpatterns = [
     path('manager/products/edit/<int:id>/', views.edit_product_button, name='edit_product'),
     path('manager/products/<int:id>/delete/', views.delete_product, name='delete_product'),
     path('manager/products/get_products_by_category/', views.get_products_by_category, name='get_products_by_category'),
+    path('manager/products/get_product_by_name_manager/', views.get_product_by_name,
+         name='get_product_by_name_manager'),
 
     # InStoreProduct list implementation
     path('manager/instoreproducts/', views.in_store_product_list, name='in_store_product_list'),
