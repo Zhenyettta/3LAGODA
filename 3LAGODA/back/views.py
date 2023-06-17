@@ -279,6 +279,26 @@ def get_product_by_name(request):
 
 
 @manager_required
+def get_product_by_name_manager(request):
+    name = request.GET.get('name')
+    with connection.cursor() as cursor:
+        query = f"""
+            SELECT p.product_id, c.name, p.name, p.characteristics
+            FROM product p
+            JOIN category c ON p.category_number = c.category_number
+            WHERE p.name LIKE '{name}%' 
+            ORDER BY p.name
+            """
+
+        cursor.execute(query)
+        products = cursor.fetchall()
+
+    html = render(request, 'manager/products/product_table.html', {'products': products}).content
+    html = html.decode('utf-8')
+    return JsonResponse({'html': html})
+
+
+@manager_required
 def get_in_store_by_upc(request):
     upc = request.GET.get('upc')
 
