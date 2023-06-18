@@ -123,6 +123,23 @@ def empl_list(request):
         }
         return render(request, 'manager/employee/empl_list.html', context)
 
+@manager_required
+def empl_counts(request):
+    with connection.cursor() as cursor:
+        query = """
+                SELECT e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')',  COUNT(DISTINCT cc.card_number) 
+                FROM employee e
+                JOIN "check" c ON e.employee_id = c.employee_id
+                JOIN customer_card cc ON c.card_number = cc.card_number
+                GROUP BY e.employee_id, e.surname;
+                """
+        cursor.execute(query)
+        employees = cursor.fetchall()
+        print(employees)
+        context = {
+            'employees': employees
+        }
+    return render(request, 'manager/employee/empl_counts.html', context)
 
 def my_info(request):
     with connection.cursor() as cursor:
@@ -757,7 +774,6 @@ def watch_check(request, id):
         """
         cursor.execute(query, [id])
         sales = cursor.fetchall()
-        print(sales)
     return render(request, 'manager/checks/watch_check.html', {'sales': sales})
 
 

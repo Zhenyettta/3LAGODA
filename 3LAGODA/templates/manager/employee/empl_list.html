@@ -21,6 +21,7 @@
         <button class="button button-header btn-all-only" id="search-all">All</button>
         <button class="button button-header btn-all-only" id="search-sales">Only Sales</button>
         <button class="button button-header btn-all-only" onclick="window.print()">Print</button>
+        <button class="button button-header btn-all-only" id="count-success" onclick="location.href='/manager/employees/empl_counts'">Success</button>
 
         <div class="search-wrapper">
             <input type="text" class="search-input" id="search-input" placeholder="Enter surname">
@@ -34,6 +35,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+
         document.getElementById("b-search-by-surname").addEventListener("click", function () {
             const surname = document.getElementById("search-input").value;
             $.ajax({

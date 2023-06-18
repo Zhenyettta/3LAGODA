@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Employee List
+{% endblock %}
+
+{% block content %}
+    <div class="header">
+        <button class="button button-back" onclick="location.href='/manager/employees/'"><span class="arrow">➜</span> Back
+        </button>
+    </div>
+    <table class="table styled-table" id="empl_list">
+        <thead>
+            <tr>
+                <th class="no-border">Full Name</th>
+                <th>Counts</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+            <tr>
+                <td>{{ employee.0 }}</td>
+                <td>{{ employee.1 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
+{% endblock %}

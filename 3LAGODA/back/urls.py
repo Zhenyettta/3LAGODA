@@ -36,6 +36,7 @@ urlpatterns = [
     path('manager/employees/<int:id>/delete/', views.delete_employee, name='delete_employee'),
     path('manager/employees/onlysales/', views.empl_only_sales_list, name='empl_only_sales_list'),
     path('manager/employees/get_empl_by_surname/', views.get_empl_by_surname, name='get_empl_by_surname'),
+    path('manager/employees/empl_counts/', views.empl_counts, name='empl_counts'),
 
     # Customer list implementation
     path('manager/customers/', views.cust_list, name='cust_list'),
@@ -103,6 +104,7 @@ urlpatterns = [
     path('home/my_info/', views.my_info, name='my_info'),
     path('home/my_info/today_check/', views.today_check, name='today_check'),
     path('home/my_info/date_working_checks/', views.date_working_checks, name='date_working_checks'),
+
 
     path('home/find_check_view/', views.find_check_view, name='find_check_view'),
     path('home/find_check_view/found_check', views.found_check_info, name='found_check_info'),
