@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Watch Check
+{% endblock %}
+
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="header">
+        <a class="button button-back" onclick="history.back()"> <span class="arrow">➜</span> Back to Checks</a>
+    </div>
+
+    <h2 style="margin-top: 100px" class="title h2">Check Details</h2>
+    <table class="styled-table" style="margin-top: 0" id='check_list'>
+        <thead>
+        <tr>
+            <th>UPC</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for sale in sales %}
+            <tr>
+                <td>{{ sale.0 }}</td>
+                <td>{{ sale.1 }}</td>
+                <td>{{ sale.2 }}</td>
+                <td>{{ sale.3 }}</td>
+                <td>{{ sale.4 }}</td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

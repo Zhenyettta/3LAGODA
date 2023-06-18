@@ -803,6 +803,20 @@ def watch_check(request, id):
     return render(request, 'manager/checks/watch_check.html', {'sales': sales})
 
 
+def watch_check_sales(request, id):
+    with connection.cursor() as cursor:
+        query = """
+        SELECT s.upc, p.name, s.price, s.product_count, c.sum_total FROM sale s
+        JOIN "check" c on s.check_number = c.check_number
+        JOIN store_product on s.upc = store_product.upc
+        JOIN product p on p.product_id = store_product.product_id
+        WHERE s.check_number = %s
+        """
+        cursor.execute(query, [id])
+        sales = cursor.fetchall()
+    return render(request, 'sales/my_info/watch_check.html', {'sales': sales})
+
+
 @manager_required
 def edit_employee_button(request, id):
     if request.method == 'POST':

@@ -105,7 +105,7 @@ urlpatterns = [
     path('home/my_info/', views.my_info, name='my_info'),
     path('home/my_info/today_check/', views.today_check, name='today_check'),
     path('home/my_info/date_working_checks/', views.date_working_checks, name='date_working_checks'),
-
+    path('home/my_info/watch/<int:id>/', views.watch_check_sales, name='watch_check_sales'),
 
     path('home/find_check_view/', views.find_check_view, name='find_check_view'),
     path('home/find_check_view/found_check', views.found_check_info, name='found_check_info'),

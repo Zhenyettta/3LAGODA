@@ -17,25 +17,28 @@
 
     <table class="table styled-table" id="check_today">
         <thead>
-            <tr>
-                <th>Check Number</th>
-                <th>Card Number</th>
-                <th>Print Date</th>
-                <th>Sum Total</th>
-                <th>Vat</th>
+        <tr>
+            <th>Check Number</th>
+            <th>Card Number</th>
+            <th>Print Date</th>
+            <th>Sum Total</th>
+            <th>Vat</th>
+            <th>Action</th>
 
-            </tr>
+        </tr>
         </thead>
         <tbody id="today">
         {% for check in checks %}
-        <tr>
+            <tr>
                 <td>{{ check.0 }}</td>
                 <td>{{ check.1 }}</td>
                 <td>{{ check.2 }}</td>
                 <td>{{ check.3 }}</td>
                 <td>{{ check.4 }}</td>
-
-        </tr>
+                <td>
+                    <a class="button button-header" href="{% url 'watch_check_sales' check.0 %}">Watch</a>
+                </td>
+            </tr>
         {% endfor %}
 
         </tbody>
