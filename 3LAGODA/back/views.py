@@ -1170,7 +1170,7 @@ def create_check(request):
                     VALUES (%s, %s, %s, %s)
                     RETURNING check_number;
                 """
-                cursor.execute(query, [user_id, 2, price, 20])
+                cursor.execute(query, [user_id, 3, price, 0.2*price])
                 check_number = cursor.fetchone()[0]
 
                 query_sale = """
