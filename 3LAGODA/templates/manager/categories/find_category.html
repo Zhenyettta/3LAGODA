@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Find Category
+{% endblock %}
+
+
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="header">
+        <button class="button button-back" id="create-employee-btn" onclick="location.href='/manager/categories'"> <span
+                class="arrow">➜</span> Back</button>
+    </div>
+
+    <div>
+    <table class="table styled-table">
+            <thead>
+            <tr>
+                <th>Category ID</th>
+                <th>Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for category in categories %}
+                <tr>
+                    <td>{{ category.0 }}</td>
+                    <td>{{ category.1 }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

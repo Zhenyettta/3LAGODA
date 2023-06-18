@@ -50,6 +50,7 @@ urlpatterns = [
     path('manager/categories/addcategory', views.add_category, name='add_category'),
     path('manager/categories/edit/<int:id>/', views.edit_category_button, name='edit_category'),
     path('manager/categories/<int:id>/delete/', views.delete_category, name='delete_category'),
+    path('manager/categories/find_category', views.find_category, name='find_category'),
 
     # Product list implementation
     path('manager/products/', views.product_list, name='product_list'),

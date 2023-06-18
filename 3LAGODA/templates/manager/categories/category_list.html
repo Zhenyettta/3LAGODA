@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Customer List
+    Category List
 {% endblock %}
 
 
@@ -18,9 +18,17 @@
         <button class="button button-header" onclick="location.href='/manager/categories/addcategory'">Add Category
         </button>
         <button class="button button-header" onclick="window.print()">Print</button>
+        <form method="POST" action="{% url 'find_category' %}">
+        {% csrf_token %}
+        <select name="option" id="option">
+            <option value="Prom">Prom</option>
+            <option value="NotProm">NotProm</option>
+        </select>
+        <button class="button button-header" type="submit">Submit</button>
+        </form>
     </div>
     <div>
-        <table class="styled-table">
+        <table id class="styled-table">
             <thead>
             <tr>
                 <th>Category ID</th>

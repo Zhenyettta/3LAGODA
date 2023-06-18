@@ -198,6 +198,32 @@ def category_list(request):
         }
         return render(request, 'manager/categories/category_list.html', context)
 
+def find_category(request):
+    option = request.POST.get('option')
+    option = 'False' if option == 'NotProm' else 'True'
+
+    with connection.cursor() as cursor:
+        query = """
+                SELECT c.category_number, c.name
+                FROM Category c
+                WHERE NOT EXISTS (
+                    SELECT *
+                    FROM Product p
+                    INNER JOIN store_product sp ON p.product_id = sp.product_id
+                    WHERE p.category_number = c.category_number
+                    AND sp.is_promotional = %s
+                );
+                """
+
+        cursor.execute(query,[option])
+        categories = cursor.fetchall()
+
+    context = {
+        'categories': categories
+    }
+    print(categories)
+    return render(request, 'manager/categories/find_category.html', context)
+
 
 def fetch_products_and_categories():
     with connection.cursor() as cursor:
@@ -1122,7 +1148,7 @@ def create_check(request):
             data = json.loads(data)
             price = sum(float(item[3]) * int(item[4]) for item in data)
 
-            user_id = user.id  # Assuming you have the user ID stored in 'user.id'
+            user_id = user.id
 
             with connection.cursor() as cursor:
                 query = """
