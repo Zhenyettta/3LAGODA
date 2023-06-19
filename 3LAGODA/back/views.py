@@ -1158,10 +1158,13 @@ def sale(request):
 def create_check(request):
     if request.method == 'GET':
         data = request.GET.get('data')
+        card_info = request.GET.get('card_info')
+        if card_info.strip() == '':
+            card_info = None
+
         if data is not None:
             data = json.loads(data)
             price = sum(float(item[3]) * int(item[4]) for item in data)
-
             user_id = user.id
 
             with connection.cursor() as cursor:
@@ -1170,7 +1173,7 @@ def create_check(request):
                     VALUES (%s, %s, %s, %s)
                     RETURNING check_number;
                 """
-                cursor.execute(query, [user_id, 3, price, 0.2*price])
+                cursor.execute(query, [user_id, card_info, price, 0.2*price])
                 check_number = cursor.fetchone()[0]
 
                 query_sale = """

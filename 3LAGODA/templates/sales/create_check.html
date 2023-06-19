@@ -51,7 +51,7 @@
         </table>
 
         <h2 class=" h2 title">Customers</h2>
-    
+        <input type="text" class="card-input" placeholder="Enter customer card">
 
         <h2 class=" h2 title">Check</h2>
         <table class="cart-table table styled-table sale-table">
@@ -148,6 +148,7 @@
         $(document).ready(function () {
             $('#send-data').click(function () {
                 const data = [];
+                const cardInfo = $('.card-input').val();
 
                 $('.cart-items tr').each(function () {
                     const row = [];
@@ -164,7 +165,10 @@
                     $.ajax({
                         url: 'createcheck/',
                         method: 'GET',
-                        data: {data: JSON.stringify(data)},
+                        data: {
+                                data: JSON.stringify(data),
+                                card_info: cardInfo
+                            },
                         success: function () {
                             window.location.href = '/home/sale/';
                         },
