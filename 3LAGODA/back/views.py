@@ -806,8 +806,7 @@ def watch_check(request, id):
 def watch_check_sales(request, id):
     with connection.cursor() as cursor:
         query = """
-        SELECT s.upc, p.name, s.price, s.product_count, c.sum_total FROM sale s
-        JOIN "check" c on s.check_number = c.check_number
+        SELECT s.upc, p.name, s.price, s.product_count, s.price * s.product_count FROM sale s
         JOIN store_product on s.upc = store_product.upc
         JOIN product p on p.product_id = store_product.product_id
         WHERE s.check_number = %s
