@@ -99,8 +99,8 @@ def user_is_manager():
 @manager_required
 def empl_list(request):
     with connection.cursor() as cursor:
-        query = "SELECT * FROM employee WHERE email != %s ORDER BY surname, name, patronymic"
-        cursor.execute(query, [user.email])
+        query = "SELECT * FROM employee ORDER BY surname, name, patronymic"
+        cursor.execute(query)
         employees = cursor.fetchall()
 
         context = {
@@ -113,7 +113,8 @@ def empl_list(request):
 def empl_counts(request):
     with connection.cursor() as cursor:
         query = """
-                SELECT e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')',  COUNT(cc.card_number) 
+                SELECT e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')',
+                COUNT(cc.card_number) 
                 FROM employee e
                 JOIN "check" c ON e.employee_id = c.employee_id
                 JOIN customer_card cc ON c.card_number = cc.card_number
@@ -519,18 +520,19 @@ def today_check(request):
 
 
 def found_check_info(request):
-    checkNumber = request.GET.get('check_number')
+    check_number = request.GET.get('check_number')
 
     with connection.cursor() as cursor:
         query = """
-            SELECT c.check_number, e.surname || ' ' || e.name || ' ' || e.patronymic, c.card_number, c.print_date, c.sum_total, c.vat
+            SELECT c.check_number, e.surname || ' ' || e.name || ' ' 
+            || e.patronymic, c.card_number, c.print_date, c.sum_total, c.vat
             FROM "check" c
             JOIN employee e ON c.employee_id = e.employee_id
             WHERE c.check_number = %s
             ORDER BY c.print_date desc
         """
 
-        cursor.execute(query, [checkNumber])
+        cursor.execute(query, [check_number])
         checks = cursor.fetchall()
 
         query1 = """
@@ -539,7 +541,7 @@ def found_check_info(request):
         JOIN product p on p.product_id = store_product.product_id
         WHERE check_number = %s
         """
-        cursor.execute(query1, [checkNumber])
+        cursor.execute(query1, [check_number])
         sales = cursor.fetchall()
 
     context = {'checks': checks, 'sales': sales}
@@ -550,8 +552,10 @@ def found_check_info(request):
 def date_working_checks(request):
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
-    if start_date == '': start_date = '1000-01-01'
-    if end_date == '': end_date = str(date.today())
+    if start_date == '':
+        start_date = '1000-01-01'
+    if end_date == '':
+        end_date = str(date.today())
     with connection.cursor() as cursor:
         query = """
             SELECT c.check_number, c.card_number, c.print_date, c.sum_total, c.vat
@@ -1298,7 +1302,7 @@ def create_check(request):
                         SELECT card_number FROM customer_card WHERE phone_number = %s
                     """
                     cursor.execute(query_card_number, [str(card_info)])
-                    card_number = cursor.fetchone()[0];
+                    card_number = cursor.fetchone()[0]
                     query = """
                         INSERT INTO "check" (employee_id, card_number, sum_total, vat)
                         VALUES (%s, %s, %s, %s)
@@ -1376,8 +1380,10 @@ def sale_sort_selected(request):
 def get_all_checks_all_empl(request):
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
-    if start_date == '': start_date = '1000-01-01'
-    if end_date == '': end_date = str(date.today())
+    if start_date == '':
+        start_date = '1000-01-01'
+    if end_date == '':
+        end_date = str(date.today())
     parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     parsed_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
@@ -1386,11 +1392,13 @@ def get_all_checks_all_empl(request):
     if employee == '':
         with connection.cursor() as cursor:
             query = f"""
-                SELECT c.check_number, e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')'
-                , c.card_number, c.print_date, c.sum_total, c.vat
+                SELECT c.check_number, e.surname || ' ' || e.name || ' ' ||
+                e.patronymic || '(id:' || e.employee_id || ')',
+                c.card_number, c.print_date, c.sum_total, c.vat
                 FROM "check" c
                 JOIN employee e ON c.employee_id = e.employee_id
-                WHERE DATE(c.print_date AT TIME ZONE 'UTC')::date BETWEEN '{parsed_start_date}' AND '{parsed_end_date}'
+                WHERE DATE(c.print_date AT TIME ZONE 'UTC')::date BETWEEN '{parsed_start_date}'
+                AND '{parsed_end_date}'
                 ORDER BY c.print_date desc
             """
             cursor.execute(query)
@@ -1398,11 +1406,13 @@ def get_all_checks_all_empl(request):
     else:
         with connection.cursor() as cursor:
             query = f"""
-                SELECT c.check_number, e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')'
+                SELECT c.check_number, e.surname || ' ' || e.name || ' ' ||
+                e.patronymic || '(id:' || e.employee_id || ')'
                 , c.card_number, c.print_date, c.sum_total, c.vat
                 FROM "check" c
                 JOIN employee e ON c.employee_id = e.employee_id
-                WHERE c.employee_id = {employee} AND DATE(c.print_date AT TIME ZONE 'UTC')::date BETWEEN '{parsed_start_date}' AND '{parsed_end_date}'
+                WHERE c.employee_id = {employee} AND DATE(c.print_date AT TIME ZONE 'UTC')::date
+                BETWEEN '{parsed_start_date}' AND '{parsed_end_date}'
                 ORDER BY c.print_date desc
             """
             cursor.execute(query)
@@ -1418,8 +1428,10 @@ def get_all_checks_all_empl(request):
 def get_all_checks_sum(request):
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
-    if start_date == '': start_date = '1000-01-01'
-    if end_date == '': end_date = str(date.today())
+    if start_date == '':
+        start_date = '1000-01-01'
+    if end_date == '':
+        end_date = str(date.today())
     parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     parsed_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
@@ -1459,11 +1471,14 @@ def get_all_checks_sum(request):
 @manager_required
 def find_product(request):
     product = request.GET.get('product')
-    if product == "Select Product": product = '%'
+    if product == "Select Product":
+        product = '%'
     start_date = request.GET.get('requested_date')
     end_date = request.GET.get('requested_date_end')
-    if start_date == '': start_date = '1000-01-01'
-    if end_date == '': end_date = str(date.today())
+    if start_date == '':
+        start_date = '1000-01-01'
+    if end_date == '':
+        end_date = str(date.today())
     parsed_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     parsed_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 

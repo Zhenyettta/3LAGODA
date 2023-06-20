@@ -23,6 +23,7 @@
         <form method="POST" action="{% url 'find_category' %}">
             {% csrf_token %}
 
+            <label for="option"></label>
             <select class="invisible-select" name="option" id="option">
                 <option value="Prom">Prom</option>
                 <option value="NotProm">NotProm</option>
