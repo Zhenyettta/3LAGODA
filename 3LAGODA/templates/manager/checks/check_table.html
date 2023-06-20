@@ -1,20 +1,20 @@
 <table class="table styled-table" id="check_list">
     <thead>
-        <tr>
-            <th>Check Number</th>
-            <th>Employee</th>
-            <th>Card Number</th>
-            <th>Print Date</th>
-            <th>Sum Total</th>
-            <th>Vat</th>
-            <th>Action</th>
-        </tr>
+    <tr>
+        <th>Check Number</th>
+        <th>Employee</th>
+        <th>Card Number</th>
+        <th>Print Date</th>
+        <th>Sum Total</th>
+        <th>Vat</th>
+        <th>Action</th>
+    </tr>
     </thead>
     <tbody>
-        {% for check in checks %}
+    {% for check in checks %}
         <tr>
             {% for field in check %}
-            <td>{{ field }}</td>
+                <td>{{ field }}</td>
             {% endfor %}
             <td>
                 <div class="td-btn">
@@ -22,11 +22,13 @@
 
                     <form method="POST" action="{% url 'delete_check' check.0 %}">
                         {% csrf_token %}
-                        <button class="button button-header" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
+                        <button class="button button-header" type="submit" onclick="return confirm('Are you sure?');">
+                            Delete
+                        </button>
                     </form>
                 </div>
             </td>
         </tr>
-        {% endfor %}
+    {% endfor %}
     </tbody>
 </table>

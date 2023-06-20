@@ -24,12 +24,12 @@
         </tr>
         </thead>
         <tbody>
-            {% for employee in employees %}
+        {% for employee in employees %}
             <tr>
                 <td>{{ employee.0 }}</td>
                 <td>{{ employee.1 }}</td>
             </tr>
-            {% endfor %}
+        {% endfor %}
         </tbody>
     </table>
 {% endblock %}

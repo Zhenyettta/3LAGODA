@@ -24,12 +24,12 @@
         </tr>
         </thead>
         <tbody>
-            {% for cust in customers %}
+        {% for cust in customers %}
             <tr>
                 <td>{{ cust.0 }}</td>
                 <td>{{ cust.1 }}</td>
             </tr>
-            {% endfor %}
+        {% endfor %}
         </tbody>
     </table>
 {% endblock %}

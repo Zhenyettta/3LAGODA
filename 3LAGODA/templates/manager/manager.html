@@ -13,8 +13,7 @@
         <a class="edit-employee-btn logout-btn" onclick="confirmLogout()">Log out</a>
 
         <script>
-            function confirmLogout()
-            {
+            function confirmLogout() {
                 var confirmation = confirm("Are you sure you want to log out?");
                 if (confirmation) {
                     location.href = '/';
@@ -64,7 +63,8 @@
         <form action="{% url 'check_list' %}" method="post">
             {% csrf_token %}
             <div class="form-field field-6">
-                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">Checks</button>
+                <button id="login-btn" class="btn btn-manager" type="submit" onclick="animateButton('red')">Checks
+                </button>
             </div>
         </form>
     </div>

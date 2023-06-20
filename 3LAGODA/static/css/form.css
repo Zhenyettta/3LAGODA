@@ -77,6 +77,7 @@ input[type="date"] {
     height: 40px;
     margin-top: 10px;
 }
+
 .arrow {
     color: #4A4A4A;
     transform: rotate(180deg);
@@ -130,7 +131,7 @@ input[type="date"] {
     position: relative;
 }
 
-.form-wrapper{
+.form-wrapper {
     display: flex;
     width: 100%;
     gap: 35px;
@@ -189,7 +190,7 @@ input[type="date"] {
 }
 
 .full-marg-checkbox {
-    margin:0 0 1px 4px;
+    margin: 0 0 1px 4px;
 }
 
 h2 {

@@ -1,16 +1,16 @@
 <table id="check_list">
     <thead>
-        <tr>
-            <th>Employee</th>
-            <th>Sum Total</th>
-        </tr>
+    <tr>
+        <th>Employee</th>
+        <th>Sum Total</th>
+    </tr>
     </thead>
     <tbody>
-        {% for check in checks %}
+    {% for check in checks %}
         <tr>
             <td>{{ check.0 }}</td>
             <td>{{ check.1 }}</td>
         </tr>
-        {% endfor %}
+    {% endfor %}
     </tbody>
 </table>

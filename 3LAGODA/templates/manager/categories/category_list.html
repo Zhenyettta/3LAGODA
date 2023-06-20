@@ -39,35 +39,6 @@
                 </ul>
             </div>
 
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script>
-                function selectProm(id) {
-                    console.log(id);
-                    document.getElementById("option").value = id;
-                }
-
-                $('.dropdown').click(function () {
-                    $(this).attr('tabindex', 1).focus();
-                    $(this).toggleClass('active');
-                    $(this).find('.dropdown-menu').slideToggle(300);
-                });
-
-                $('.dropdown').focusout(function () {
-                    $(this).removeClass('active');
-                    $(this).find('.dropdown-menu').slideUp(300);
-                });
-
-                $('.dropdown .dropdown-menu li').click(function () {
-                    $(this).parents('.dropdown').find('span').text($(this).text());
-                    $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
-                });
-
-                $('.dropdown-menu li').click(function () {
-                    const input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
-                        msg = '<span class="msg">Hidden input value: ';
-                    $('.msg').html(msg + input + '</span>');
-                });
-            </script>
 
             <button class="button button-header" type="submit">Submit</button>
 
@@ -104,5 +75,35 @@
             </tbody>
         </table>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function selectProm(id) {
+            console.log(id);
+            document.getElementById("option").value = id;
+        }
+
+        $('.dropdown').click(function () {
+            $(this).attr('tabindex', 1).focus();
+            $(this).toggleClass('active');
+            $(this).find('.dropdown-menu').slideToggle(300);
+        });
+
+        $('.dropdown').focusout(function () {
+            $(this).removeClass('active');
+            $(this).find('.dropdown-menu').slideUp(300);
+        });
+
+        $('.dropdown .dropdown-menu li').click(function () {
+            $(this).parents('.dropdown').find('span').text($(this).text());
+            $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
+        });
+
+        $('.dropdown-menu li').click(function () {
+            const input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
+                msg = '<span class="msg">Hidden input value: ';
+            $('.msg').html(msg + input + '</span>');
+        });
+    </script>
 
 {% endblock %}
