@@ -69,11 +69,16 @@
         </div>
 
         <div class="prom-div">
-            <label for="is-prom">Prom</label>
-            <input type="checkbox" id="is-prom" onclick="sortTable(4, this)">
+            <div class="checkbox-div">
+                <label class="checkbox-label" for="is-prom">Prom</label>
+            <input type="checkbox" class="checkbox" id="is-prom" onclick="sortTable(4, this)">
+            </div>
+            <div class="checkbox-div">
+                <label class="checkbox-label" for="not-prom">Non-prom</label>
+            <input type="checkbox" class="checkbox" id="not-prom" onclick="sortTable(5, this)">
+            </div>
 
-            <label for="not-prom">Not prom</label>
-            <input type="checkbox" id="not-prom" onclick="sortTable(5, this)">
+
         </div>
 
         <a class="button button-header btn-all-only" onclick="window.print()">Print</a>

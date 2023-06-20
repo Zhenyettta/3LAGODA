@@ -224,8 +224,29 @@
 .prom-div {
     display: flex;
     align-content: center;
+    gap: 8px;
 }
 
+.checkbox-div {
+    display: flex;
+    align-content: center;
+    background-color: #ef8354;
+    color: white;
+    width: 95px;
+    padding: 3px 5px 3px 9px;
+    height: 26px;
+    border-radius: 7px;
+    justify-content: space-between;
+}
+
+.checkbox-label{
+    padding: 3px 0;
+}
+
+.checkbox {
+    accent-color: #4a4a4a;
+    mix-blend-mode: soft-light;
+}
 .customer-percent-highlight {
     animation-name: inputBackgroundAnimation;
     animation-duration: 3s;

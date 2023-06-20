@@ -42,8 +42,14 @@ label {
     margin: 2.2px;
     position: absolute;
     bottom: 0;
+    accent-color: #4a4a4a;
+    mix-blend-mode: soft-light;
 }
 
+.checkbox-add {
+    accent-color: #4a4a4a;
+    mix-blend-mode: soft-light;
+}
 .label {
     display: block;
     font-weight: bold;
