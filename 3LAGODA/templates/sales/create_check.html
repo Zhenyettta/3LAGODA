@@ -87,7 +87,8 @@
         const submitCard = document.querySelector('button.submit-card');
 
         function updateTotalPrice() {
-            const customerPercentInput = document.getElementById('customer-percent').value;
+            let customerPercentInput = document.getElementById('customer-percent').value;
+            if (customerPercentInput === '') customerPercentInput = 1
             let totalPrice = 0;
 
             const cartItemRows = cartItemsContainer.querySelectorAll('tr');
@@ -136,7 +137,8 @@
 
         addToCartButtons.forEach((button) => {
             button.addEventListener('click', () => {
-
+                let customerPercentInput = document.getElementById('customer-percent').value;
+                if (customerPercentInput === '') customerPercentInput = 1
                 const productRow = button.closest('tr');
                 const productData = [...productRow.children].map((td) => td.textContent);
                 const countInput = productRow.querySelector('input[name="quantity"]');
@@ -162,6 +164,7 @@
                 if (promotionalCheckbox) {
                     price *= 0.8;
                 }
+                price = price * customerPercentInput;
                 if (count <= productCount && productCount !== 0) {
 
                     if (existingCartItem) {
@@ -181,6 +184,7 @@
                 <button class="delete-all-button button button-header">Delete All</button></td>
             `;
                         cartItemsContainer.appendChild(newRow);
+                        updateTotalPrice();
                     }
                 }
                 updateTotalPrice();
