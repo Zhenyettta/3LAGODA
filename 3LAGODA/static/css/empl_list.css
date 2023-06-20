@@ -231,7 +231,7 @@
     animation-duration: 3s;
     animation-timing-function: linear;
     animation-iteration-count: 1;
-    background-color: green;
+    background-color: lightgreen;
 }
 
 @keyframes inputBackgroundAnimation {
@@ -239,10 +239,10 @@
         background-color: initial;
     }
     50% {
-        background-color: green;
+        background-color: lightgreen;
     }
     100% {
-        background-color: green;
+        background-color: lightgreen;
     }
 }
 
@@ -251,7 +251,7 @@
     animation-duration: 3s;
     animation-timing-function: linear;
     animation-iteration-count: 1;
-    background-color: red;
+    background-color: lightcoral;
 }
 
 @keyframes inputBackgroundAnimationRed {
@@ -259,10 +259,10 @@
         background-color: initial;
     }
     50% {
-        background-color: red;
+        background-color: lightcoral;
     }
     100% {
-        background-color: red;
+        background-color: lightcoral;
     }
 }
 
