@@ -1,0 +1,13 @@
+form .form-field:nth-child(3)::before {
+    background-image: url('../images/lock-icon.png');
+    width: 16px;
+    height: 16px;
+}
+
+form .form-field:nth-child(2)::before {
+    background-image: url('../images/mail-icon.png');
+    width: 16px;
+    height: 16px;
+    top: 15px !important;
+
+}
