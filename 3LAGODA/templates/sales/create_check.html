@@ -120,15 +120,15 @@
                     const customerInput = document.getElementById('card-input');
                     if (response.percent > 0) {
                         customerPercentInput.value = response.percent;
+                        customerInput.classList.remove('customer-percent-highlight-red')
                         customerInput.classList.add('customer-percent-highlight');
-                    } else {
-                        customerInput.classList.add('customer-percent-highlight-red');
                     }
 
 
                 },
                 error: function (error) {
-
+                    const customerInput = document.getElementById('card-input');
+                    customerInput.classList.add('customer-percent-highlight-red');
                 }
             });
         });
