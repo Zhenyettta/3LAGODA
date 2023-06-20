@@ -41,7 +41,7 @@ def submit_form(request):
                     return JsonResponse({'redirect': '/manager'})
                 else:
                     return JsonResponse({'redirect': '/home'})
-
+    user.password = None
     return JsonResponse({'error': 'Form submission failed'}, status=400)
 
 
