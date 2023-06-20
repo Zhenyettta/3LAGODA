@@ -16,9 +16,6 @@ from .user_data import User
 user = User()
 
 
-# TODO віктор абобус
-
-
 def manager_required(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
@@ -40,7 +37,6 @@ def submit_form(request):
         if form.is_valid():
             email, password = extract_form_data(form)
             if authenticate_user(email, password):
-                print(repr(user))
                 if user_is_manager():
                     return JsonResponse({'redirect': '/manager'})
                 else:
@@ -100,17 +96,6 @@ def user_is_manager() -> object:
     return user.role == 'Manager'
 
 
-def encryption():
-    password = "123"
-    password = password.encode('utf-8')
-    hashedPassword = bcrypt.hashpw(password, bcrypt.gensalt())
-    print(bcrypt.checkpw(password, hashedPassword))
-    print(hashedPassword)
-    with connection.cursor() as cursor:
-        query = "UPDATE employee SET password = %s WHERE employee_id = %s", (hashedPassword, 2)
-        cursor.execute(query)
-
-
 @manager_required
 def empl_list(request):
     with connection.cursor() as cursor:
@@ -122,6 +107,7 @@ def empl_list(request):
             'employees': employees
         }
         return render(request, 'manager/employee/empl_list.html', context)
+
 
 @manager_required
 def empl_counts(request):
@@ -139,6 +125,7 @@ def empl_counts(request):
             'employees': employees
         }
     return render(request, 'manager/employee/empl_counts.html', context)
+
 
 @manager_required
 def sold_all(request):
@@ -164,6 +151,8 @@ def sold_all(request):
             'employees': employees
         }
     return render(request, 'manager/employee/sold_all.html', context)
+
+
 def my_info(request):
     with connection.cursor() as cursor:
         query = "SELECT * FROM employee WHERE email = %s"
@@ -185,7 +174,7 @@ def cust_list(request):
 
         context = {
             'customers': customers,
-            'categories':categories
+            'categories': categories
         }
         return render(request, 'manager/customers/cust_list.html', context)
 
@@ -226,6 +215,7 @@ def category_list(request):
         }
         return render(request, 'manager/categories/category_list.html', context)
 
+
 def find_category(request):
     option = request.POST.get('option')
     option = 'False' if option == 'NotProm' else 'True'
@@ -243,13 +233,12 @@ def find_category(request):
                 );
                 """
 
-        cursor.execute(query,[option])
+        cursor.execute(query, [option])
         categories = cursor.fetchall()
 
     context = {
         'categories': categories
     }
-    print(categories)
     return render(request, 'manager/categories/find_category.html', context)
 
 
@@ -452,7 +441,6 @@ def get_cust_total_sum_category(request):
             customers = cursor.fetchall()
 
     context = {'customers': customers}
-    print(context)
     return render(request, 'manager/customers/cust_category.html', context)
 
 
@@ -553,7 +541,6 @@ def date_working_checks(request):
     end_date = request.GET.get('end_date')
     if start_date == '': start_date = '1000-01-01'
     if end_date == '': end_date = str(date.today())
-    print(start_date, end_date)
     with connection.cursor() as cursor:
         query = """
             SELECT c.check_number, c.card_number, c.print_date, c.sum_total, c.vat
@@ -787,25 +774,34 @@ def is_email_used(email):
 
 @manager_required
 def delete_employee(request, id):
-    with connection.cursor() as cursor:
-        query = "DELETE FROM employee WHERE employee_id = %s"
-        cursor.execute(query, [id])
+    try:
+        with connection.cursor() as cursor:
+            query = "DELETE FROM employee WHERE employee_id = %s"
+            cursor.execute(query, [id])
+    except IntegrityError:
+        pass
     return redirect('/manager/employees')
 
 
 @manager_required
 def delete_customer(request, id):
-    with connection.cursor() as cursor:
-        query = "DELETE FROM customer_card WHERE card_number = %s"
-        cursor.execute(query, [id])
+    try:
+        with connection.cursor() as cursor:
+            query = "DELETE FROM customer_card WHERE card_number = %s"
+            cursor.execute(query, [id])
+    except IntegrityError:
+        pass
     return redirect('/manager/customers')
 
 
 @manager_required
 def delete_customer_as_sale(request, id):
-    with connection.cursor() as cursor:
-        query = "DELETE FROM customer_card WHERE card_number = %s"
-        cursor.execute(query, [id])
+    try:
+        with connection.cursor() as cursor:
+            query = "DELETE FROM customer_card WHERE card_number = %s"
+            cursor.execute(query, [id])
+    except IntegrityError:
+        pass
     return redirect('/home/customers_view')
 
 
@@ -822,17 +818,23 @@ def delete_category(request, id):
 
 @manager_required
 def delete_product(request, id):
-    with connection.cursor() as cursor:
-        query = "DELETE FROM product WHERE product_id = %s"
-        cursor.execute(query, [id])
+    try:
+        with connection.cursor() as cursor:
+            query = "DELETE FROM product WHERE product_id = %s"
+            cursor.execute(query, [id])
+    except IntegrityError:
+        pass
     return redirect('/manager/products')
 
 
 @manager_required
 def delete_in_store_product(request, id):
-    with connection.cursor() as cursor:
-        query = "DELETE FROM store_product WHERE product_id = %s"
-        cursor.execute(query, [id])
+    try:
+        with connection.cursor() as cursor:
+            query = "DELETE FROM store_product WHERE product_id = %s"
+            cursor.execute(query, [id])
+    except IntegrityError:
+        pass
     return redirect('/manager/instoreproducts')
 
 
@@ -1117,7 +1119,7 @@ def create_in_store_product(id, price, count, is_promotional, upc):
             INSERT INTO store_product (product_id, price, count, is_promotional, upc)
             SELECT %s, %s, %s, %s, %s
             WHERE NOT EXISTS (
-                SELECT 1 FROM store_product WHERE upc = %s
+                SELECT 1 FROM store_product WHERE upc = '%s'
             )
             """
         cursor.execute(query, [id, price, count, is_promotional, upc, upc])
@@ -1228,7 +1230,7 @@ def create_check(request):
                     VALUES (%s, %s, %s, %s)
                     RETURNING check_number;
                 """
-                cursor.execute(query, [user_id, card_info, price, 0.2*price])
+                cursor.execute(query, [user_id, card_info, price, 0.2 * price])
                 check_number = cursor.fetchone()[0]
 
                 query_sale = """
@@ -1278,7 +1280,6 @@ def sale_sort_selected(request):
     choice = request.GET.get('choice')
     prom = request.GET.get('prom')
     order = request.GET.get('order')
-    print(f"1:{choice}, 2:{prom}, 3:{order}")
 
     with connection.cursor() as cursor:
         query = f"""
@@ -1307,8 +1308,6 @@ def get_all_checks_all_empl(request):
     parsed_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
     employee = request.GET.get('empl_id')
-
-    print(employee)
 
     if employee == '':
         with connection.cursor() as cursor:

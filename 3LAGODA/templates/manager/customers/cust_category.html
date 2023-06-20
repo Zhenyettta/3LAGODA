@@ -6,15 +6,15 @@
 
 {% block content %}
     <div class="header">
-        <button class="button button-back" onclick="location.href='/manager/customers/'"><span class="arrow">➜</span> Back
+        <button class="button button-back" onclick="history.back()"><span class="arrow">➜</span> Back
         </button>
     </div>
     <table class="table styled-table" id="cust_list">
         <thead>
-            <tr>
-                <th class="no-border">Surname</th>
-                <th>Total Sum</th>
-            </tr>
+        <tr>
+            <th class="no-border">Surname</th>
+            <th>Total Sum</th>
+        </tr>
         </thead>
         <tbody>
             {% for cust in customers %}

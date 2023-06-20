@@ -6,15 +6,15 @@
 
 {% block content %}
     <div class="header">
-        <button class="button button-back" onclick="location.href='/manager/employees/'"><span class="arrow">➜</span> Back
+        <button class="button button-back" onclick="history.back()"><span class="arrow">➜</span> Back
         </button>
     </div>
     <table class="table styled-table" id="empl_list">
         <thead>
-            <tr>
-                <th class="no-border">Full Name</th>
-                <th>Counts</th>
-            </tr>
+        <tr>
+            <th class="no-border">Full Name</th>
+            <th>Counts</th>
+        </tr>
         </thead>
         <tbody>
             {% for employee in employees %}
