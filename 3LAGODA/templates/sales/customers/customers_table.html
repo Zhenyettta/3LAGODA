@@ -1,6 +1,7 @@
 <table class="styled-table" id="customer_list">
     <thead>
     <tr>
+        <th>Card</th>
         <th>Full Name</th>
         <th>Phone Number</th>
         <th>City</th>
@@ -13,6 +14,7 @@
     <tbody id="cust_list_body">
     {% for customer in customers %}
         <tr>
+            <td>{{ customer.0 }}</td>
             <td>{{ customer.1 }} {{ customer.2 }} {{ customer.3 }}</td>
             <td>{{ customer.4 }}</td>
             <td>{{ customer.5 }}</td>

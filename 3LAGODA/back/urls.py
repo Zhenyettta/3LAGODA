@@ -114,5 +114,4 @@ urlpatterns = [
 
     path('home/find_check_view/', views.find_check_view, name='find_check_view'),
     path('home/find_check_view/found_check', views.found_check_info, name='found_check_info'),
-
 ]

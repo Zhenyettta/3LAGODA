@@ -1245,39 +1245,79 @@ def create_check(request):
     if request.method == 'GET':
         data = request.GET.get('data')
         card_info = request.GET.get('card_info')
+
         if card_info.strip() == '':
             card_info = None
 
-        if data is not None:
-            data = json.loads(data)
-            price = sum(float(item[3]) * int(item[4]) for item in data)
-            user_id = user.id
+            if data is not None:
+                data = json.loads(data)
+                price = sum(float(item[3]) * int(item[4]) for item in data)
+                user_id = user.id
 
-            with connection.cursor() as cursor:
-                query = """
-                    INSERT INTO "check" (employee_id, card_number, sum_total, vat)
-                    VALUES (%s, %s, %s, %s)
-                    RETURNING check_number;
-                """
-                cursor.execute(query, [user_id, card_info, price, 0.2 * price])
-                check_number = cursor.fetchone()[0]
+                with connection.cursor() as cursor:
+                    query = """
+                        INSERT INTO "check" (employee_id, card_number, sum_total, vat)
+                        VALUES (%s, %s, %s, %s)
+                        RETURNING check_number;
+                    """
+                    cursor.execute(query, [user_id, card_info, price, 0.2 * price])
+                    check_number = cursor.fetchone()[0]
 
-                query_sale = """
-                    INSERT INTO sale (upc, price, check_number, product_count)
-                    VALUES (%s, %s, %s, %s);
-                """
-                query_count = """
-                    UPDATE store_product
-                    SET count = CASE
-                        WHEN count >= %s THEN (count - %s)
-                        ELSE 0
-                    END
-                    WHERE upc = %s;
-                """
-                cursor.executemany(query_sale, [(item[0], item[3], check_number, item[4]) for item in data])
-                cursor.executemany(query_count, [(item[4], item[4], item[0]) for item in data])
+                    query_sale = """
+                        INSERT INTO sale (upc, price, check_number, product_count)
+                        VALUES (%s, %s, %s, %s);
+                    """
+                    query_count = """
+                        UPDATE store_product
+                        SET count = CASE
+                            WHEN count >= %s THEN (count - %s)
+                            ELSE 0
+                        END
+                        WHERE upc = %s;
+                    """
+                    cursor.executemany(query_sale, [(item[0], item[3], check_number, item[4]) for item in data])
+                    cursor.executemany(query_count, [(item[4], item[4], item[0]) for item in data])
 
-                return redirect('sale')
+                    return redirect('sale')
+
+        else:
+            if data is not None:
+                data = json.loads(data)
+                price = sum(float(item[3]) * int(item[4]) for item in data)
+                user_id = user.id
+
+                with connection.cursor() as cursor:
+
+                    query_discount = f"""
+                        SELECT percent FROM customer_card WHERE card_number = {card_info}
+                    """
+                    cursor.execute(query_discount)
+                    percent = cursor.fetchone()[0]
+                    price = price - price*percent/100
+                    query = """
+                        INSERT INTO "check" (employee_id, card_number, sum_total, vat)
+                        VALUES (%s, %s, %s, %s)
+                        RETURNING check_number;
+                    """
+                    cursor.execute(query, [user_id, card_info, price, 0.2 * price])
+                    check_number = cursor.fetchone()[0]
+
+                    query_sale = """
+                        INSERT INTO sale (upc, price, check_number, product_count)
+                        VALUES (%s, %s, %s, %s);
+                    """
+                    query_count = """
+                        UPDATE store_product
+                        SET count = CASE
+                            WHEN count >= %s THEN (count - %s)
+                            ELSE 0
+                        END
+                        WHERE upc = %s;
+                    """
+                    cursor.executemany(query_sale, [(item[0], item[3], check_number, item[4]) for item in data])
+                    cursor.executemany(query_count, [(item[4], item[4], item[0]) for item in data])
+
+                    return redirect('sale')
 
     return JsonResponse({'error': 'Invalid request method'})
 
