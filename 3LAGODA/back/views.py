@@ -1249,7 +1249,6 @@ def create_check(request):
     if request.method == 'GET':
         data = request.GET.get('data')
         card_info = request.GET.get('card_info')
-
         if card_info.strip() == '':
             card_info = None
 

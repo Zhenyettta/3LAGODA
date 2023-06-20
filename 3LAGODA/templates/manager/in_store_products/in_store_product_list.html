@@ -14,8 +14,8 @@
 
 {% block content %}
     <div class="header in-store-head">
-        <a class="button button-back" onclick="history.back()"> <span class="arrow">➜</span> Back </a>
 
+        <a class="button button-back" onclick="location.href='/manager/'"> <span class="arrow">➜</span> Back </a>
         <div>
             <button class="button button-header" onclick="location.href='/manager/instoreproducts/addproduct'">Add
                 Product
@@ -52,6 +52,7 @@
                     $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
                 });
 
+
                 $('.dropdown-menu li').click(function () {
                     var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
                         msg = '<span class="msg">Hidden input value: ';
@@ -62,7 +63,6 @@
             <label>
                 <input type="date" id="search-product">
                 <input type="date" id="search-product-end">
-
                 <button class="button button-header" id="b-search-product" onclick="boba()" type="submit">Find product
                 </button>
             </label>
@@ -111,6 +111,7 @@
 
         </tbody>
     </table>
+
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

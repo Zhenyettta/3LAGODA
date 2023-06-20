@@ -12,7 +12,8 @@
 
 {% block content %}
     <div class="header">
-        <a class="button button-back" onclick="history.back()"> <span class="arrow">➜</span> Back to Checks</a>
+        <a class="button button-back" onclick="location.href='/manager/checks'"> <span class="arrow">➜</span> Back to
+            Checks</a>
     </div>
 
     <h2 class="title h2 top-marg-heading">Check Details</h2>
@@ -35,6 +36,7 @@
                 <td>{{ sale.2 }}</td>
                 <td>{{ sale.3 }}</td>
                 <td>{{ sale.4 }}</td>
+
             </tr>
         {% endfor %}
         </tbody>
@@ -45,5 +47,6 @@
 
         <h3 class="title h2 top-marg left-marg">{{ sum_total.0 }}</h3>
     </div>
+
 
 {% endblock %}
