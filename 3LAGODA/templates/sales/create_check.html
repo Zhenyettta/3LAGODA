@@ -69,12 +69,39 @@
             <tbody class="cart-items"></tbody>
         </table>
 
+        <div class="total-price">
+            <h3 class="title h2 top-marg">Total price:</h3>
+
+            <h3 class="title h2 top-marg left-marg"> UPDATE IT</h3>
+        </div>
+
+
         <button id="send-data" class="sale-button button button-header" type="submit">Create Check</button>
     </div>
 
     <script>
         const addToCartButtons = document.querySelectorAll('.add-to-cart-button');
         const cartItemsContainer = document.querySelector('.cart-items');
+        const totalPriceElement = document.querySelector('.total-price h3.left-marg');
+
+        function updateTotalPrice() {
+            let totalPrice = 0;
+
+            const cartItemRows = cartItemsContainer.querySelectorAll('tr');
+            cartItemRows.forEach((row) => {
+                const priceCell = row.querySelector('td:nth-child(4)');
+                const countCell = row.querySelector('td:nth-child(5)');
+                const price = parseFloat(priceCell.textContent);
+                const count = parseInt(countCell.textContent);
+
+                totalPrice += price * count;
+            });
+
+            totalPriceElement.textContent = totalPrice.toFixed(2); // Update total price element
+        }
+
+        // Call the function initially to set the initial total price
+        updateTotalPrice();
 
         addToCartButtons.forEach((button) => {
             button.addEventListener('click', () => {
@@ -119,11 +146,13 @@
                 <td>${price}</td>
                 <td>${count}</td>
                 <td>${productData[5]}</td>
-                <td><button class="delete-button button button-header">Delete</button></td>
+                <td><button class="delete-button button button-header">Delete</button>
+                <button class="delete-all-button button button-header">Delete All</button></td>
             `;
                         cartItemsContainer.appendChild(newRow);
                     }
                 }
+                updateTotalPrice();
             });
         })
         ;
@@ -137,9 +166,19 @@
                 if (count > 1) {
                     count--;
                     countCell.textContent = count;
+                    updateTotalPrice();
                 } else {
                     cartItemRow.remove();
+                    updateTotalPrice();
                 }
+            }
+        });
+
+        cartItemsContainer.addEventListener('click', (event) => {
+            if (event.target.classList.contains('delete-all-button')) {
+                const cartItemRow = event.target.closest('tr');
+                cartItemRow.remove();
+                updateTotalPrice();
             }
         });
     </script>
@@ -168,9 +207,9 @@
                         url: 'createcheck/',
                         method: 'GET',
                         data: {
-                                data: JSON.stringify(data),
-                                card_info: cardInfo
-                            },
+                            data: JSON.stringify(data),
+                            card_info: cardInfo
+                        },
                         success: function () {
                             window.location.href = '/home/sale/';
                         },
