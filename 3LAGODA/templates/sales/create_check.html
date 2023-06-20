@@ -51,7 +51,7 @@
         </table>
 
         <h2 class=" h2 title">Customers</h2>
-        <input type="text" class="card-input" name="card-input" placeholder="Enter phone number">
+        <input type="text" class="card-input" name="card-input" id="card-input" placeholder="Enter phone number">
         <button id="submit-card" class="submit-card sale-button button button-header" type="submit">Submit</button>
 
         <h2 class=" h2 title">Check</h2>
@@ -117,7 +117,15 @@
                 },
                 success: function (response) {
                     const customerPercentInput = document.getElementById('customer-percent');
-                    customerPercentInput.value = response.percent;
+                    const customerInput = document.getElementById('card-input');
+                    if (response.percent > 0) {
+                        customerPercentInput.value = response.percent;
+                        customerInput.classList.add('customer-percent-highlight');
+                    } else {
+                        customerInput.classList.add('customer-percent-highlight-red');
+                    }
+
+
                 },
                 error: function (error) {
 

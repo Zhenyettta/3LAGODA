@@ -226,6 +226,46 @@
     align-content: center;
 }
 
+.customer-percent-highlight {
+    animation-name: inputBackgroundAnimation;
+    animation-duration: 3s;
+    animation-timing-function: linear;
+    animation-iteration-count: 1;
+    background-color: green;
+}
+
+@keyframes inputBackgroundAnimation {
+    0% {
+        background-color: initial;
+    }
+    50% {
+        background-color: green;
+    }
+    100% {
+        background-color: green;
+    }
+}
+
+.customer-percent-highlight-red {
+    animation-name: inputBackgroundAnimationRed;
+    animation-duration: 3s;
+    animation-timing-function: linear;
+    animation-iteration-count: 1;
+    background-color: green;
+}
+
+@keyframes inputBackgroundAnimationRed {
+    0% {
+        background-color: initial;
+    }
+    50% {
+        background-color: red;
+    }
+    100% {
+        background-color: red;
+    }
+}
+
 input[type="date"] {
     padding: 0px 10px;
     border: none;
