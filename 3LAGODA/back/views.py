@@ -132,18 +132,17 @@ def sold_all(request):
     with connection.cursor() as cursor:
         query = """
                 SELECT employee.surname, employee.name, employee.patronymic
-                            FROM employee 
-                                INNER JOIN "check" AS emplCheck
-                                    ON employee.employee_id = emplCheck.employee_id
-                            WHERE employee.role = 'Sales' 
-                                AND NOT EXISTS (SELECT * 
-                                                FROM store_product
-                                                WHERE NOT EXISTS (
-                                                                    SELECT * FROM sale
-                                                                    WHERE sale.upc = store_product.upc
-                                                                    AND sale.check_number = emplCheck.check_number
-                                                                )
-                                                )
+                FROM employee 
+                INNER JOIN "check" AS emplCheck ON employee.employee_id = emplCheck.employee_id
+                WHERE employee.role = 'Sales' 
+                AND NOT EXISTS (
+                                SELECT * FROM store_product
+                                WHERE NOT EXISTS (
+                                                 SELECT * FROM sale
+                                                 WHERE sale.upc = store_product.upc
+                                                 AND sale.check_number = emplCheck.check_number
+                                                 )
+                                )
                 """
         cursor.execute(query)
         employees = cursor.fetchall()
@@ -439,20 +438,15 @@ def get_cust_total_sum_category(request):
         category = request.GET.get('category')
         with connection.cursor() as cursor:
             query = """
-            WITH customer_sum AS (
-                SELECT ccard.card_number, SUM(s.product_count) AS total_count
-                FROM customer_card AS ccard
-                INNER JOIN "check" c ON ccard.card_number = c.card_number
-                INNER JOIN sale s ON c.check_number = s.check_number
-                INNER JOIN store_product AS sp ON sp.upc = s.upc 
-                INNER JOIN product AS pr ON pr.product_id = sp.product_id
-                INNER JOIN category AS cat ON cat.category_number = pr.category_number 
-                WHERE cat.name = %s
-                GROUP BY ccard.card_number
-            )
-            SELECT ccard.surname, cs.total_count
+            SELECT ccard.surname, SUM(s.product_count) AS total_count
             FROM customer_card AS ccard
-            INNER JOIN customer_sum AS cs ON ccard.card_number = cs.card_number;
+            INNER JOIN "check" c ON ccard.card_number = c.card_number
+            INNER JOIN sale s ON c.check_number = s.check_number
+            INNER JOIN store_product AS sp ON sp.upc = s.upc 
+            INNER JOIN product AS pr ON pr.product_id = sp.product_id
+            INNER JOIN category AS cat ON cat.category_number = pr.category_number 
+            WHERE cat.name = %s
+            GROUP BY ccard.surname;
             """
             cursor.execute(query, [category])
             customers = cursor.fetchall()
