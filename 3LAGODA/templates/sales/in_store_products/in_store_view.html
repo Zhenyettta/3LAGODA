@@ -15,11 +15,14 @@
         <a class="button button-back" onclick="location.href='/home'"> <span class="arrow">➜</span> Back </a>
 
         <div class="prom-div">
-            <label for="is-prom">Prom</label>
-            <input type="checkbox" id="is-prom" onclick="sortTable(4, this)">
-
-            <label for="not-prom">Not prom</label>
-            <input type="checkbox" id="not-prom" onclick="sortTable(5, this)">
+            <div class="checkbox-div">
+                <label class="checkbox-label" for="is-prom">Prom</label>
+                <input type="checkbox" class="checkbox" id="is-prom" onclick="sortTable(4, this)">
+            </div>
+            <div class="checkbox-div">
+                <label class="checkbox-label" for="not-prom">Non-prom</label>
+                <input type="checkbox" class="checkbox" id="not-prom" onclick="sortTable(5, this)">
+            </div>
         </div>
 
         <div class="search-wrapper">
