@@ -14,7 +14,7 @@
     <div class="header">
         <a class="button button-back" onclick="history.back()"> <span class="arrow">➜</span> Back </a>
 
-        <select style="display: none" id="category-select">
+        <select class="invisible-select" id="category-select">
             <option disabled selected>default</option>
             {% for category in categories %}
                 <option value='{{ category.0 }}'>{{ category.0 }}</option>
@@ -23,7 +23,7 @@
         <div class="dropdown">
             <div class="select">
                 <span>Select Category</span>
-                <i style="margin-left: 24px" class="fa fa-chevron-down"></i>
+                <i class="fa fa-chevron-down arrow-margin"></i>
             </div>
             <input type="hidden" id="gender" name="gender">
             <ul class="dropdown-menu">
@@ -65,7 +65,9 @@
 
         <div class="search-wrapper">
             <input type="text" class="search-input" id="search-input" placeholder="Name">
+
             <button class="button button-header" id="b-search-by-name" type="submit">Search</button>
+
             <button class="button button-header" onclick="location.href='/home/product_view/'">Clear</button>
         </div>
     </div>
@@ -110,4 +112,5 @@
             }
         });
     </script>
+
 {% endblock %}

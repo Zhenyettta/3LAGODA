@@ -26,36 +26,35 @@
             <th>Sum Total</th>
             <th>Vat</th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         {% for check in checks %}
-        <tr>
-            {% for field in check %}
-            <td>{{ field }}</td>
-            {% endfor %}
-
-        </tr>
+            <tr>
+                {% for field in check %}
+                    <td>{{ field }}</td>
+                {% endfor %}
+            </tr>
         {% endfor %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
     <table class="table styled-table" id="sale_list">
-    <thead>
+        <thead>
         <tr>
             <th>UPC</th>
             <th>Name</th>
             <th>Price</th>
             <th>Amount</th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         {% for sale in sales %}
-        <tr>
-            {% for field in sale %}
-            <td>{{ field }}</td>
-            {% endfor %}
-        </tr>
+            <tr>
+                {% for field in sale %}
+                    <td>{{ field }}</td>
+                {% endfor %}
+            </tr>
         {% endfor %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
 {% endblock %}

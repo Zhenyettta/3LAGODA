@@ -13,19 +13,18 @@
 
 {% block content %}
     <div class="header">
-
         <a class="button button-back" onclick="history.back()"> <span class="arrow">➜</span> Back </a>
     </div>
-
     <br>
     <br>
     <br>
     <br>
     <h2>Find check</h2>
-    <div style="width: 300px; margin: auto; display: flex; flex-direction: column; align-items: center"
-         class="check-input">
+
+    <div class="check-input check-div">
         <input class="input" type="text" id="check-number" placeholder="Check Number:" name="check-number">
-        <button style=" background-color: #ef8354; width: 120px; margin-top: 15px" class="button button-header"
+
+        <button class="button button-header check-button"
                 id="b-find" type="submit" onclick="findCheck()">Find
         </button>
     </div>
@@ -37,4 +36,5 @@
             window.location.href = url;
         }
     </script>
+
 {% endblock %}

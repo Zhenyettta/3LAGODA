@@ -10,9 +10,7 @@
     <div class="header">
         <h2 class="header-title">ZLAGODA</h2>
 
-        <a class="edit-employee-btn" onclick="confirmLogout()"
-           style="background-color: #2d3142; color: white; padding: 10px 20px; margin-right: 50px;
-          font-size: 16px; border: none; cursor: pointer; border-radius: 4px;">Log out</a>
+        <a class="edit-employee-btn logout-btn" onclick="confirmLogout()">Log out</a>
 
         <script>
             function confirmLogout() {
@@ -22,7 +20,6 @@
                 }
             }
         </script>
-
     </div>
 
     <h1 class="title">Sales home page</h1>
@@ -71,9 +68,6 @@
                 <button id="login-btn" class="btn btn-manager" type="submit">In store products</button>
             </div>
         </form>
-
-
     </div>
-
 
 {% endblock %}

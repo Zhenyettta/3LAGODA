@@ -4,7 +4,6 @@
     Edit Customer
 {% endblock %}
 
-
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
@@ -20,14 +19,17 @@
     <form class="form" method="post">
         {% csrf_token %}
         <h2>Edit customer menu</h2>
+
         <label>
             <input class="input" placeholder="Surname" type="text" id="surname" name="surname"
                    {% if customer.1 %}value="{{ customer.1 }}"{% endif %}>
         </label>
+
         <label>
             <input class="input" placeholder="Name" type="text" id="name" name="name"
                    {% if customer.2 %}value="{{ customer.2 }}"{% endif %}>
         </label>
+
         <label>
             <input class="input" placeholder="Patronymic" type="text" id="patronymic" name="patronymic"
                    {% if customer.3 %}value="{{ customer.3 }}"{% endif %}>
@@ -43,6 +45,7 @@
                 <input class="input" placeholder="City" type="text" id="city" name="city"
                        {% if customer.5 %}value="{{ customer.5 }}"{% endif %}>
             </label>
+
             <label class="el-wrapper">
                 <input class="input" placeholder="Zip code" type="text" id="zip_code" name="zip_code"
                        {% if customer.7 %}value="{{ customer.7 }}"{% endif %}>

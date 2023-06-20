@@ -14,7 +14,7 @@
     <div class="header">
         <a class="button button-back" onclick="history.back()"> <span class="arrow">➜</span> Back </a>
 
-        <div style="display: flex; align-items: center">
+        <div class="prom-div">
             <label for="is-prom">Prom</label>
             <input type="checkbox" id="is-prom" onclick="sortTable(4, this)">
 
@@ -24,13 +24,13 @@
 
         <div class="search-wrapper">
             <label class="upc-enter">
-            <input type="text" id="search-input" placeholder="Enter UPC">
-            <button class="button button-header" id="b-search-by-upc" type="submit">Search</button>
-        </label>
+                <input type="text" id="search-input" placeholder="Enter UPC">
+
+                <button class="button button-header" id="b-search-by-upc" type="submit">Search</button>
+            </label>
+
             <button class="button button-header" onclick="location.href='/home/instoreproducts_view/'">Reset</button>
         </div>
-
-
     </div>
 
     <table class="styled-table" id="is_store_table">
@@ -38,7 +38,7 @@
         <tr>
             <th>UPC</th>
             <th>Product ID</th>
-              <th>Name
+            <th>Name
                 <button class="sort-button" data="name" onclick="sortTable(1, this)">▲</button>
             </th>
             <th>Selling price
@@ -55,20 +55,19 @@
         </tbody>
     </table>
 
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function sortTable(choice, element) {
-                const isProm = document.getElementById("is-prom").checked;
-                const notProm = document.getElementById("not-prom").checked;
-                const checkboxChecked = getCheckboxChecked(isProm, notProm);
-                const selectedValue = getSelectedValue(element);
+            const isProm = document.getElementById("is-prom").checked;
+            const notProm = document.getElementById("not-prom").checked;
+            const checkboxChecked = getCheckboxChecked(isProm, notProm);
+            const selectedValue = getSelectedValue(element);
 
-                toggleCheckboxes(isProm, notProm);
-                const column = getColumn(choice);
-                sendAjaxRequest(column, checkboxChecked, selectedValue);
-                toggleSortButtons(element);
-            }
+            toggleCheckboxes(isProm, notProm);
+            const column = getColumn(choice);
+            sendAjaxRequest(column, checkboxChecked, selectedValue);
+            toggleSortButtons(element);
+        }
 
         function getCheckboxChecked(isProm, notProm) {
             if (isProm) {
@@ -165,7 +164,6 @@
                 }
             });
         }
-
     </script>
 
 {% endblock %}

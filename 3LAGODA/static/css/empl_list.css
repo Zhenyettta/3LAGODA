@@ -225,6 +225,7 @@
     display: flex;
     align-content: center;
 }
+
 input[type="date"] {
     padding: 0px 10px;
     border: none;
@@ -311,6 +312,26 @@ input[type="date"] {
 
 .left-marg {
     margin-left: 10px;
+}
+
+.check-div {
+    width: 300px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.check-button {
+    background-color: #ef8354;
+    width: 120px;
+    margin-top: 15px;
+}
+
+.card-input {
+    border-radius: 7px;
+    height: 25px;
+    border: 1.5px solid darkgray;
 }
 
 @media print {

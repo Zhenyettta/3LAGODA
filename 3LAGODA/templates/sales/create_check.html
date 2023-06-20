@@ -4,7 +4,6 @@
     Product List
 {% endblock %}
 
-
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
@@ -17,8 +16,8 @@
         <a class="button button-back" onclick="history.back()"> <span class="arrow">➜</span> Back</a>
     </div>
     <div class="checkout-container">
-
         <h2 class=" h2 title">Products</h2>
+
         <table class="table styled-table sale-table">
             <thead>
             <tr>
@@ -42,6 +41,7 @@
                     <td>{{ product.5 }}</td>
                     <td class="td-btn">
                         <input class="td-quantity" type="number" name="quantity" min="1" value="1">
+
                         <button class="add-to-cart-button button button-header" data-product-id="{{ product.1 }}">Add
                         </button>
                     </td>
@@ -68,6 +68,7 @@
             </thead>
             <tbody class="cart-items"></tbody>
         </table>
+
         <button id="send-data" class="sale-button button button-header" type="submit">Create Check</button>
     </div>
 
@@ -142,6 +143,7 @@
             }
         });
     </script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         const csrfToken = '{{ csrf_token }}';

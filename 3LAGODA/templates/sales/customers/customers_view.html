@@ -4,7 +4,6 @@
     Customer List
 {% endblock %}
 
-
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
@@ -14,16 +13,17 @@
 {% block content %}
     <div class="header">
         <button class="button button-back" onclick="history.back()"><span class="arrow">➜</span> Back</button>
-        <button class="button button-header" onclick="location.href='/home/customers/addcustomer'">Add Customer</button>
 
+        <button class="button button-header" onclick="location.href='/home/customers/addcustomer'">Add Customer</button>
 
         <div class="search-wrapper">
             <input type="text" class="search-input" id="search-input" placeholder="Surname">
+
             <button class="button button-header" id="b-search-by-name" type="submit">Find</button>
+
             <button class="button button-header" onclick="location.href='/home/customers_view/'">Reset</button>
         </div>
     </div>
-
 
     {% include 'sales/customers/customers_table.html' %}
 
