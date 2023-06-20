@@ -22,24 +22,27 @@
 
         <form id="search-form" action="{% url 'get_cust_total_sum_category' %}" method="GET">
             {% csrf_token %}
-            <select class="input parameter-select invisible-select" id="category" name="category">
-                {% for category in categories %}
-                    <option value="{{ category.1 }}">{{ category.1 }}</option>
-                {% endfor %}
-            </select>
-            <div class="dropdown">
-                <div class="select">
-                    <span>Select category</span>
-                    <i class="fa fa-chevron-down arrow-margin"></i>
-                </div>
-                <input type="hidden" name="gender">
-                <ul class="dropdown-menu">
+            <div class="queries-div">
+                <select class="input parameter-select invisible-select" id="category" name="category">
                     {% for category in categories %}
-                        <li onclick="selectCat({{ category.1 }})">{{ category.1 }}</li>
+                        <option value="{{ category.1 }}">{{ category.1 }}</option>
                     {% endfor %}
-                </ul>
-            </div>
+                </select>
+                <div class="dropdown">
+                    <div class="select">
+                        <span>Select category</span>
+                        <i class="fa fa-chevron-down arrow-margin"></i>
+                    </div>
+                    <input type="hidden" name="gender">
+                    <ul class="dropdown-menu">
+                        {% for category in categories %}
+                            <li onclick="selectCat({{ category.1 }})">{{ category.1 }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
 
+                <button class="button button-header" id="b-search" type="submit">Find</button>
+            </div>
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script>
                 function selectCat(id) {
@@ -70,7 +73,6 @@
                 });
             </script>
 
-            <button class="button button-header" id="b-search" type="submit">Find</button>
         </form>
 
         <div class="search-wrapper">

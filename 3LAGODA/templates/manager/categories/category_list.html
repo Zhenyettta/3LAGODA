@@ -22,27 +22,26 @@
 
         <form method="POST" action="{% url 'find_category' %}">
             {% csrf_token %}
-
-            <label for="option"></label>
-            <select class="invisible-select" name="option" id="option">
-                <option value="Prom">Prom</option>
-                <option value="NotProm">NotProm</option>
-            </select>
-            <div class="dropdown">
-                <div class="select">
-                    <span>Select option</span>
-                    <i class="fa fa-chevron-down arrow-margin"></i>
+            <div class="queries-div">
+                <label for="option"></label>
+                <select class="invisible-select" name="option" id="option">
+                    <option value="Prom">Prom</option>
+                    <option value="NotProm">NotProm</option>
+                </select>
+                <div class="dropdown">
+                    <div class="select">
+                        <span>Select option</span>
+                        <i class="fa fa-chevron-down arrow-margin"></i>
+                    </div>
+                    <input type="hidden" name="gender">
+                    <ul class="dropdown-menu">
+                        <li onclick="selectProm('Prom')"> Prom</li>
+                        <li onclick="selectProm('NotProm')"> NotProm</li>
+                    </ul>
                 </div>
-                <input type="hidden" name="gender">
-                <ul class="dropdown-menu">
-                    <li onclick="selectProm('Prom')"> Prom</li>
-                    <li onclick="selectProm('NotProm')"> NotProm</li>
-                </ul>
+
+                <button class="button button-header" type="submit">Submit</button>
             </div>
-
-
-            <button class="button button-header" type="submit">Submit</button>
-
         </form>
     </div>
     <div>

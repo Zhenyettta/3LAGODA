@@ -374,6 +374,10 @@ input[type="date"] {
     border: 1.5px solid darkgray;
 }
 
+.queries-div {
+    margin-left: 45px;
+}
+
 @media print {
     .no-print {
         display: none;
