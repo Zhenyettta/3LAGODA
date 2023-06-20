@@ -238,7 +238,7 @@ def find_category(request):
                     SELECT *
                     FROM Product p
                     JOIN store_product sp ON p.product_id = sp.product_id
-                    WHERE sp.is_promotional = %s
+                    WHERE sp.is_promotional NOT IN (%s)
                     AND p.category_number = c.category_number
                 );
                 """
