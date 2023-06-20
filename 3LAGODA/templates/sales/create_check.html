@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Product List
+    Create Check
 {% endblock %}
 
 {% block head %}
@@ -51,7 +51,7 @@
         </table>
 
         <h2 class=" h2 title">Customers</h2>
-        <input type="text" class="card-input" placeholder="Enter customer card">
+        <input type="text" class="card-input" placeholder="Enter phone number">
 
         <h2 class=" h2 title">Check</h2>
         <table class="cart-table table styled-table sale-table">
@@ -97,10 +97,9 @@
                 totalPrice += price * count;
             });
 
-            totalPriceElement.textContent = totalPrice.toFixed(2); // Update total price element
+            totalPriceElement.textContent = totalPrice.toFixed(2);
         }
 
-        // Call the function initially to set the initial total price
         updateTotalPrice();
 
         addToCartButtons.forEach((button) => {

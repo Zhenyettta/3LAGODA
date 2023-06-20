@@ -1287,12 +1287,13 @@ def create_check(request):
                 user_id = user.id
 
                 with connection.cursor() as cursor:
-
-                    query_discount = f"""
-                        SELECT percent FROM customer_card WHERE card_number = {card_info}
+                    query_discount = """
+                        SELECT percent FROM customer_card WHERE phone_number = %s
                     """
-                    cursor.execute(query_discount)
+
+                    cursor.execute(query_discount,[str(card_info)])
                     percent = cursor.fetchone()[0]
+                    print(percent)
                     price = price - price*percent/100
                     query = """
                         INSERT INTO "check" (employee_id, card_number, sum_total, vat)
