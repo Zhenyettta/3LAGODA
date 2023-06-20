@@ -4,7 +4,6 @@
     Create Customer
 {% endblock %}
 
-
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
@@ -16,46 +15,63 @@
                 class="arrow">➜</span> Back
         </button>
     </div>
+
     <form class="form" method="post">
         {% csrf_token %}
         <h2>New customer form</h2>
+
         <div>
             <label class="label" for="surname">Surname:</label>
+
             <div><input class="input" type="text" id="surname" name="surname" required></div>
         </div>
+
         <div>
             <label class="label" for="name">Name:</label>
+
             <div><input class="input" type="text" id="name" name="name" required></div>
         </div>
+
         <div>
             <label class="label" for="patronymic">Patronymic:</label>
+
             <div><input class="input" type="text" id="patronymic" name="patronymic"></div>
         </div>
+
         <label class="label" for="phone_number">Phone Number:</label>
+
         <div><input class="input" type="tel" id="phone_number" name="phone_number" required></div>
         </div>
+
         <div class="form-wrapper">
             <div class="el-wrapper">
                 <label class="label" for="city">City:</label>
+
                 <div><input class="input" type="text" id="city" name="city"></div>
-        </div>
+            </div>
+
             <div class="el-wrapper">
                 <label class="label" for="zip_code">Zip Code:</label>
+
                 <div><input class="input" type="text" id="zip_code" name="zip_code"></div>
             </div>
         </div>
+
         <div>
             <label class="label" for="street">Street:</label>
+
             <div><input class="input" type="text" id="street" name="street"></div>
         </div>
+
         <div>
             <label class="label" for="percent">Percent of discount:</label>
+
             <div><input class="input" type="text" id="percent" name="percent" required></div>
         </div>
+
         <div class="btn-div">
             <button class="button button-confirm" id="create-employee-btn">Create Customer</button>
         </div>
     </form>
-
 
 {% endblock %}

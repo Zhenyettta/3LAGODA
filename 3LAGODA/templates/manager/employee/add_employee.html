@@ -4,7 +4,6 @@
     Create Employee
 {% endblock %}
 
-
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
@@ -20,31 +19,41 @@
     <form class="form" method="post">
         {% csrf_token %}
         <h2>New employee form</h2>
+
         <div>
             <label class="label" for="surname">Surname:</label>
+
             <div><input class="input" type="text" id="surname" name="surname" required></div>
         </div>
+
         <div>
             <label class="label" for="name">Name:</label>
+
             <div><input class="input" type="text" id="name" name="name" required></div>
         </div>
+
         <div>
             <label class="label" for="patronymic">Patronymic:</label>
+
             <div><input class="input" type="text" id="patronymic" name="patronymic"></div>
         </div>
-        <div style="gap: 15px;" class="form-wrapper">
+
+        <div class="form-wrapper gap-select">
             <div class="el-wrapper">
                 <label class="label" for="role">Role:</label>
+
                 <div>
-                    <select style="height: 37px; width: 246px;" class="input" id="role" name="role" required>
+                    <select class="input select-empl" id="role" name="role" required>
                         <option value="" disabled selected>Choose role</option>
                         <option value="Sales">Sales</option>
                         <option value="Manager">Manager</option>
                     </select>
                 </div>
             </div>
+
             <div class="el-wrapper">
                 <label class="label" for="salary">Salary:</label>
+
                 <div><input class="input" type="number" id="salary" name="salary" required></div>
             </div>
         </div>
@@ -52,46 +61,60 @@
         <div class="form-wrapper">
             <div class="el-wrapper">
                 <label class="label" for="date_of_birth">Date of Birth:</label>
+
                 <div><input class="input" type="date" id="date_of_birth" name="date_of_birth" required></div>
             </div>
+
             <div class="el-wrapper">
                 <label class="label" for="date_of_start">Date of Start:</label>
+
                 <div><input class="input" type="date" id="date_of_start" name="date_of_start" required></div>
             </div>
         </div>
+
         <div class="form-wrapper">
             <div class="el-wrapper">
                 <label class="label" for="phone_number">Phone Number:</label>
+
                 <div><input class="input" type="tel" id="phone_number" name="phone_number" required></div>
             </div>
+
             <div class="el-wrapper">
                 <label class="label" for="email">Email:</label>
+
                 <div><input class="input" type="email" id="email" name="email" required></div>
             </div>
         </div>
+
         <div class="form-wrapper">
             <div class="el-wrapper">
                 <label class="label" for="city">City:</label>
+
                 <div><input class="input" type="text" id="city" name="city" required></div>
             </div>
+
             <div class="el-wrapper">
                 <label class="label" for="zip_code">Zip Code:</label>
+
                 <div><input class="input" type="text" id="zip_code" name="zip_code" required></div>
             </div>
         </div>
+
         <div>
             <label class="label" for="street">Street:</label>
+
             <div><input class="input" type="text" id="street" name="street" required></div>
         </div>
 
         <div>
             <label class="label" for="password">Password:</label>
+
             <div><input class="input" type="password" id="password" name="password" required></div>
         </div>
+
         <div class="btn-div">
             <button class="button button-confirm" id="create-employee-btn">Create Employee</button>
         </div>
     </form>
-
 
 {% endblock %}

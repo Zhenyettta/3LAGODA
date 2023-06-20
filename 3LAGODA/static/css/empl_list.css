@@ -208,6 +208,23 @@
     background-color: #e2e2e2
 }
 
+.invisible-select {
+    display: none;
+}
+
+.parameter-select {
+    height: 37px;
+    width: 320px;
+}
+
+.arrow-margin {
+    margin-left: 24px;
+}
+
+.prom-div {
+    display: flex;
+    align-content: center;
+}
 input[type="date"] {
     padding: 0px 10px;
     border: none;
@@ -276,6 +293,24 @@ input[type="date"] {
 .h2 {
     color: #2d3142;
     font-family: "Arial";
+}
+
+.top-marg-heading {
+    margin-top: 100px;
+}
+
+.total-price {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.top-marg {
+    margin-top: 30px;
+}
+
+.left-marg {
+    margin-left: 10px;
 }
 
 @media print {

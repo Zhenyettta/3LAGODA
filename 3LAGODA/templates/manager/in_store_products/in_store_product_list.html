@@ -14,8 +14,8 @@
 
 {% block content %}
     <div class="header in-store-head">
-
         <a class="button button-back" onclick="history.back()"> <span class="arrow">➜</span> Back </a>
+
         <div>
             <button class="button button-header" onclick="location.href='/manager/instoreproducts/addproduct'">Add
                 Product
@@ -26,7 +26,7 @@
             <div class="dropdown">
                 <div class="select">
                     <span>Select Product</span>
-                    <i  style="margin-left: 24px" class="fa fa-chevron-down"></i>
+                    <i class="fa fa-chevron-down arrow-margin"></i>
                 </div>
                 <input type="hidden" name="gender">
                 <ul class="dropdown-menu">
@@ -52,7 +52,6 @@
                     $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
                 });
 
-
                 $('.dropdown-menu li').click(function () {
                     var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
                         msg = '<span class="msg">Hidden input value: ';
@@ -63,28 +62,31 @@
             <label>
                 <input type="date" id="search-product">
                 <input type="date" id="search-product-end">
+
                 <button class="button button-header" id="b-search-product" onclick="boba()" type="submit">Find product
                 </button>
             </label>
         </div>
 
-
-        <div style="display: flex; align-content: center">
+        <div class="prom-div">
             <label for="is-prom">Prom</label>
             <input type="checkbox" id="is-prom" onclick="sortTable(4, this)">
 
             <label for="not-prom">Not prom</label>
             <input type="checkbox" id="not-prom" onclick="sortTable(5, this)">
         </div>
+
         <a class="button button-header btn-all-only" onclick="window.print()">Print</a>
 
         <label class="upc-enter">
             <input type="text" id="search-input" placeholder="Enter UPC">
+
             <button class="button button-header" id="b-search-by-upc" type="submit">Search</button>
+
             <a class="button button-header" onclick="location.href='/manager/instoreproducts/'">Reset</a>
         </label>
-
     </div>
+
     <table class="styled-table" id="is_store_table">
         <thead>
         <tr>
@@ -109,7 +111,6 @@
 
         </tbody>
     </table>
-
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

@@ -4,7 +4,6 @@
     AddEmployee
 {% endblock %}
 
-
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
@@ -21,42 +20,47 @@
     <form class="form" method="post">
         {% csrf_token %}
         <h2>Edit employee menu</h2>
+
         <label>
             <input class="input" placeholder="Surname" type="text" id="surname" name="surname" value="{{ employee.1 }}">
         </label>
+
         <label>
             <input class="input" placeholder="Name" type="text" id="name" name="name" value="{{ employee.2 }}">
         </label>
+
         <label>
             <input class="input" placeholder="Patronymic" type="text" id="patronymic" name="patronymic"
                    {% if employee.3 %}value="{{ employee.3 }}"{% endif %}>
         </label>
-        <div style="gap: 15px;" class="form-wrapper">
-            <label class="el-wrapper">
 
-                <select style="height: 36px; width: 246px; margin-top: 1px" class="input" id="role" name="role"
-                        required>
+        <div class="form-wrapper gap-select">
+            <label class="el-wrapper">
+                <select class="input select-empl marg-select" id="role" name="role" required>
                     <option value="" disabled>Choose role</option>
                     <option value="{{ employee.4 }}" disabled selected hidden="hidden">{{ employee.4 }}</option>
                     <option value="Sales">Sales</option>
                     <option value="Manager">Manager</option>
                 </select>
-
             </label>
+
             <label class="el-wrapper">
                 <input class="input" placeholder="Salary" type="text" id="salary" name="salary"
                        value="{{ employee.5 }}">
             </label>
         </div>
+
         <div class="form-wrapper">
             <div class="el-wrapper">
                 <label class="label" for="date_of_birth">Date of Birth:</label>
+
                 <input class="input" placeholder="Date of birth" type="date" id="date_of_birth" name="date_of_birth"
                        value="{{ employee.6|date:'Y-m-d' }}">
             </div>
 
             <div class="el-wrapper">
                 <label class="label" for="date_of_start">Date of Start:</label>
+
                 <input class="input" placeholder="Date of start" type="date" id="date_of_start" name="date_of_start"
                        value="{{ employee.7|date:'Y-m-d' }}">
             </div>
@@ -67,6 +71,7 @@
                 <input class="input" placeholder="Phone number" type="text" id="phone_number" name="phone_number"
                        value="{{ employee.8 }}">
             </label>
+
             <label class="el-wrapper">
                 <input class="input" placeholder="Email" type="text" id="email" name="email" value="{{ employee.12 }}">
             </label>
@@ -76,17 +81,21 @@
             <label class="el-wrapper">
                 <input class="input" placeholder="City" type="text" id="city" name="city" value="{{ employee.9 }}">
             </label>
+
             <label class="el-wrapper">
                 <input class="input" placeholder="Zip code" type="text" id="zip_code" name="zip_code"
                        value="{{ employee.11 }}">
             </label>
         </div>
+
         <label>
             <input class="input" placeholder="Street" type="text" id="street" name="street" value="{{ employee.10 }}">
         </label>
+
         <label>
             <input class="input" placeholder="Password" type="password" name="password" id="password">
         </label>
+
         <div class="btn-div">
             <button class="button button-confirm" id="edit-employee-btn">Update</button>
         </div>

@@ -13,13 +13,15 @@
             <td>{{ product.1 }} </td>
             <td>{{ product.2 }} </td>
             <td>{{ product.3 }} </td>
-
             <td>
                 <div class="td-btn">
                     <a class="button button-header" href="{% url 'edit_product' product.0 %}">Edit</a>
+
                     <form method="POST" action="{% url 'delete_product' product.0 %}">
                         {% csrf_token %}
-                        <button class="button button-header" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
+                        <button class="button button-header" type="submit" onclick="return confirm('Are you sure?');">
+                            Delete
+                        </button>
                     </form>
                 </div>
             </td>

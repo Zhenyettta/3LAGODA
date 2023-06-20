@@ -103,6 +103,15 @@ input[type="date"] {
     margin-top: 80px;
 }
 
+.small-width {
+    width: 300px !important;
+}
+
+.select-parameters {
+    height: 37px !important;
+    width: 320px !important;
+}
+
 .input {
     height: 35px;
     outline: none;
@@ -127,8 +136,60 @@ input[type="date"] {
     gap: 35px;
 }
 
+.gap-select {
+    gap: 15px !important;
+}
+
 .el-wrapper {
     width: 100%;
+}
+
+.select-empl {
+    height: 36.5px;
+    width: 246px;
+}
+
+.marg-select {
+    margin-top: 1px;
+}
+
+.checkbox-div {
+    margin-top: 10px;
+    display: flex;
+    align-content: center;
+}
+
+.checkbox-label {
+    margin: 1px;
+}
+
+.form-button {
+    padding: 12px 0;
+    width: 300px;
+}
+
+.form-btn-div {
+    margin-bottom: 15px;
+}
+
+.form-wrapper-width {
+    width: calc(100% + 21.5px);
+}
+
+.heading-marg {
+    margin-bottom: 0;
+}
+
+.small-marg-bottom {
+    margin-bottom: 7px;
+}
+
+.small-marg-top {
+    margin-top: 6.5px !important;
+}
+
+.full-marg-checkbox {
+    margin:0 0 1px 4px;
 }
 
 h2 {

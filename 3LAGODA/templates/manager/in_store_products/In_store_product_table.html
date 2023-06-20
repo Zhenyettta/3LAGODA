@@ -1,4 +1,3 @@
-
 {% for product in products %}
     <tr>
         <td>{{ product.0 }}</td>
@@ -10,6 +9,7 @@
         <td>
             <div class="td-btn">
                 <a class="button button-header" href="{% url 'edit_in_store_product' product.1 %}">Edit</a>
+
                 <form method="POST" action="{% url 'delete_in_store_product' product.1 %}">
                     {% csrf_token %}
                     <button class="button button-header" type="submit" onclick="return confirm('Are you sure?');">
@@ -17,7 +17,6 @@
                     </button>
                 </form>
             </div>
-
         </td>
     </tr>
 {% endfor %}

@@ -4,7 +4,6 @@
     Employee List
 {% endblock %}
 
-
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
@@ -13,34 +12,41 @@
 
 {% block content %}
     <div class="header">
-        <button class="button button-back" onclick="history.back()"><span class="arrow">➜</span> Back
+        <button class="button button-back" onclick="history.back()"><span class="arrow">➜</span>
+            Back
         </button>
-        <button class="button button-header btn-addempl" onclick="location.href='/manager/employees/addemployee'">Add
-            Employee
+
+        <button class="button button-header btn-addempl" onclick="location.href='/manager/employees/addemployee'">
+            Add Employee
         </button>
+
         <button class="button button-header btn-all-only" id="search-all">All</button>
+
         <button class="button button-header btn-all-only" id="search-sales">Sales</button>
+
         <button class="button button-header btn-all-only" onclick="window.print()">Print</button>
+
         <button class="button button-header btn-all-only" id="count-success"
                 onclick="location.href='/manager/employees/empl_counts'">Success
         </button>
+
         <button class="button button-header btn-all-only" id="sold-all-product"
                 onclick="location.href='/manager/employees/sold_all'">SoldAll
         </button>
 
         <div class="search-wrapper">
             <input type="text" class="search-input" id="search-input" placeholder="Enter surname">
+
             <button class="button button-header btn-all-only" id="b-search-by-surname" type="submit">Search</button>
         </div>
-
     </div>
+
     <div>
         {% include 'manager/employee/empl_table.html' %}
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-
         document.getElementById("b-search-by-surname").addEventListener("click", function () {
             const surname = document.getElementById("search-input").value;
             $.ajax({

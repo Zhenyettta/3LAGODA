@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
-
 {% block title %}
     Product List
 {% endblock %}
@@ -15,6 +14,7 @@
     <div class="header">
         <button class="button button-back" onclick="history.back()"><span class="arrow">➜</span> Back
         </button>
+
         <button class="button button-header" onclick="location.href='/manager/products/addproduct'">Add Product
         </button>
 
@@ -30,6 +30,7 @@
                 {% endfor %}
             </ul>
         </div>
+
         <div class="search-wrapper">
             <input type="text" class="search-input" id="search-input" placeholder="Name">
             <button class="button button-header" id="b-search-by-name" type="submit">Search</button>
@@ -76,7 +77,6 @@
             }
         });
 
-
         $('.dropdown').click(function () {
             $(this).attr('tabindex', 1).focus();
             $(this).toggleClass('active');
@@ -90,8 +90,6 @@
             $(this).parents('.dropdown').find('span').text($(this).text());
             $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
         });
-        /*End Dropdown Menu*/
-
 
         $('.dropdown-menu li').click(function () {
             var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
@@ -99,7 +97,5 @@
             $('.msg').html(msg + input + '</span>');
         });
     </script>
-
-
 
 {% endblock %}

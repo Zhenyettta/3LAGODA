@@ -4,7 +4,6 @@
     Customer List
 {% endblock %}
 
-
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
@@ -15,30 +14,29 @@
     <div class="header">
         <button class="button button-back" onclick="history.back()"><span class="arrow">➜</span> Back
         </button>
+
         <button class="button button-header" onclick="location.href='/manager/customers/addcustomer'">Add Customer
         </button>
+
         <button class="button button-header" onclick="window.print()">Print</button>
 
         <form id="search-form" action="{% url 'get_cust_total_sum_category' %}" method="GET">
             {% csrf_token %}
-            <select style="height: 37px; width: 320px; display: none" class="input" id="category" name="category">
+            <select class="input parameter-select invisible-select" id="category" name="category">
                 {% for category in categories %}
                     <option value="{{ category.1 }}">{{ category.1 }}</option>
                 {% endfor %}
             </select>
-
             <div class="dropdown">
                 <div class="select">
                     <span>Select category</span>
-                    <i style="margin-left: 24px" class="fa fa-chevron-down"></i>
+                    <i class="fa fa-chevron-down arrow-margin"></i>
                 </div>
                 <input type="hidden" name="gender">
                 <ul class="dropdown-menu">
-
                     {% for category in categories %}
                         <li onclick="selectCat({{ category.1 }})">{{ category.1 }}</li>
                     {% endfor %}
-
                 </ul>
             </div>
 
@@ -72,21 +70,19 @@
                 });
             </script>
 
-
             <button class="button button-header" id="b-search" type="submit">Find</button>
         </form>
 
-
         <div class="search-wrapper">
             <input type="text" class="search-input" id="search-input" placeholder="Enter percent">
+
             <button class="button button-header" id="b-search-by-prom" type="submit">Search</button>
         </div>
-
     </div>
+
     <div>
         {% include 'manager/customers/customer_table.html' %}
     </div>
-
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

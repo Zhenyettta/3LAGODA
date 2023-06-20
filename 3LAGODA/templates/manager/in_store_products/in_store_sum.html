@@ -1,22 +1,21 @@
 <table>
-        <thead>
+    <thead>
+    <tr>
+        <th>Sold</th>
+        <th>Name</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for product in products %}
         <tr>
-            <th>Sold</th>
-            <th>Name</th>
-            <th>Action</th>
+            <td>{{ product.0 }}</td>
+            <td>{{ product.1 }}</td>
+            <td>
+                <a class="button" onclick="location.href='/manager/instoreproducts/'">Reset</a>
+            </td>
         </tr>
-        </thead>
-        <tbody>
-
-            {% for product in products %}
-                <tr>
-                    <td>{{ product.0 }}</td>
-                    <td>{{ product.1 }}</td>
-                    <td>
-                        <a class="button" onclick="location.href='/manager/instoreproducts/'">Reset</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    {% endfor %}
+    </tbody>
+</table>
 

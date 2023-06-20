@@ -18,14 +18,16 @@
 
     <form class="form" method="post">
         {% csrf_token %}
-        <h2 style="margin-bottom: 0px">Add product form</h2>
-        <div class=" form-wrapper btn-div" style="width: calc(100% + 21.5px);">
-            <div class="el-wrapper" style="margin-bottom: 15px">
+        <h2 class="heading-marg">Add product form</h2>
+
+        <div class=" form-wrapper btn-div form-wrapper-width">
+            <div class="el-wrapper form-btn-div">
                 <label class="label" for="upc">UPC:</label>
+
                 <div><input class="input" type="text" id="upc" name="upc" required></div>
             </div>
 
-            <div class="el-wrapper" style="padding: 12px 0; width: 300px">
+            <div class="el-wrapper form-button">
                 <button class="button button-confirm" id="create-employee-btn" onclick="generateUPC()">Generate UPC
                 </button>
             </div>
@@ -42,22 +44,26 @@
 
         <div>
             <label class="label" for="id">ID:</label>
+
             <div><input class="input" type="text" id="id" name="id" readonly></div>
         </div>
 
         <div class="form-wrapper">
             <div class="el-wrapper">
                 <label class="label" for="price">Price:</label>
+
                 <div><input class="input" type="number" id="price" name="price" required></div>
             </div>
             <div class="el-wrapper">
                 <label class="label" for="count">Count:</label>
+
                 <div><input class="input" type="number" id="count" name="count" required></div>
             </div>
         </div>
 
-        <div class="btn-div" style="margin-top: 10px; display: flex; align-content: center">
-            <label class="label" style="margin: 1px" for="prom">Prom:</label>
+        <div class="btn-div checkbox-div">
+            <label class="label checkbox-label" for="prom">Prom:</label>
+
             <input type="checkbox" id="prom" name="prom">
         </div>
 
@@ -86,8 +92,6 @@
             }
             document.getElementById("upc").value = randomNumber;
         }
-
     </script>
-
 
 {% endblock %}

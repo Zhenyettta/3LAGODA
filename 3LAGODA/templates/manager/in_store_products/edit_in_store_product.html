@@ -18,27 +18,29 @@
 
     <form class="form" method="post">
         {% csrf_token %}
-        <h2 style="margin-bottom: 7px"> Edit product menu</h2>
-        <div class=" form-wrapper btn-div" style="width: calc(100% + 21.5px);">
+        <h2 class="small-marg-bottom"> Edit product menu</h2>
+        <div class=" form-wrapper btn-div form-wrapper-width">
             <div class="el-wrapper">
                 <label>
                     <input class="input" type="text" id="upc" name="upc" value="{{ product.0 }}">
                 </label>
             </div>
 
-            <div class="el-wrapper" style="width: 300px">
-                <button class="button button-confirm" style="margin-top: 6.5px;" id="create-employee-btn" onclick="generateUPC()">Generate UPC
+            <div class="el-wrapper small-width">
+                <button class="button button-confirm small-marg-top" id="create-employee-btn" onclick="generateUPC()">
+                    Generate UPC
                 </button>
             </div>
         </div>
 
-        <label style="margin-top: 7px" class="label" for="id">ID:
+        <label class="label small-marg-top" for="id">ID:
             <input class="input" type="number" id="id" name="id" value="{{ product.1 }}" readonly>
         </label>
 
         <label class="label" for=name>Name:
             <input class="input" type="text" id="name" name="name" value="{{ product.2 }}" readonly>
         </label>
+
         <label class="label" for="price">Price:
             <input class="input" type="number" id="price" name="price" value="{{ product.3 }}">
         </label>
@@ -46,15 +48,15 @@
         <label class="label" for="count">Count:
             <input class="input" type="number" id="count" name="count" value="{{ product.4 }}">
         </label>
+
         <div class="btn-div">
             <label class="label" for="prom">Prom:
-                <input style="margin:0 0 1px 4px" class="checkbox" type="checkbox" id="prom" name="prom"
+                <input class="checkbox full-marg-checkbox" type="checkbox" id="prom" name="prom"
                         {% if product.5 %}
                        checked
                         {% endif %}>
             </label>
         </div>
-
 
         <div class="btn-div">
             <button class="button button-confirm"> Update</button>
@@ -72,6 +74,6 @@
             }
             document.getElementById("upc").value = randomNumber;
         }
-
     </script>
+
 {% endblock %}

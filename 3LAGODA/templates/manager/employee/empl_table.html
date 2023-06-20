@@ -30,6 +30,7 @@
             <td>
                 <div class="td-btn">
                     <a class="button button-header" href="{% url 'edit_employee' employee.0 %}">Edit</a>
+
                     <form method="POST" action="{% url 'delete_employee' employee.0 %}">
                         {% csrf_token %}
                         <button class="button button-header" type="submit" onclick="return confirm('Are you sure?');">

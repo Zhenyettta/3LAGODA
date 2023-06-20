@@ -4,7 +4,6 @@
     Create Customer
 {% endblock %}
 
-
 {% block head %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
@@ -17,7 +16,7 @@
         </button>
     </div>
 
-    <form class="form" style="width: 300px" method="post">
+    <form class="form small-width" method="post">
         {% csrf_token %}
         <h2>New category form</h2>
         <div>
@@ -28,6 +27,5 @@
             <button class="button button-confirm" id="create-employee-btn">Create Category</button>
         </div>
     </form>
-
 
 {% endblock %}

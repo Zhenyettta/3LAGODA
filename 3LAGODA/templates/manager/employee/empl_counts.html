@@ -4,6 +4,13 @@
     Employee List
 {% endblock %}
 
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
+{% endblock %}
+
+
 {% block content %}
     <div class="header">
         <button class="button button-back" onclick="history.back()"><span class="arrow">➜</span> Back
@@ -25,10 +32,4 @@
             {% endfor %}
         </tbody>
     </table>
-{% endblock %}
-
-{% block head %}
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
 {% endblock %}

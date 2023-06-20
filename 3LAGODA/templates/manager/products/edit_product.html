@@ -16,12 +16,12 @@
         </button>
     </div>
 
-    <form class="form" style="width: 300px;" method="post">
+    <form class="form small-width" method="post">
         {% csrf_token %}
         <h2>Edit product menu</h2>
 
         <label>
-            <select style="height: 37px; width: 320px" class="input" id="category" name="category">
+            <select class="input select-parameters" id="category" name="category">
                 {% for category in categories %}
                     <option value="{{ category.0 }}"
                             {% if category.0 == product.0 %}selected{% endif %}>{{ category.1 }}</option>
@@ -32,6 +32,7 @@
         <label>
             <input class="input" type="text" id="name" name="name" value="{{ product.1 }}">
         </label>
+
         <label>
             <input class="input" type="text" id="characteristics" name="characteristics" value="{{ product.2 }}">
         </label>

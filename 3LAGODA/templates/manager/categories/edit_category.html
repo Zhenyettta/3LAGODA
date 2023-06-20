@@ -16,15 +16,16 @@
         </button>
     </div>
 
-    <form class="form" style="width: 300px" method="post">
+    <form class="form small-width" method="post">
         {% csrf_token %}
         <h2>Edit category menu</h2>
+
         <label>
             <input class="input" placeholder="Category name" type="text" id="name" name="name" value="{{ category.0 }}">
         </label>
 
         <div class="btn-div">
-            <button class="button button-confirm"> Update </button>
+            <button class="button button-confirm"> Update</button>
         </div>
     </form>
 {% endblock %}

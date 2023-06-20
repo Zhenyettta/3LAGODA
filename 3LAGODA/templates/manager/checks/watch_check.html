@@ -15,7 +15,8 @@
         <a class="button button-back" onclick="history.back()"> <span class="arrow">➜</span> Back to Checks</a>
     </div>
 
-    <h2 style="margin-top: 100px" class="title h2">Check Details</h2>
+    <h2 class="title h2 top-marg-heading">Check Details</h2>
+
     <table class="styled-table" style="margin-top: 0" id='check_list'>
         <thead>
         <tr>
@@ -34,15 +35,15 @@
                 <td>{{ sale.2 }}</td>
                 <td>{{ sale.3 }}</td>
                 <td>{{ sale.4 }}</td>
-
             </tr>
         {% endfor %}
         </tbody>
     </table>
-    <div style="display: flex; align-items: center; justify-content: center;">
-        <h3 style="margin-top: 30px" class="title h2">Total price:</h3>
-        <h3 style="margin-top: 30px; margin-left: 10px" class="title h2">10000000000000</h3>
-    </div>
 
+    <div class="total-price">
+        <h3 class="title h2 top-marg">Total price:</h3>
+
+        <h3 class="title h2 top-marg left-marg">10000000000000</h3>
+    </div>
 
 {% endblock %}
