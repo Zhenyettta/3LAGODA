@@ -19,6 +19,18 @@
         </button>
         <button class="button button-header" onclick="window.print()">Print</button>
 
+        <form id="search-form" action="{% url 'get_cust_total_sum_category' %}" method="GET">
+            {% csrf_token %}
+            <select style="height: 37px; width: 320px;" class="input" id="category" name="category">
+                {% for category in categories %}
+                    <option value="{{ category.1 }}">{{ category.1 }}</option>
+                {% endfor %}
+            </select>
+
+            <button class="button button-header" id="b-search" type="submit">Find</button>
+        </form>
+
+
         <div class="search-wrapper">
             <input type="text" class="search-input" id="search-input" placeholder="Enter percent">
             <button class="button button-header" id="b-search-by-prom" type="submit">Search</button>

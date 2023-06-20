@@ -127,7 +127,7 @@ def empl_list(request):
 def empl_counts(request):
     with connection.cursor() as cursor:
         query = """
-                SELECT e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')',  COUNT(DISTINCT cc.card_number) 
+                SELECT e.surname || ' ' || e.name || ' ' || e.patronymic || '(id:' || e.employee_id || ')',  COUNT(cc.card_number) 
                 FROM employee e
                 JOIN "check" c ON e.employee_id = c.employee_id
                 JOIN customer_card cc ON c.card_number = cc.card_number
@@ -135,12 +135,35 @@ def empl_counts(request):
                 """
         cursor.execute(query)
         employees = cursor.fetchall()
-        print(employees)
         context = {
             'employees': employees
         }
     return render(request, 'manager/employee/empl_counts.html', context)
 
+@manager_required
+def sold_all(request):
+    with connection.cursor() as cursor:
+        query = """
+                SELECT employee.surname, employee.name, employee.patronymic
+                            FROM employee 
+                                INNER JOIN "check" AS emplCheck
+                                    ON employee.employee_id = emplCheck.employee_id
+                            WHERE employee.role = 'Sales' 
+                                AND NOT EXISTS (SELECT * 
+                                                FROM store_product
+                                                WHERE NOT EXISTS (
+                                                                    SELECT * FROM sale
+                                                                    WHERE sale.upc = store_product.upc
+                                                                    AND sale.check_number = emplCheck.check_number
+                                                                )
+                                                )
+                """
+        cursor.execute(query)
+        employees = cursor.fetchall()
+        context = {
+            'employees': employees
+        }
+    return render(request, 'manager/employee/sold_all.html', context)
 def my_info(request):
     with connection.cursor() as cursor:
         query = "SELECT * FROM employee WHERE email = %s"
@@ -156,8 +179,13 @@ def cust_list(request):
         cursor.execute(query)
         customers = cursor.fetchall()
 
+        query = "SELECT * FROM category"
+        cursor.execute(query)
+        categories = cursor.fetchall()
+
         context = {
-            'customers': customers
+            'customers': customers,
+            'categories':categories
         }
         return render(request, 'manager/customers/cust_list.html', context)
 
@@ -209,9 +237,9 @@ def find_category(request):
                 WHERE NOT EXISTS (
                     SELECT *
                     FROM Product p
-                    INNER JOIN store_product sp ON p.product_id = sp.product_id
-                    WHERE p.category_number = c.category_number
-                    AND sp.is_promotional = %s
+                    JOIN store_product sp ON p.product_id = sp.product_id
+                    WHERE sp.is_promotional = %s
+                    AND p.category_number = c.category_number
                 );
                 """
 
@@ -397,6 +425,35 @@ def get_customer_by_percent(request):
     html = render(request, 'manager/customers/customer_table.html', {'customers': customers}).content
     html = html.decode('utf-8')
     return JsonResponse({'html': html})
+
+
+@manager_required
+def get_cust_total_sum_category(request):
+    if request.method == 'GET':
+        category = request.GET.get('category')
+        with connection.cursor() as cursor:
+            query = """
+            WITH customer_sum AS (
+                SELECT ccard.card_number, SUM(s.product_count) AS total_count
+                FROM customer_card AS ccard
+                INNER JOIN "check" c ON ccard.card_number = c.card_number
+                INNER JOIN sale s ON c.check_number = s.check_number
+                INNER JOIN store_product AS sp ON sp.upc = s.upc 
+                INNER JOIN product AS pr ON pr.product_id = sp.product_id
+                INNER JOIN category AS cat ON cat.category_number = pr.category_number 
+                WHERE cat.name = %s
+                GROUP BY ccard.card_number
+            )
+            SELECT ccard.surname, cs.total_count
+            FROM customer_card AS ccard
+            INNER JOIN customer_sum AS cs ON ccard.card_number = cs.card_number;
+            """
+            cursor.execute(query, [category])
+            customers = cursor.fetchall()
+
+    context = {'customers': customers}
+    print(context)
+    return render(request, 'manager/customers/cust_category.html', context)
 
 
 @manager_required

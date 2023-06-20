@@ -37,6 +37,7 @@ urlpatterns = [
     path('manager/employees/onlysales/', views.empl_only_sales_list, name='empl_only_sales_list'),
     path('manager/employees/get_empl_by_surname/', views.get_empl_by_surname, name='get_empl_by_surname'),
     path('manager/employees/empl_counts/', views.empl_counts, name='empl_counts'),
+    path('manager/employees/sold_all/', views.sold_all, name='sold_all'),
 
     # Customer list implementation
     path('manager/customers/', views.cust_list, name='cust_list'),
@@ -44,6 +45,7 @@ urlpatterns = [
     path('manager/customers/edit/<int:id>/', views.edit_customer_button, name='manager_edit_customer'),
     path('manager/customers/<int:id>/delete/', views.delete_customer, name='delete_customer'),
     path('manager/customers/get_customer_by_percent/', views.get_customer_by_percent, name='get_customer_by_percent'),
+    path('manager/customers/get_cust_total_sum_category/', views.get_cust_total_sum_category, name='get_cust_total_sum_category'),
 
     # Category list implementation
     path('manager/categories/', views.category_list, name='category_list'),
