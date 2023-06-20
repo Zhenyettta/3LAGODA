@@ -13,7 +13,7 @@
 
 {% block content %}
     <div class="header">
-        <button class="button button-back" onclick="location.href='/manager/'"><span class="arrow">➜</span> Back
+        <button class="button button-back" onclick="location.href='/manager'"><span class="arrow">➜</span> Back
         </button>
 
         <button class="button button-header btn-addempl" onclick="location.href='/manager/employees/addemployee'">
@@ -22,12 +22,6 @@
         <button class="button button-header btn-all-only" id="search-all">All</button>
         <button class="button button-header btn-all-only" id="search-sales">Sales</button>
         <button class="button button-header btn-all-only" onclick="window.print()">Print</button>
-        <button class="button button-header btn-all-only" id="count-success"
-                onclick="location.href='/manager/employees/empl_counts'">Success
-        </button>
-        <button class="button button-header btn-all-only" id="sold-all-product"
-                onclick="location.href='/manager/employees/sold_all'">SoldAll
-        </button>
 
         <button class="button button-header btn-all-only" id="count-success"
                 onclick="location.href='/manager/employees/empl_counts'">Success

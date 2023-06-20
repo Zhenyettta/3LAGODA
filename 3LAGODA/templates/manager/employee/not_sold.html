@@ -6,7 +6,9 @@
 
 {% block content %}
     <div class="header">
-        <button class="button button-back" onclick="history.back()"><span class="arrow">➜</span> Back</button>
+        <button class="button button-back" onclick="location.href ='/manager/employees/'"><span class="arrow">➜</span>
+            Back
+        </button>
         <form id="filterForm" method="POST" action="/manager/employees/not_sold/">
             {% csrf_token %}
             <div class="dropdown">
