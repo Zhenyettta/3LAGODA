@@ -1290,17 +1290,21 @@ def create_check(request):
                     query_discount = """
                         SELECT percent FROM customer_card WHERE phone_number = %s
                     """
-
-                    cursor.execute(query_discount,[str(card_info)])
+                    cursor.execute(query_discount, [str(card_info)])
                     percent = cursor.fetchone()[0]
-                    print(percent)
-                    price = price - price*percent/100
+                    price = price - price * percent / 100
+
+                    query_card_number = """
+                        SELECT card_number FROM customer_card WHERE phone_number = %s
+                    """
+                    cursor.execute(query_card_number, [str(card_info)])
+                    card_number = cursor.fetchone()[0];
                     query = """
                         INSERT INTO "check" (employee_id, card_number, sum_total, vat)
                         VALUES (%s, %s, %s, %s)
                         RETURNING check_number;
                     """
-                    cursor.execute(query, [user_id, card_info, price, 0.2 * price])
+                    cursor.execute(query, [user_id, card_number, price, 0.2 * price])
                     check_number = cursor.fetchone()[0]
 
                     query_sale = """
@@ -1557,3 +1561,19 @@ def zhenyas_query2(request):
             employees, categories = fetch_employees_and_categories()
             context = {'choose': 'Price', 'employees': employees, 'categories': categories, 'employee': employee}
             return render(request, 'manager/employee/not_sold.html', context)
+
+
+def get_customer_percent_by_name(request):
+    customer_number = request.GET.get('customer_number')
+    with connection.cursor() as cursor:
+        query = """
+         SELECT percent
+         FROM customer_card
+         WHERE phone_number = %s;
+         """
+        cursor.execute(query, [customer_number])
+        percent = cursor.fetchone()[0]
+        percent = 1 - percent / 100
+        context = {'percent': percent}
+
+        return JsonResponse(context)

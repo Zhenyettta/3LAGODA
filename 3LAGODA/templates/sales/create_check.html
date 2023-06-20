@@ -51,7 +51,8 @@
         </table>
 
         <h2 class=" h2 title">Customers</h2>
-        <input type="text" class="card-input" placeholder="Enter phone number">
+        <input type="text" class="card-input" name="card-input" placeholder="Enter phone number">
+        <button id="submit-card" class="submit-card sale-button button button-header" type="submit">Submit</button>
 
         <h2 class=" h2 title">Check</h2>
         <table class="cart-table table styled-table sale-table">
@@ -72,19 +73,21 @@
         <div class="total-price">
             <h3 class="title h2 top-marg">Total price:</h3>
 
-            <h3 class="title h2 top-marg left-marg"> UPDATE IT</h3>
+            <h3 class="title h2 top-marg left-marg"></h3>
         </div>
 
-
+        <input type="hidden" id="customer-percent" value="">
         <button id="send-data" class="sale-button button button-header" type="submit">Create Check</button>
     </div>
 
     <script>
         const addToCartButtons = document.querySelectorAll('.add-to-cart-button');
         const cartItemsContainer = document.querySelector('.cart-items');
-        const totalPriceElement = document.querySelector('.total-price h3.left-marg');
+        const totalPriceElement = document.querySelector('h3.left-marg');
+        const submitCard = document.querySelector('button.submit-card');
 
         function updateTotalPrice() {
+            const customerPercentInput = document.getElementById('customer-percent').value;
             let totalPrice = 0;
 
             const cartItemRows = cartItemsContainer.querySelectorAll('tr');
@@ -94,13 +97,34 @@
                 const price = parseFloat(priceCell.textContent);
                 const count = parseInt(countCell.textContent);
 
-                totalPrice += price * count;
+                totalPrice += price * count * customerPercentInput;
             });
 
-            totalPriceElement.textContent = totalPrice.toFixed(2);
+            totalPriceElement.textContent = totalPrice.toFixed(2); // Update total price element
         }
 
+        // Call the function initially to set the initial total price
         updateTotalPrice();
+
+        submitCard.addEventListener('click', () => {
+            const cardInput = document.querySelector('.card-input').value;
+
+            $.ajax({
+                url: '/home/customers_list/get_customer_percent_by_name/',
+                method: 'GET',
+                data: {
+                    customer_number: cardInput,
+                },
+                success: function (response) {
+                    const customerPercentInput = document.getElementById('customer-percent');
+                    customerPercentInput.value = response.percent;
+                },
+                error: function (error) {
+
+                }
+            });
+        });
+
 
         addToCartButtons.forEach((button) => {
             button.addEventListener('click', () => {
