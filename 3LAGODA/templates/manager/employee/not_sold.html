@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Employee List
+{% endblock %}
+
+{% block content %}
+    <div class="header">
+        <button class="button button-back" onclick="history.back()"><span class="arrow">➜</span> Back</button>
+        <form id="filterForm" method="POST" action="/manager/employees/not_sold/">
+            {% csrf_token %}
+            <div class="dropdown">
+                <div class="select">
+                    <span>Select Employee</span>
+                    <i class="fa fa-chevron-down"></i>
+                </div>
+                <input type="hidden" id="selectedEmployeeId" name="selectedEmployeeId">
+                <ul class="dropdown-menu">
+                    {% for employee in employees %}
+                        <li data-id="{{ employee.0 }}">{{ employee.1 }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="dropdown">
+                <div class="select">
+                    <span>Select Category</span>
+                    <i class="fa fa-chevron-down"></i>
+                </div>
+                <input type="hidden" id="selectedCategoryId" name="selectedCategoryId">
+                <ul class="dropdown-menu">
+                    {% for category in categories %}
+                        <li data-id="{{ category.0 }}">{{ category.1 }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <button type="submit" class="button button-header btn-all-only" id="sold-all-product">Zhenya first</button>
+        </form>
+    </div>
+
+    <table class="table styled-table" id="empl_list">
+        <thead>
+        <tr>
+            <th class="no-border">Surname</th>
+            <th>Name</th>
+            <th>Patronymic</th>
+            <th>Total {{ choose }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for employee in employee %}
+            <tr>
+                <td>{{ employee.0 }}</td>
+                <td>{{ employee.1 }}</td>
+                <td>{{ employee.2 }}</td>
+                <td>{{ employee.3 }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $('.dropdown').click(function () {
+            $(this).attr('tabindex', 1).focus();
+            $(this).toggleClass('active');
+            $(this).find('.dropdown-menu').slideToggle(300);
+        });
+
+        $('.dropdown').focusout(function () {
+            $(this).removeClass('active');
+            $(this).find('.dropdown-menu').slideUp(300);
+        });
+
+        $('.dropdown .dropdown-menu li').click(function () {
+            $(this).parents('.dropdown').find('span').text($(this).text());
+            $(this).parents('.dropdown').find('input').val($(this).data('id'));
+        });
+    </script>
+{% endblock %}
+
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
+{% endblock %}
+
+

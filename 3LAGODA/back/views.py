@@ -92,7 +92,7 @@ def redirect_to_manager_page():
     return HttpResponse(status=204)
 
 
-def user_is_manager() -> object:
+def user_is_manager():
     return user.role == 'Manager'
 
 
@@ -258,6 +258,23 @@ def fetch_products_and_categories():
         categories = cursor.fetchall()
 
     return products, categories
+
+
+def fetch_employees_and_categories():
+    with connection.cursor() as cursor:
+        query = """
+            SELECT  e.employee_id, e.surname
+            FROM employee e
+            order by e.name
+        """
+        cursor.execute(query)
+        employees = cursor.fetchall()
+
+        query = "SELECT c.category_number, c.name FROM category c"
+        cursor.execute(query)
+        categories = cursor.fetchall()
+
+    return employees, categories
 
 
 @manager_required
@@ -851,14 +868,23 @@ def delete_check(request, id):
 def watch_check(request, id):
     with connection.cursor() as cursor:
         query = """
-        SELECT s.upc, p.name, s.price, s.product_count, s.price * s.product_count FROM sale s
+        SELECT s.upc, p.name, s.price, s.product_count, s.price * s.product_count
+        FROM sale s
         JOIN store_product on s.upc = store_product.upc
         JOIN product p on p.product_id = store_product.product_id
-        WHERE s.check_number = %s
+        WHERE s.check_number = %s 
         """
         cursor.execute(query, [id])
         sales = cursor.fetchall()
-    return render(request, 'manager/checks/watch_check.html', {'sales': sales})
+
+        query = """
+                SELECT sum_total 
+                FROM "check"
+                WHERE check_number = %s
+                """
+        cursor.execute(query, [id])
+        sum_total = cursor.fetchone()
+    return render(request, 'manager/checks/watch_check.html', {'sales': sales, 'sum_total': sum_total})
 
 
 def watch_check_sales(request, id):
@@ -871,7 +897,16 @@ def watch_check_sales(request, id):
         """
         cursor.execute(query, [id])
         sales = cursor.fetchall()
-    return render(request, 'sales/my_info/watch_check.html', {'sales': sales})
+
+        query = """
+                       SELECT sum_total 
+                       FROM "check"
+                       WHERE check_number = %s
+                       """
+        cursor.execute(query, [id])
+        sum_total = cursor.fetchone()
+
+    return render(request, 'sales/my_info/watch_check.html', {'sales': sales, 'sum_total': sum_total})
 
 
 @manager_required
@@ -1434,3 +1469,56 @@ def add_customer_sales(request):
     else:
         form = CustomerForm()
     return render(request, 'sales/customers/add_customer.html', {'form': form})
+
+
+@manager_required
+def zhenyas_query1(request):
+    with connection.cursor() as cursor:
+        query = """
+            SELECT e.surname, e.name, e.patronymic, total_product_count
+            FROM (
+                SELECT c.employee_id, SUM(s.product_count) AS total_product_count
+                FROM "check" c
+                JOIN sale s ON c.check_number = s.check_number
+                GROUP BY c.employee_id
+            ) AS employee_totals
+            JOIN employee e ON e.employee_id = employee_totals.employee_id
+            ORDER BY total_product_count
+            LIMIT 1;
+                """
+        cursor.execute(query)
+        employee = cursor.fetchall()
+
+        context = {'employee': employee, 'choose': 'Count'}
+
+        return render(request, 'manager/employee/sold_less.html', context)
+
+
+def zhenyas_query2(request):
+    if request.method == 'GET':
+        employees, categories = fetch_employees_and_categories()
+        context = {'choose': 'Price', 'employees': employees, 'categories': categories}
+        return render(request, 'manager/employee/not_sold.html', context)
+    else:
+        selected_employee_id = request.POST.get('selectedEmployeeId')
+        selected_category_id = request.POST.get('selectedCategoryId')
+        if selected_category_id == "" or selected_category_id == "":
+            return HttpResponse(status=204)
+        with connection.cursor() as cursor:
+            query = """
+            SELECT e.surname, e.name, e.patronymic, sum(c.sum_total)
+            FROM employee e
+            JOIN "check" c ON e.employee_id = c.employee_id
+            JOIN sale s ON c.check_number = s.check_number
+            JOIN store_product sp ON s.UPC = sp.UPC
+            JOIN product p ON sp.product_id = p.product_id
+            JOIN "category" cc ON p.category_number = cc.category_number
+            WHERE  e.employee_id != %s AND cc.category_number != %s
+            GROUP BY e.surname, e.name, e.patronymic;
+                """
+            cursor.execute(query, [selected_employee_id, selected_category_id])
+            employee = cursor.fetchall()
+
+            employees, categories = fetch_employees_and_categories()
+            context = {'choose': 'Price', 'employees': employees, 'categories': categories, 'employee': employee}
+            return render(request, 'manager/employee/not_sold.html', context)

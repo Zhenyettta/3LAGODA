@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Employee List
+{% endblock %}
+
+{% block content %}
+    <div class="header">
+        <button class="button button-back" onclick="history.back()"><span class="arrow">➜</span> Back
+        </button>
+    </div>
+    <table class="table styled-table" id="empl_list">
+        <thead>
+        <tr>
+            <th class="no-border">Surname</th>
+            <th>Name</th>
+            <th>Patronymic</th>
+            <th>Total {{ choose }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for employee in employee %}
+            <tr>
+                <td>{{ employee.0 }}</td>
+                <td>{{ employee.1 }}</td>
+                <td>{{ employee.2 }}</td>
+                <td>{{ employee.3 }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/view_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/empl_list.css' %}">
+{% endblock %}
