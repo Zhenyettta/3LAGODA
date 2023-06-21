@@ -501,13 +501,14 @@ def check_list(request):
 def today_check(request):
     today = date.today()
     formatted_date = datetime.strptime(str(today), '%Y-%m-%d').date()
+    print(formatted_date)
 
     with connection.cursor() as cursor:
         query = """
             SELECT c.check_number, c.card_number, c.print_date, c.sum_total, c.vat
             FROM "check" c
             JOIN employee e ON c.employee_id = e.employee_id
-            WHERE e.email = %s AND DATE(c.print_date AT TIME ZONE 'UTC')::date = %s
+            WHERE e.email = %s AND DATE(c.print_date AT TIME ZONE 'Europe/Kiev')::date = %s
             ORDER BY c.print_date desc
         """
 
