@@ -1483,7 +1483,7 @@ def find_product(request):
 
     with connection.cursor() as cursor:
         query = f"""
-            SELECT SUM(sp.count), p.name AS total_units_sold
+            SELECT SUM(s.product_count), p.name AS total_units_sold
             FROM Sale s
             JOIN "check" c ON s.check_number = c.check_number
             JOIN store_product sp ON s.UPC = sp.UPC
