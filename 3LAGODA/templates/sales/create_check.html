@@ -98,7 +98,7 @@
                 const price = parseFloat(priceCell.textContent);
                 const count = parseInt(countCell.textContent);
 
-                totalPrice += price * count * customerPercentInput;
+                totalPrice += price * count;
             });
 
             totalPriceElement.textContent = totalPrice.toFixed(2); // Update total price element
@@ -148,6 +148,7 @@
                 if (countInput.value) {
                     count = parseInt(countInput.value);
                 }
+
 
                 const productId = button.dataset.productId;
                 const promotionalCheckbox = productData[5] === 'True';
