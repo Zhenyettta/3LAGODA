@@ -501,7 +501,6 @@ def check_list(request):
 def today_check(request):
     today = date.today()
     formatted_date = datetime.strptime(str(today), '%Y-%m-%d').date()
-    print(formatted_date)
 
     with connection.cursor() as cursor:
         query = """
